@@ -59,7 +59,7 @@ public class Time
 		//we will eventually multiply the hours by 3600 + the minutes by 60 + the seconds
 		int minutes = getTotalMinutes (time);
 		int seconds = getSeconds(time);
-		return hours * 3600 + minutes * 60 + seconds;
+		return hours * 3600 + minutes * 50 + seconds;
 	}
 	
 	public static int getSeconds(String time) throws NumberFormatException, StringIndexOutOfBoundsException 
