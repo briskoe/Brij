@@ -1,0 +1,12 @@
+package ca.brij;
+
+import java.io.IOException;
+import javax.servlet.http.*;
+
+@SpringBootApplication
+public class Main {
+
+	public static void main(String [] args){
+		SpringApplication.run(Main.class, args);
+	}
+}

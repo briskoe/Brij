@@ -1,0 +1,22 @@
+package main;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
+
+import main.bean.user.User;
+import main.dao.UserDao;
+
+
+@SpringBootApplication
+public class Main {
+
+
+	public static void main(String [] args){
+		ConfigurableApplicationContext context = SpringApplication.run(Main.class, args);
+		context.getBean(UserDao.class).save(User.getPriviligedUser());
+	}
+	
+
+}

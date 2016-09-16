@@ -1,0 +1,31 @@
+
+a.navbar-brand{
+	font-size: 20px;
+}
+.navbar-header{
+	width:100%;
+}
+    .navbar-toggle
+    {
+        display: block !important;
+		float: right;
+    }
+
+.menuLinks{
+	cursor: pointer;
+	width: 100%;
+}
+
+.navbar-nav{
+	width: 100%;
+}
+
+.hide{
+	display: none;
+
+}
+
+.btn{
+	margin-bottom: 100px;
+
+}

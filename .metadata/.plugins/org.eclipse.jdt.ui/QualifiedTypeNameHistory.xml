@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="org.springframework.boot.SpringApplication"/>
+<fullyQualifiedTypeName name="org.springframework.boot.autoconfigure.SpringBootApplication"/>
+<fullyQualifiedTypeName name="org.springframework.boot.autoconfigure.EnableAutoConfiguration"/>
+<fullyQualifiedTypeName name="org.springframework.context.annotation.ComponentScan"/>
+<fullyQualifiedTypeName name="org.springframework.context.annotation.Configuration"/>
+<fullyQualifiedTypeName name="javax.persistence.Transient"/>
+<fullyQualifiedTypeName name="org.springframework.security.core.context.SecurityContextHolder"/>
+<fullyQualifiedTypeName name="org.springframework.beans.BeanUtils"/>
+<fullyQualifiedTypeName name="org.springframework.beans.BeanWrapper"/>
+<fullyQualifiedTypeName name="org.springframework.beans.BeanWrapperImpl"/>
+<fullyQualifiedTypeName name="java.util.Set"/>
+<fullyQualifiedTypeName name="java.util.HashSet"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="antlr.collections.List"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="main.bean.user.User"/>
+<fullyQualifiedTypeName name="org.springframework.context.ConfigurableApplicationContext"/>
+<fullyQualifiedTypeName name="org.springframework.stereotype.Component"/>
+<fullyQualifiedTypeName name="org.springframework.context.ApplicationListener"/>
+<fullyQualifiedTypeName name="org.springframework.boot.context.event.ApplicationReadyEvent"/>
+<fullyQualifiedTypeName name="javax.annotation.PostConstruct"/>
+<fullyQualifiedTypeName name="javax.persistence.Entity"/>
+<fullyQualifiedTypeName name="org.hibernate.annotations.DynamicUpdate"/>
+<fullyQualifiedTypeName name="org.hibernate.annotations.Index"/>
+<fullyQualifiedTypeName name="javax.persistence.Index"/>
+<fullyQualifiedTypeName name="javax.persistence.GeneratedValue"/>
+<fullyQualifiedTypeName name="javax.persistence.GenerationType"/>
+<fullyQualifiedTypeName name="main.dao.PostingDao"/>
+<fullyQualifiedTypeName name="main.bean.posting.Posting"/>
+<fullyQualifiedTypeName name="java.security.Principal"/>
+</qualifiedTypeNameHistroy>

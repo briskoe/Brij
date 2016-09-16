@@ -1,0 +1,21 @@
+package main.dao;
+
+import java.util.ArrayList;
+
+import javax.transaction.Transactional;
+
+import org.springframework.data.repository.query.Param;
+
+import main.bean.posting.Posting;
+
+
+@Transactional
+public interface PostingDao {
+	
+	public ArrayList<Posting> findAll();
+
+	public Posting getPostingById(@Param("id") String id);
+
+	public Posting getPostingsByUserID(@Param("userID") String userID);
+
+}

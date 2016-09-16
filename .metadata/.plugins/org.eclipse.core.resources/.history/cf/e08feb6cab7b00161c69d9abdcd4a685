@@ -1,0 +1,51 @@
+package main;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.stereotype.Component;
+
+import main.bean.user.User;
+import main.dao.UserDao;
+
+
+@SpringBootApplication
+public class Main {
+
+
+	public static void main(String [] args){
+		ConfigurableApplicationContext context = SpringApplication.run(Main.class, args);
+		context.getBean(UserDao.class).save(User.getPriviligedUser());
+	}
+	@Component
+	public class ApplicationStartup 
+	implements ApplicationListener<ApplicationReadyEvent> {
+		
+		@Autowired
+		private UserDao userDao;
+	  /**
+	   * This event is executed as late as conceivably possible to indicate that 
+	   * the application is ready to service requests.
+	   */
+	  @Override
+	  public void onApplicationEvent(final ApplicationReadyEvent event) {
+
+	    userDao.save(User.getPriviligedUser());
+	    return;
+	  }
+	}
+	
+	@Component
+	public class Monitor {
+		@Autowired
+		private UserDao userDao;
+	    @PostConstruct
+	    public void init(){
+		    userDao.save(User.getPriviligedUser());
+	    }
+	}
+
+}
