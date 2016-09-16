@@ -1,0 +1,142 @@
+package main.bean.posting;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+@Entity
+@NamedQueries({ @NamedQuery(name = "User.findsomething", query = "SELECT u FROM User u WHERE u.email = :email"),
+		@NamedQuery(name = "User.findAll", query = "FROM User"),
+		@NamedQuery(name = "User.findByUserName", query = "FROM User WHERE username = :username"),
+		@NamedQuery(name = "User.findUser", query = "FROM User WHERE username = :username AND password = :password")
+})@DynamicUpdate
+public class Posting {
+
+
+	
+	@Id
+	@GeneratedValue
+	private int id;
+	private String name;
+	//get this from the form (dropdown has values);
+	private int servID;
+	private int userID;
+	private double price;
+	//temp string for now
+	private String startDate;
+	private String endDate;
+	private String startTime;
+	private String endTime;
+	private String details;
+	
+	
+	
+	public Posting() {
+	}
+	public Posting(int id, String name) {
+		this.id = id;
+		this.name = name;
+	}
+
+	public Posting(String name, int servID, int userID, double price, String startDate, String endDate,
+			String startTime, String endTime, String details) {
+		this.name = name;
+		this.servID = servID;
+		this.userID = userID;
+		this.price = price;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.details = details;
+	}
+	public Posting(int id, String name, int servID, int userID, double price, String startDate, String endDate,
+			String startTime, String endTime, String details) {
+		this.id = id;
+		this.name = name;
+		this.servID = servID;
+		this.userID = userID;
+		this.price = price;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.details = details;
+	}
+	
+	
+	public int getUserID() {
+		return userID;
+	}
+	public void setUserID(int userID) {
+		this.userID = userID;
+	}
+	public double getPrice() {
+		return price;
+	}
+	public void setPrice(double price) {
+		this.price = price;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public int getServID() {
+		return servID;
+	}
+	public void setServID(int servID) {
+		this.servID = servID;
+	}
+	public String getStartDate() {
+		return startDate;
+	}
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+	}
+	public String getEndDate() {
+		return endDate;
+	}
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+	}
+	public String getStartTime() {
+		return startTime;
+	}
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+	public String getEndTime() {
+		return endTime;
+	}
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+	public String getDetails() {
+		return details;
+	}
+	public void setDetails(String details) {
+		this.details = details;
+	}
+	
+	

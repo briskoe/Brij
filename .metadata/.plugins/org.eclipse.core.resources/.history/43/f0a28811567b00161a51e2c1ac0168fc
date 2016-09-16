@@ -1,0 +1,5 @@
+package main.security;
+
+public class SecurityConfiguration {
+
+}

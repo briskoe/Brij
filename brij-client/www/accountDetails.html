@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+        <link rel="stylesheet" type="text/css" href="css/index.css" />
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+
+        <title>Hello World</title>
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script type="text/javascript" src="cordova.js"></script>
+		<script type="text/javascript" src="js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+    </head>
+    <body id="accountDetailsPage">
+
+		<!--HEADER-->
+<nav class="navbar navbar-inverse mainMenu">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar" aria-expanded="false"
+>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Brij</a>
+    </div>
+
+  </div>
+      <div class="collapse" aria-expanded="false"
+ id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="menuLinks"><a >Postings</a></li>
+      </ul>
+    </div>
+</nav>
+	<!--END OF HEADER -->
+	
+		<div class="container">
+			<div class="page-header text-center">
+				<h1>Account details</h1>
+			</div>
+		<form class="form-horizontal" id="userForm">
+		  <div class="form-group">
+			<label class="control-label col-sm-2" for="firstname" >First Name:</label>
+			<div class="col-sm-10">
+			  <input type="text" class="form-control" id="firstname" placeholder="first Name" disabled>
+			</div>
+		  </div>
+		  <div class="form-group">
+			<label class="control-label col-sm-2" for="lastname">Last Name:</label>
+			<div class="col-sm-10"> 
+			  <input type="lastname" class="form-control" id="lastname" placeholder="Last Name" disabled>
+			</div>
+		  </div>
+		 <div class="form-group">
+		<label class="control-label col-sm-2" for="phonenumber">Phone #:</label>
+			 <div class="col-sm-10">
+			  <input type="text" class="form-control" id="phonenumber" placeholder="Phone Number" disabled>
+			</div>
+		  </div>
+			 <div class="form-group">
+			<label class="control-label col-sm-2" for="address">Address:</label>
+			<div class="col-sm-10">
+			  <input type="text" class="form-control" id="address" placeholder="Address" disabled>
+			</div>
+		  </div>
+			 <div class="form-group">
+			<label class="control-label col-sm-2" for="city">City:</label>
+			<div class="col-sm-10">
+			  <input type="text" class="form-control" id="city" placeholder="City" disabled>
+			</div>
+		  </div>
+			 <div class="form-group">
+			<label class="control-label col-sm-2" for="province">Province:</label>
+			<div class="col-sm-10">
+			  <input type="text" class="form-control" id="province" placeholder="province" disabled>
+			</div>
+		  </div>
+			 <div class="form-group">
+			<label class="control-label col-sm-2" for="email">Email:</label>
+			<div class="col-sm-10">
+			  <input type="email" class="form-control" id="email" placeholder="name@domain.com" disabled>
+			</div>
+		  </div>
+		  <div class="form-group"> 
+			<div class="col-sm-12 ">
+				<button id="btnEdit"  class="btn btn-primary form-control">Edit</button>
+			  
+				<button id="btnCancel" type="submit" class="btn btn-default form-control hide">Cancel</button>
+
+			</div>
+		  </div>
+
+		</form>
+		</div>
+
+	<script>
+		app.initialize()
+	</script>
+
+    </body>
+</html>

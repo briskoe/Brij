@@ -1,0 +1,8 @@
+package main.dao;
+
+import javax.transaction.Transactional;
+
+@Transactional
+public interface PostingDao {
+
+}

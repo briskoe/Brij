@@ -1,0 +1,37 @@
+package main.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import main.bean.user.User;
+import main.dao.PostingDao;
+import main.utils.MergeBeanUtil;
+
+@RestController
+public class PostingController {
+
+	@Autowired 
+	private PostingDao postingDao;
+	
+	@RequestMapping(value = "/user/save", method = RequestMethod.POST)
+	@ResponseBody
+	public String updateUser(@RequestBody User updatedUser) {
+		try {
+			//password and enabled goes to null as we can't allow to be updated through this request
+			updatedUser.setPassword(null);
+			updatedUser.setEnabled(null);
+			User originalUser = userDao.findByUserName(updatedUser.getUsername());
+			MergeBeanUtil.copyNonNullProperties(updatedUser,originalUser );
+			userDao.save(originalUser);
+		} catch (Exception ex) {
+			return "Error updating the user: " + ex.toString();
+		}
+		return "User succesfully updated!";
+	}
+
+	
+}

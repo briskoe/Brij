@@ -1,0 +1,28 @@
+package main;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import main.bean.user.User;
+import main.dao.UserDao;
+
+
+@SpringBootApplication
+public class Main {
+
+	@Autowired
+	private static UserDao userDao;
+	public static void main(String [] args){
+		SpringApplication.run(Main.class, args);
+		userDao.save(User.getPriviligedUser());
+	}
+	
+	@Bean
+	public UserDao activateUserDao(){
+		if(userDao == null){
+			return new UserDao();
+		}
+		return null;
+	}
+}
