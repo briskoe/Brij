@@ -1,4 +1,7 @@
-var isSaving = false;
+/**
+	Global Variables
+*/
+
 var app = {
     // Application Constructor
     initialize: function() {
@@ -32,41 +35,13 @@ var app = {
 };
 
 $(function(){
-
-	$("#btnEdit").click(function(e){
-		e.preventDefault();
-		e.stopPropagation();
-		isSaving = !isSaving;
-		$("#userForm input").attr("disabled", !isSaving);
-		if(isSaving){
-			$("#btnEdit").html("Save");
-			$("#btnCancel").removeClass("hide");
-		}else{
-			$("#btnEdit").html("Edit");
-			$("#btnCancel").addClass("hide");
-
-		}
-		
-		
-	});
-	
-	
-	
-	$("#btnCancel").click(function(e){
-		e.preventDefault();
-		e.stopPropagation();
-		//when user clicks cancel, save changes to edit
-		isSaving = false;
-		$("#userForm input").attr("disabled", true);
-		
-		//hiding button
-		$("#btnCancel").addClass("hide");
-		
-		//change name
-		$("#btnEdit").html("Edit");
-		
-	});
-	
-
+	if(window.location.href.indexOf("index.html") == -1) {
+		checkIfOnline(null, true);
+    }
 });
+
+
+
+
+	
 
