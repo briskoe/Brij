@@ -3,7 +3,7 @@
 */
 
 $(function(){
-	checkIfOnline(function(){window.location = "accountDetails.html"}, false);
+	checkIfOnline(function(){window.location = "postings.html"}, false);
 	$("#btnSignIn").click(function(e){
 		e.preventDefault();
 		e.stopPropagation();
@@ -13,7 +13,7 @@ $(function(){
 		url = url.replace(":username", username).replace(":password", password);
 		makeRequest(url, POST, "", "", function(data){
 			console.log("successful Login");
-			window.location = "/accountDetails.html";
+			window.location = "postings.html";
 		}, defaultError);
 		
 	});
