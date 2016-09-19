@@ -41,9 +41,7 @@ a.navbar-brand{
 	LOGIN
 **/
 
-.brijLogo{
-	width: 100%;
-}
+
 body{
 	font-family: "HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
     font-weight: 100;
@@ -190,4 +188,8 @@ clear:both;
 	position: static;
 	display: inline-block;
 	margin: 0;
+}
+
+#logo .brijLogo{
+	width: 100%;
 }
