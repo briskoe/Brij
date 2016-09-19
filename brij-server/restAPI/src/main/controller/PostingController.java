@@ -58,7 +58,7 @@ public class PostingController {
 	/**
 	 * Get all the postings in the db
 	 */
-	@RequestMapping(value = "/admin/posting/findAll", method = RequestMethod.GET)
+	@RequestMapping(value = "/posting/findAll", method = RequestMethod.GET)
 	@ResponseBody
 	public ArrayList<Posting> getAllPosting() {
 		ArrayList<Posting> postings;
