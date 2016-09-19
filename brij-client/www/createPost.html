@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/index.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="js/script.js"></script>
+
+</head>
+
+<body>
+    <!--HEADER-->
+    <nav class="navbar navbar-inverse mainMenu">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar" aria-expanded="false">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Brij</a>
+            </div>
+
+        </div>
+        <div class="collapse" aria-expanded="false" id="myNavbar">
+            <ul class="nav navbar-nav">
+                <li class="menuLinks"><a>Postings</a></li>
+            </ul>
+        </div>
+    </nav>
+    <!--END OF HEADER -->
+
+    <img src="img/brij_logo.png" class="img-rounded" alt="Brij Logo" width="100%">
+
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="title">Title:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="title" placeholder="Enter Post Title" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2">Service:</label>
+            <div class="col-sm-10">
+                <select class="form-control">
+                    <option value="notSelected">Please Select a Service...</option>
+                    <option value="cleaning">Cleaning</option>
+                    <option value="dogWalking">Dog Walking</option>
+                    <option value="gardening">Gardening</option>
+                    <option value="snowShoveling">Snow Shoveling</option>
+                    <option value="tutoring">Tutoring</option>
+                </select>
+            </div>
+        </div>
+
+        <br/>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="description">Description:</label>
+            <div class="col-sm-10">
+                <textarea class="form-control" rows="5" id="description"></textarea>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="startDate">Start Date:</label>
+            <div class="col-sm-10">
+                <input id="startDate" type="date" class="form-control" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="daysOfWeek">Select Available Days:</label>
+            <div class="col-sm-10">
+                <label class="checkbox-inline">
+                    <input type="checkbox" value="1">Sunday</label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" value="2">Monday</label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" value="3">Tuesday</label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" value="4">Wednesday</label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" value="5">Thursday</label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" value="6">Friday</label>
+                <label class="checkbox-inline">
+                    <input type="checkbox" value="7">Saturday</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="time">How long does this service take? (in minutes):</label>
+            <div class="col-sm-10">
+                <input id="time" type="number" class="form-control" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="cost">Cost (in $):</label>
+            <div class="col-sm-10">
+                <input id="cost" type="number" class="form-control" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <button type="button" class="btn btn-default col-xs-6 btn-danger">Cancel</button>
+            <button type="submit" class="btn btn-default col-xs-6 btn-success">Submit</button>
+        </div>
+    </form>
+
+</body>
+
+</html>
