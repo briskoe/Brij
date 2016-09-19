@@ -25,7 +25,7 @@ public class Posting {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false, unique = true)
-	private int id;
+	private Integer id;
 
 	@Column(name = "name", nullable = false)
 	private String name;
@@ -58,12 +58,12 @@ public class Posting {
 	public Posting() {
 	}
 
-	public Posting(int id, String name) {
+	public Posting(Integer id, String name) {
 		this.id = id;
 		this.name = name;
 	}
 
-	public Posting(int id, String name, String userID, String servID) {
+	public Posting(Integer id, String name, String userID, String servID) {
 		this.id = id;
 		this.name = name;
 		this.userID = userID;
@@ -86,11 +86,11 @@ public class Posting {
 		this.price = price;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
