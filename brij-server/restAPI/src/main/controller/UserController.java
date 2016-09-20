@@ -43,12 +43,13 @@ public class UserController {
 	}
 	@RequestMapping(value = "/user/save", method = RequestMethod.POST)
 	@ResponseBody
-	public String updateUser(@RequestBody User updatedUser) {
+	public String updateUser(@RequestBody User updatedUser, Principal principal) {
 		try {
 			//password and enabled goes to null as we can't allow to be updated through this request
 			updatedUser.setPassword(null);
 			updatedUser.setEnabled(null);
-			User originalUser = userDao.findByUserName(updatedUser.getUsername());
+			updatedUser.setUserRole(null);
+			User originalUser = userDao.findByUserName(principal.getName());
 			MergeBeanUtil.copyNonNullProperties(updatedUser,originalUser );
 			userDao.save(originalUser);
 		} catch (Exception ex) {
