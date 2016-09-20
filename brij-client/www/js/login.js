@@ -3,7 +3,7 @@
 */
 
 $(function(){
-	checkIfOnline(function(){window.location = "accountDetails.html"}, false);
+	checkIfOnline(checkIfOnlineCallback, false);
 	$("#btnSignIn").click(function(e){
 		e.preventDefault();
 		e.stopPropagation();
@@ -12,12 +12,20 @@ $(function(){
 		var url = LOGIN;
 		url = url.replace(":username", username).replace(":password", password);
 		makeRequest(url, POST, "", "", function(data){
-			console.log("successful Login");
-			window.location = "/accountDetails.html";
+			//if online go to the homePage as you have permission
+			checkIfOnline(checkIfOnlineCallback, false);
+
 		}, defaultError);
 		
 	});
 
-	
+	function goToHome(){
+		window.location = "accountDetails.html";
+	}
+	function checkIfOnlineCallback(data){
+		if(data){
+			goToHome();
+		}
+	}
 	
 });
