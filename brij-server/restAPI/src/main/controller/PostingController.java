@@ -1,5 +1,6 @@
 package main.controller;
 
+import java.security.Principal;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +22,14 @@ public class PostingController {
 
 	@RequestMapping(value = "/posting/save", method = RequestMethod.POST)
 	@ResponseBody
-	public String updateUser(@RequestBody Posting post) {
+	public String updateUser(@RequestBody Posting post, Principal principal) {
 		try {
-			Posting origPost = postingDao.getPostingById(post.getId());
+			post.setUserID(principal.getName());
+			Posting origPost = null;
+			if(post.getId() != null){
+				origPost = postingDao.getPostingById(post.getId());
+
+			}
 			// means is new
 			if (origPost == null) {
 				origPost = post;
@@ -58,7 +64,7 @@ public class PostingController {
 	/**
 	 * Get all the postings in the db
 	 */
-	@RequestMapping(value = "/admin/posting/findAll", method = RequestMethod.GET)
+	@RequestMapping(value = "/posting/findAll", method = RequestMethod.GET)
 	@ResponseBody
 	public ArrayList<Posting> getAllPosting() {
 		ArrayList<Posting> postings;
