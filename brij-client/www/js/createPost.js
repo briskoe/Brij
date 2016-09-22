@@ -1,17 +1,25 @@
-$("#btnSave").click(function (e) {
-    savePost();
+
+$(function(){
+	$("#btnSave").click(function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		savePost();
+	});
+
+	$("#btnCancel").click(function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		window.location.href = "postings.html";
+
+	});
 });
 
-$("#btnCancel").click(function (e) {
-    window.location.href = "postings.html";
-
-});
 
 
 function savePost() {
     var newPost = {
         name: $("#postForm #title").val(),
-        servId: $("#postForm #service").val(),
+        servID: $("#postForm #service").val(),
         price: $("#postForm #cost").val(),
         startDate: $("#postForm #startDate").val(),
         endDate: $("#postForm #endDate").val(),
@@ -19,5 +27,9 @@ function savePost() {
         endTime: $("#postForm #endTime").val()
     };
 
-    makeRequest(CREATE_POST, POST, JSON.stringify(newPost), APPLICATION_JSON, null, null);
+    makeRequest(CREATE_POST, POST, JSON.stringify(newPost), APPLICATION_JSON, savePostingComplete, null);
+}
+
+function savePostingComplete(){
+	window.location.href = "postings.html";
 }

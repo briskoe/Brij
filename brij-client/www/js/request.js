@@ -5,6 +5,7 @@ var HEARTBEAT = "/heartbeat";
 var GET_CURRENT_USER = "/user/current";
 var UPDATE_USER = "/user/save";
 var CREATE_POST = "/posting/save";
+var GET_POSTS = "/posting/findAll";
 
 //Request Types
 var GET = "GET";
