@@ -1,21 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-   <head>
-      <meta charset="utf-8">
-      <title>Postings</title>
-      <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
-      <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
-      <link rel="stylesheet" type="text/css" href="css/index.css" />
-      <script type="text/javascript" src="js/jquery.min.js"></script>
-      <script type="text/javascript" src="cordova.js"></script>
-      <script type="text/javascript" src="js/bootstrap.min.js"></script>
-      <script type="text/javascript" src="js/request.js"></script>
-      <script type="text/javascript" src="js/index.js"></script>
-	  <script type="text/javascript" src="js/postings.js"></script>
-   </head>
-   <body>
-      <!--HEADER-->
-      <nav class="navbar navbar-inverse mainMenu">
+
+<head>
+    <meta charset="utf-8">
+    <title>Postings</title>
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/request.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/postings.js"></script>
+</head>
+
+<body>
+    <!--HEADER-->
+    <nav class="navbar navbar-inverse mainMenu">
         <div class="container-fluid">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar" aria-expanded="false">
@@ -31,19 +33,20 @@
             </ul>
         </div>
     </nav>
-      <!--END OF HEADER -->
-      <img src="img/brij_logo.png" class="img-rounded" alt="Brij Logo" width="100%">
-      <br/>
-      <br/>
-      <a href="createPost.html" class="btn btn-primary btn-block btn-lg" role="button">Create New Post</a>
-      <br/>
-      <div class="btn-group btn-group-justified">
-         <a href="#" class="btn btn-info">All Postings</a>
-         <a href="#" class="btn btn-info">My Postings</a>
-         <a href="#" class="btn btn-info">My Requests</a>
-      </div>
-      <div id="postingList" class="list-group">
+    <!--END OF HEADER -->
+    <img src="img/brij_logo.png" class="img-rounded" alt="Brij Logo" width="100%">
+    <br/>
+    <br/>
+    <a href="createPost.html" class="btn btn-primary btn-block btn-lg" role="button">Create New Post</a>
+    <br/>
+    <div class="btn-group btn-group-justified">
+        <a id="btnAll" href="#" class="btn btn-info btnPosts active">All Postings</a>
+        <a id="btnMyPosts" href="#" class="btn btn-info btnPosts">My Postings</a>
+        <a id="btnMyRequest" href="#" class="btn btn-info btnPosts">My Requests</a>
+    </div>
+    <div id="postingList" class="list-group">
 
-      </div>
-   </body>
+    </div>
+</body>
+
 </html>
