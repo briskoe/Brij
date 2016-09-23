@@ -60,6 +60,21 @@ public class PostingController {
 		}
 		return postings;
 	}
+	
+	/**
+	 * Find By id
+	 */
+	@RequestMapping(value = "/posting/findById", method = RequestMethod.GET)
+	@ResponseBody
+	public Posting getPostingById(int id) {
+		Posting posting = null;
+		try {
+			posting = postingDao.getPostingById(id);
+		} catch (Exception ex) {
+			return null;
+		}
+		return posting;
+	}
 
 	/**
 	 * Get all the postings in the db
