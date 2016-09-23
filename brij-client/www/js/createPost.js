@@ -24,7 +24,9 @@ function savePost() {
         startDate: $("#postForm #startDate").val(),
         endDate: $("#postForm #endDate").val(),
         startTime: $("#postForm #startTime").val(),
-        endTime: $("#postForm #endTime").val()
+        endTime: $("#postForm #endTime").val(),
+		details: $("#postForm #description").val()
+		
     };
 
     makeRequest(CREATE_POST, POST, JSON.stringify(newPost), APPLICATION_JSON, savePostingComplete, null);

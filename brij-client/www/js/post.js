@@ -14,7 +14,7 @@ $(function () {
 
 
 
-    var query_string = {};
+   /* var query_string = {};
     var query = window.location.search.substring(1);
     var vars = query.split("&");
     for (var i = 0; i < vars.length; i++) {
@@ -27,8 +27,8 @@ $(function () {
         }
     }
     console.log(query_string);
-    
-    getPosts(query_string.id);
+    */
+    getPosts($.urlParam("id"));
     
     
 
@@ -38,8 +38,27 @@ $(function () {
     }
 });
 
-function getPosts(var id) {
+function getPosts(id) {
     //Need to get based on id
-    makeRequest(GET_POST, GET, "", "", createPostingList, null);
+	var url = GET_POST_BY_ID;
+	url  = url.replace(":id", id);
+    makeRequest(url, GET, "", "", populatePost, null);
     console.log(id);
+}
+
+var serviceArray = [
+	"Cleaning", "Dog Walking", "Gardening", "Snow Shoveling", "Tutoring"
+];
+
+function populatePost(data){
+	console.log(data.endTime);
+	$("#postForm #title").val(data.name);
+	$("#postForm #service").val(serviceArray[data.servID]);
+	$("#postForm #description").val(data.details);
+	$("#postForm #startDate").val(data.startDate);
+	$("#postForm #endDate").val(data.endDate);
+	$("#postForm #startTime").val(data.startTime);
+	$("#postForm #endTime").val(data.endTime);
+	$("#postForm #cost").val(data.price);
+	
 }

@@ -17,9 +17,9 @@ $(function () {
 		var listItems = "";
 		for(var i = 0 ; i < data.length && i < 10; i++){
 			if(i % 2 === 0){
-				listItems += "<a href='#' class='list-group-item' " + data[i].id + ">" + data[i].name + "</a>";
+				listItems += "<a href='post.html?id="+data[i].id+"' class='list-group-item' id='posting#" + data[i].id + "'>" + data[i].name + "</a>";
 			}else{
-				listItems += "<a href='#' class='list-group-item list-group-item-info'>" + data[i].name + "</a>";
+				listItems += "<a href='post.html?id="+data[i].id+"' class='list-group-item list-group-item-info' id='posting#" + data[i].id + "'>" + data[i].name + "</a>";
 			}
 		}
 		$("#postingList").html(listItems);
