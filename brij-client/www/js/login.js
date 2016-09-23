@@ -20,7 +20,7 @@ $(function(){
 	});
 
 	function goToHome(){
-		window.location = "createPost.html";
+		window.location = "postings.html";
 	}
 	function checkIfOnlineCallback(data){
 		if(data){
