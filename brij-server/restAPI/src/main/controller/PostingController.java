@@ -51,10 +51,10 @@ public class PostingController {
 	 */
 	@RequestMapping(value = "/posting/findByUser", method = RequestMethod.GET)
 	@ResponseBody
-	public ArrayList<Posting> getPostingByUser(String username) {
+	public ArrayList<Posting> getPostingByUser(Principal principal) {
 		ArrayList<Posting> postings = null;
 		try {
-			postings = postingDao.getPostingsByUserID(username);
+			postings = postingDao.getPostingsByUserID(principal.getName());
 		} catch (Exception ex) {
 			return null;
 		}
