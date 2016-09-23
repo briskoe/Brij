@@ -51,14 +51,29 @@ public class PostingController {
 	 */
 	@RequestMapping(value = "/posting/findByUser", method = RequestMethod.GET)
 	@ResponseBody
-	public ArrayList<Posting> getPostingByUser(String username) {
+	public ArrayList<Posting> getPostingByUser(Principal principal) {
 		ArrayList<Posting> postings = null;
 		try {
-			postings = postingDao.getPostingsByUserID(username);
+			postings = postingDao.getPostingsByUserID(principal.getName());
 		} catch (Exception ex) {
 			return null;
 		}
 		return postings;
+	}
+	
+	/**
+	 * Find By id
+	 */
+	@RequestMapping(value = "/posting/findById", method = RequestMethod.GET)
+	@ResponseBody
+	public Posting getPostingById(int id) {
+		Posting posting = null;
+		try {
+			posting = postingDao.getPostingById(id);
+		} catch (Exception ex) {
+			return null;
+		}
+		return posting;
 	}
 
 	/**
