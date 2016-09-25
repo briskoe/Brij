@@ -1,14 +1,13 @@
-package main.dao;
+package ca.brij.dao.user;
 
 import java.util.ArrayList;
 
 import javax.transaction.Transactional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
-import main.bean.user.User;
+import ca.brij.bean.user.User;
 
 @Transactional
 public interface UserDao extends JpaRepository<User, Long> {

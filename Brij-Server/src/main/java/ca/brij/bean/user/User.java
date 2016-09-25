@@ -1,4 +1,4 @@
-package main.bean.user;
+package ca.brij.bean.user;
 
 import java.util.ArrayList;
 import java.util.HashSet;

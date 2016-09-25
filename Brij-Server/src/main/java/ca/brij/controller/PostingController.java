@@ -1,4 +1,4 @@
-package main.controller;
+package ca.brij.controller;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import main.bean.posting.Posting;
-import main.dao.PostingDao;
-import main.utils.MergeBeanUtil;
+import ca.brij.bean.posting.Posting;
+import ca.brij.dao.posting.PostingDao;
+import ca.brij.utils.MergeBeanUtil;
+
+
 
 @RestController
 public class PostingController {
@@ -92,3 +94,4 @@ public class PostingController {
 	}
 
 }
+

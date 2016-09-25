@@ -1,5 +1,4 @@
-package main.controller;
-
+package ca.brij.controller;
 
 import org.apache.log4j.Logger;
 import org.springframework.web.bind.annotation.RequestMapping;

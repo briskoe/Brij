@@ -1,4 +1,4 @@
-package main.security;
+package ca.brij.security;
 
 import javax.annotation.Resource;
 
@@ -14,7 +14,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 
-import main.bean.user.MyUserDetailsService;
+import ca.brij.bean.user.MyUserDetailsService;
+
+
 
 @Configuration
 @EnableWebSecurity

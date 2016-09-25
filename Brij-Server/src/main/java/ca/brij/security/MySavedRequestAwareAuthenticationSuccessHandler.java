@@ -1,4 +1,4 @@
-package main.security;
+package ca.brij.security;
 
 import java.io.IOException;
 

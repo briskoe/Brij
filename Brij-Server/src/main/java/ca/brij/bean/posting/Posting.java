@@ -1,5 +1,4 @@
-package main.bean.posting;
-
+package ca.brij.bean.posting;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

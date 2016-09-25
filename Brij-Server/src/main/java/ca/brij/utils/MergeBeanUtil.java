@@ -1,4 +1,4 @@
-package main.utils;
+package ca.brij.utils;
 
 import java.util.HashSet;
 import java.util.Set;

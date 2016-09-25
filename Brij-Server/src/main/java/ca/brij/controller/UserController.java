@@ -1,4 +1,4 @@
-package main.controller;
+package ca.brij.controller;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -14,11 +14,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import main.bean.user.MyUserDetailsService;
-import main.bean.user.User;
-import main.bean.user.UserRole;
-import main.dao.UserDao;
-import main.utils.MergeBeanUtil;
+import ca.brij.bean.user.MyUserDetailsService;
+import ca.brij.bean.user.User;
+import ca.brij.bean.user.UserRole;
+import ca.brij.dao.user.UserDao;
+import ca.brij.utils.MergeBeanUtil;
+
 
 @RestController
 public class UserController {

@@ -1,4 +1,4 @@
-package main.bean.user;
+package ca.brij.bean.user;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -13,9 +13,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
-import main.dao.UserDao;
+import ca.brij.dao.user.UserDao;
 
 @Service("authService")
 public class MyUserDetailsService implements UserDetailsService{
@@ -24,15 +23,14 @@ public class MyUserDetailsService implements UserDetailsService{
 	private UserDao userDao;
 	
 
-	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		main.bean.user.User user = userDao.findByUserName(username);
+		ca.brij.bean.user.User user = userDao.findByUserName(username);
 		//TODO check for null
 		List<GrantedAuthority> authorities = buildUserAuthority(user.getUserRole());
 		return buildUserForAuthentication(user, authorities);
 	}
 	
-	private User buildUserForAuthentication(main.bean.user.User user, List<GrantedAuthority> authorities){
+	private User buildUserForAuthentication(ca.brij.bean.user.User user, List<GrantedAuthority> authorities){
 		return new User(user.getUsername(), user.getPassword(), user.getEnabled(), true, true, true, authorities);
 	}
 	
