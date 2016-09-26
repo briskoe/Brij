@@ -1,5 +1,0 @@
-package main.bean.user;
-
-public class MyUserDetailsService {
-
-}

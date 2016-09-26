@@ -1,5 +1,0 @@
-package main.security;
-
-public class MySavedRequestAwareAuthenticationSuccessHandler {
-
-}
