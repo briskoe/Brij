@@ -15,6 +15,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -191,10 +193,13 @@ public class User {
 
 	public static List<User> getPriviligedUser(){
 		List<User> users = new ArrayList<User>();
-		User admin = new User("Admin", "Admin", "Admin", true);
-		UserRole userRole = new UserRole(admin, "ROLE_ADMIN");
+		String encryptedPassword = new BCryptPasswordEncoder().encode("admin");
+		User admin = new User("Admin", encryptedPassword, "Admin", true);
+		UserRole adminRole = new UserRole(admin, "ROLE_ADMIN");
+		UserRole userRole = new UserRole(admin, "ROLE_USER");
 		admin.getUserRole().add(userRole);
-
+		admin.getUserRole().add(adminRole);
+		users.add(admin);
 		return users;
 	}
 	

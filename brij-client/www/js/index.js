@@ -42,8 +42,18 @@ $(function () {
     var navbar = "" +
         "<li class='menuLinks'><a href='postings.html'>Postings</a></li>" +
         "<li class='menuLinks'><a href='accountDetails.html'>Account Details</a></li>" +
-        "<li class='menuLinks'><a href='index.html'>Logout</a></li>";
+        "<li class='menuLinks'><a id=logoutMenuItem>Logout</a></li>";
     $("#navbar").html(navbar);
+    
+    $("#logoutMenuItem").click(function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        
+        makeRequest(LOGOUT, POST, "", "", function(data){
+            window.location = "/index.html"
+        }, null);
+    });
+    
 });
 
 $.urlParam = function (name) {
