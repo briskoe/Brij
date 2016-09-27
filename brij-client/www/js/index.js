@@ -1,6 +1,11 @@
 /**
 	Global Variables
 */
+/**
+    Constants
+*/
+var IS_REQUEST_MESSAGE_FOR_OTHERS = "This post is requesting for help";
+var IS_POSTING_MESSAGE_FOR_OTHERS = "This post is offering a service"
 
 var app = {
     // Application Constructor

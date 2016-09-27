@@ -18,14 +18,10 @@ $(function(){
 
 function savePost() {
     var newPost = {
-        name: $("#postForm #title").val(),
+        title: $("#postForm #title").val(),
         servID: $("#postForm #service").val(),
-        price: $("#postForm #cost").val(),
-        startDate: $("#postForm #startDate").val(),
-        endDate: $("#postForm #endDate").val(),
-        startTime: $("#postForm #startTime").val(),
-        endTime: $("#postForm #endTime").val(),
-		details: $("#postForm #description").val()
+		details: $("#postForm #description").val(),
+        isPost: $("input:radio[name='rdIsPost']:checked").val()
 		
     };
 
