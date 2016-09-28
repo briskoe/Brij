@@ -1,5 +1,6 @@
 package ca.brij.bean.user;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -26,8 +27,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 		@NamedQuery(name = "User.findUser", query = "FROM User WHERE username = :username AND password = :password")
 })
 @Table(name = "users")
-public class User {
+public class User implements Serializable {
 
+	private static final long serialVersionUID = -1401790070620926402L;
 
 	@Id
 	@Column(name = "username", nullable = false, unique = true)

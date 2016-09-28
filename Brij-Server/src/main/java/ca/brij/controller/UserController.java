@@ -39,7 +39,7 @@ public class UserController {
 				encryptedPassword, userDetails.getAuthorities());
 		SecurityContextHolder.getContext().setAuthentication(auth);
 		
-		return "it was registered!";
+		return "Success";
 
 	}
 	@RequestMapping(value = "/user/save", method = RequestMethod.POST)
@@ -56,7 +56,7 @@ public class UserController {
 		} catch (Exception ex) {
 			return "Error updating the user: " + ex.toString();
 		}
-		return "User succesfully updated!";
+		return "Success";
 	}
 
 	/**
@@ -71,7 +71,7 @@ public class UserController {
 		} catch (Exception ex) {
 			return "Error deleting the user:" + ex.toString();
 		}
-		return "User succesfully deleted!";
+		return "Success";
 	}
 	
 	@RequestMapping("/user/current")

@@ -1,4 +1,6 @@
 package ca.brij.bean.posting;
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -19,7 +21,9 @@ import org.hibernate.annotations.DynamicUpdate;
 @Table(name = "posting", indexes = { @Index(name = "posting_userIdInd", columnList = "userID"),
 		@Index(name = "posting_nameInd", columnList = "name") })
 @DynamicUpdate
-public class Posting {
+public class Posting implements Serializable{
+
+	private static final long serialVersionUID = 8816634543519363815L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

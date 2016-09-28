@@ -24,7 +24,7 @@ public class PostingController {
 
 	@RequestMapping(value = "/posting/save", method = RequestMethod.POST)
 	@ResponseBody
-	public String updateUser(@RequestBody Posting post, Principal principal) {
+	public String updatePost(@RequestBody Posting post, Principal principal) {
 		try {
 			post.setUserID(principal.getName());
 			Posting origPost = null;
@@ -45,7 +45,7 @@ public class PostingController {
 		} catch (Exception ex) {
 			return "Error updating posting: " + ex.toString();
 		}
-		return "Post succesfully updated!";
+		return "Success";
 	}
 
 	/**
