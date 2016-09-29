@@ -20,10 +20,15 @@ $(function () {
     function createPostingList(data) {
         var listItems = "";
         for (var i = 0; i < data.length && i < 10; i++) {
+                var badge = "REQUEST"
+                console.log(data[i].isPost);
+                if(data[i].isPost){
+                    badge = "POSTING";
+                }
             if (i % 2 === 0) {
-                listItems += "<a href='post.html?id=" + data[i].id + "' class='list-group-item' id='posting#" + data[i].id + "'>" + data[i].name + "</a>";
+                listItems += "<a href='post.html?id=" + data[i].id + "' class='list-group-item' id='posting#" + data[i].id + "'> <span class='badge'>"+ badge +"</span> " + data[i].title + "</a>";
             } else {
-                listItems += "<a href='post.html?id=" + data[i].id + "' class='list-group-item list-group-item-info' id='posting#" + data[i].id + "'>" + data[i].name + "</a>";
+                listItems += "<a href='post.html?id=" + data[i].id + "' class='list-group-item list-group-item-info' id='posting#" + data[i].id + "'>" + "<span class='badge'>"+ badge +"</span>" + data[i].title + "</a>";
             }
         }
         $("#postingList").html(listItems);
