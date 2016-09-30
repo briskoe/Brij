@@ -24,6 +24,7 @@ public class ServiceController {
 		
 		try{
 			logger.info("Saving service");
+			service.setStatus("active");
 			serviceDao.save(service);
 			
 		}catch(Exception e){
