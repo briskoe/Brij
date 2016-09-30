@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import ca.brij.bean.service.Service;
 import ca.brij.bean.user.User;
+import ca.brij.dao.service.ServiceDao;
 import ca.brij.dao.user.UserDao;
 
 /**
@@ -28,6 +30,13 @@ public class App
     public void insertPriviligedUser(UserDao dao){
 		if(dao.findByUserName("admin") == null){
 	    	dao.save(User.getPriviligedUser());
+		}
+    }
+	
+	@Autowired
+    public void insertServices(ServiceDao dao){
+		if(dao.getAllServices().size() == 0){
+	    	dao.save(Service.populateServices());
 		}
     }
 	
