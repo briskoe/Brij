@@ -1,5 +1,9 @@
 package ca.brij;
 
+import javax.annotation.PreDestroy;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,6 +20,7 @@ public class App
 {
     public static void main( String[] args )
     {
+    	logger.info("Starting App");
 		SpringApplication.run(App.class, args);
     }
     
@@ -25,5 +30,12 @@ public class App
 	    	dao.save(User.getPriviligedUser());
 		}
     }
+	
+	@PreDestroy
+	public void beforeShutDown(){
+		logger.info("Server is shutting down... bye bye!!!");
+	}
+    private final static Logger logger = LoggerFactory.getLogger(App.class);
+
 
 }

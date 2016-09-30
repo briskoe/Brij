@@ -4,6 +4,8 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,12 +29,14 @@ public class RequestController {
 	 * @param request
 	 * @param principal
 	 * @return status of request
+	 * @throws Exception 
 	 */
 	@RequestMapping(value = "/request/save", method = RequestMethod.POST)
 	@ResponseBody
-	public String saveRequest(@RequestBody Request request, Principal principal){
+	public String saveRequest(@RequestBody Request request, Principal principal) throws Exception{
 		
 		try{
+			logger.info("Saving request made by: " + principal.getName());
 			request.setUserID(principal.getName());
 			if(requestDao.findByUserAndPost(request.getUserID(), request.getPostID()) == null){
 				request.setCreationDate(Calendar.getInstance());
@@ -40,9 +44,10 @@ public class RequestController {
 			requestDao.save(request);
 			
 		}catch(Exception e){
-			return "Error saving request: " + e.toString();
+			logger.error("Error saving request " + e.getMessage());
+			throw e;
 		}
-		
+		logger.info("Successfully saved request made by " + principal.getName());
 		return "Success";
 	}
 	
@@ -51,12 +56,14 @@ public class RequestController {
 	 * It assumes that the request has been made
 	 * @param request
 	 * @return status of request
+	 * @throws Exception 
 	 */
 	@RequestMapping(value = "/request/edit", method = RequestMethod.POST)
 	@ResponseBody
-	public String editRequest(@RequestBody Request request){
+	public String editRequest(@RequestBody Request request) throws Exception{
 		
 		try{
+			logger.info("Editing request made by: " + request.getUserID());
 			if(request.getRequestID() == null || request.getUserID() == null){
 				throw new Exception("No ID or user provided");
 			}
@@ -68,33 +75,39 @@ public class RequestController {
 			}
 			requestDao.save(oldRequest);
 		}catch(Exception e){
-			return "Error saving request: " + e.toString();
+			logger.error("Error editing request " + e.getMessage());
+			throw e;
 		}
-		
+		logger.info("Successfully edit request!");
 		return "Success";
 	}
 	
 	@RequestMapping(value = "/admin/request/findAll", method = RequestMethod.GET)
 	@ResponseBody
-	public ArrayList<Request> findAll(){
+	public ArrayList<Request> findAll() throws Exception{
 		ArrayList<Request> requests = null;
 		try{
+			logger.info("Finding All Requests");
 			requests = requestDao.findAll();
 		}catch(Exception e){
-			return null;
+			logger.error("Error finding all requests " + e.getMessage());
+			throw e;
 		}
-		
+		logger.info("Successfully got all requests");
 		return requests;
 	}
 	@RequestMapping(value = "/request/findById", method = RequestMethod.GET)
 	@ResponseBody
-	public Request findById(int requestID){
+	public Request findById(int requestID) throws Exception{
 		Request request = null;
 		try{
+			logger.info("Finding Request by ID: " + requestID);
 			request = requestDao.findById(requestID);
 		}catch(Exception e){
-			return null;
+			logger.error("Error Finding request" + e.getMessage());
+			throw e;
 		}
+		logger.info("Successfully found request by id: " + requestID);
 		return request;
 	}
 	
@@ -102,16 +115,20 @@ public class RequestController {
 	 * Will find all the requests made by the person that requested it.
 	 * @param principal
 	 * @return list of requests
+	 * @throws Exception 
 	 */
 	@RequestMapping(value = "/request/findByRequester", method = RequestMethod.GET)
 	@ResponseBody
-	public ArrayList<Request> findByRequester(Principal principal){
+	public ArrayList<Request> findByRequester(Principal principal) throws Exception{
 		ArrayList<Request> requests = null;
 		try{
+			logger.info("Finding all request made by the requester " + principal.getName());
 			requests = requestDao.findByUser(principal.getName());
 		}catch(Exception e){
-			return null;
+			logger.error("Error finding all request made by the requester " + e.getMessage());
+			throw e;
 		}
+		logger.info("Successfully retrieved all requests made by : " + principal.getName());
 		return requests;
 	}
 	
@@ -119,16 +136,20 @@ public class RequestController {
 	 * Will find all the requests made by the person passed as a parameter
 	 * @param UserID
 	 * @return list of requests
+	 * @throws Exception 
 	 */
 	@RequestMapping(value = "/request/findByUser", method = RequestMethod.GET)
 	@ResponseBody
-	public ArrayList<Request> findByUser(String userID){
+	public ArrayList<Request> findByUser(String userID) throws Exception{
 		ArrayList<Request> requests = null;
 		try{
+			logger.info("Finding all requests made by user " + userID);
 			requests = requestDao.findByUser(userID);
 		}catch(Exception e){
-			return null;
+			logger.error("Error finding all requests made by user " + userID);
+			throw e;
 		}
+		logger.info("Successfully find all request made by user " + userID);
 		return requests;
 	}
 	
@@ -136,17 +157,21 @@ public class RequestController {
 	 * Will find all the requests made by the person passed as a parameter
 	 * @param UserID
 	 * @return list of requests
+	 * @throws Exception 
 	 */
 	@RequestMapping(value = "/request/findByPost", method = RequestMethod.GET)
 	@ResponseBody
-	public ArrayList<Request> findByPost(int postID){
+	public ArrayList<Request> findByPost(int postID) throws Exception{
 		ArrayList<Request> requests = null;
 		try{
+			logger.info("Finding request made for post with ID " + postID);
 			requests = requestDao.findByPost(postID);
 		}catch(Exception e){
-			return null;
+			logger.error("Error finding requests made for post with ID "+ postID + " " + e.getMessage());
+			throw e;
 		}
 		return requests;
 	}
-	
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
 }
