@@ -10,8 +10,9 @@ $(function(){
 		e.preventDefault();
 		e.stopPropagation();
 		window.location.href = "postings.html";
-
 	});
+    
+    makeRequest(GET_ALL_SERVICES, GET, "", "", populateServices, null);
 });
 
 
@@ -19,7 +20,7 @@ $(function(){
 function savePost() {
     var newPost = {
         title: $("#postForm #title").val(),
-        servID: $("#postForm #service").val(),
+        servID: $("#postForm #serviceDropdown").val(),
 		details: $("#postForm #description").val(),
         isPost: $("input:radio[name='rdIsPost']:checked").val()
 		
@@ -30,4 +31,15 @@ function savePost() {
 
 function savePostingComplete(){
 	window.location.href = "postings.html";
+}
+
+function populateServices(data) {
+    
+    var options;
+    
+    for (var i = 0; i < data.length; i++) {
+        options += "<option value='" + data[i].id + "'>" + data[i].serviceName + "</option>"    
+    }
+    
+    $("#serviceDropdown").html(options);
 }

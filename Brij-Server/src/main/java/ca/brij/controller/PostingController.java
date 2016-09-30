@@ -2,6 +2,8 @@ package ca.brij.controller;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +15,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import ca.brij.bean.posting.Posting;
+import ca.brij.bean.service.Service;
 import ca.brij.dao.posting.PostingDao;
+import ca.brij.dao.service.ServiceDao;
 import ca.brij.utils.MergeBeanUtil;
 
 
@@ -23,6 +27,9 @@ public class PostingController {
 
 	@Autowired
 	private PostingDao postingDao;
+	
+	@Autowired
+	private ServiceDao serviceDao;
 
 	@RequestMapping(value = "/posting/save", method = RequestMethod.POST)
 	@ResponseBody
@@ -77,17 +84,27 @@ public class PostingController {
 	 */
 	@RequestMapping(value = "/posting/findById", method = RequestMethod.GET)
 	@ResponseBody
-	public Posting getPostingById(int id) {
+	public Map<String, Object> getPostingById(int id) {
 		Posting posting = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		
 		try {
 			logger.info("retrieving post by id" +  id);
 			posting = postingDao.getPostingById(id);
+			Service service = serviceDao.getServiceById(Integer.parseInt(posting.getServID()));
+			String serviceName = service.getServiceName();
+			
+			map.put("serviceName", serviceName);
+			
 		} catch (Exception ex) {
 			logger.error("Error occurred retrieving post " + ex.getMessage());
 			return null;
 		}
 		logger.info("Successfully retrieved post by id " + id);
-		return posting;
+		
+		map.put("posting", posting);
+		
+		return map;
 	}
 
 	/**
