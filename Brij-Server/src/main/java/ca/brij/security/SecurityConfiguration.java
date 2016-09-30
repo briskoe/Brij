@@ -29,7 +29,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
  
     @Autowired
     private MySavedRequestAwareAuthenticationSuccessHandler authenticationSuccessHandler;
-	/**
+	
+    @Autowired
+    private CustomLogOutSuccessHandler logOutHandler;
+    
+    /**
 	 * This section defines the user accounts which can be used for
 	 * authentication as well as the roles each user has.
 	 */
@@ -71,8 +75,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		        .successHandler(authenticationSuccessHandler)
 		        .failureHandler(new SimpleUrlAuthenticationFailureHandler())
 	            .and()
-				.logout().logoutSuccessUrl("/spring/logout").permitAll().and().csrf().disable();
+				.logout().logoutSuccessHandler(logOutHandler).permitAll().and().csrf().disable();
 	}
+	
+    @Bean
+    public CustomLogOutSuccessHandler logOutHandler(){
+        return new CustomLogOutSuccessHandler();
+    }
 	
     @Bean
     public MySavedRequestAwareAuthenticationSuccessHandler mySuccessHandler(){

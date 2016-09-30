@@ -1,6 +1,7 @@
 //hide this information
 var SERVER_URL = "http://localhost:8080";
 var LOGIN = "/login?username=:username&password=:password";
+var LOGOUT = "/logout";
 var HEARTBEAT = "/heartbeat";
 var GET_CURRENT_USER = "/user/current";
 var UPDATE_USER = "/user/save";

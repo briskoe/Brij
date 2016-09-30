@@ -1,4 +1,6 @@
 package ca.brij.bean.posting;
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,17 +19,19 @@ import org.hibernate.annotations.DynamicUpdate;
 		@NamedQuery(name = "Posting.getPostingById", query = "from Posting where id = :id"),
 		@NamedQuery(name = "Posting.getPostingsByUserID", query = "from Posting where userID = :userID") })
 @Table(name = "posting", indexes = { @Index(name = "posting_userIdInd", columnList = "userID"),
-		@Index(name = "posting_nameInd", columnList = "name") })
+		@Index(name = "posting_nameInd", columnList = "title") })
 @DynamicUpdate
-public class Posting {
+public class Posting implements Serializable{
+
+	private static final long serialVersionUID = 8816634543519363815L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false, unique = true)
 	private Integer id;
 
-	@Column(name = "name", nullable = false)
-	private String name;
+	@Column(name = "title", nullable = false)
+	private String title;
 
 	// get this from the form (dropdown has values);
 	@Column(name = "servID", nullable = false)
@@ -36,35 +40,23 @@ public class Posting {
 	@Column(name = "userID", nullable = false)
 	private String userID;
 
-	@Column(name = "price")
-	private double price;
-	// temp string for now
-	@Column(name = "startDate")
-	private String startDate;
-
-	@Column(name = "endDate")
-	private String endDate;
-
-	@Column(name = "startTime")
-	private String startTime;
-
-	@Column(name = "endTime")
-	private String endTime;
-
 	@Column(name = "details", columnDefinition = "TEXT")
 	private String details;
 
+	@Column(name = "isPost")
+	private Boolean isPost;
+	
 	public Posting() {
 	}
 
 	public Posting(Integer id, String name) {
 		this.id = id;
-		this.name = name;
+		this.title = name;
 	}
 
 	public Posting(Integer id, String name, String userID, String servID) {
 		this.id = id;
-		this.name = name;
+		this.title = name;
 		this.userID = userID;
 		this.servID = servID;
 	}
@@ -77,14 +69,6 @@ public class Posting {
 		this.userID = userID;
 	}
 
-	public double getPrice() {
-		return price;
-	}
-
-	public void setPrice(double price) {
-		this.price = price;
-	}
-
 	public Integer getId() {
 		return id;
 	}
@@ -92,13 +76,13 @@ public class Posting {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
-	public String getName() {
-		return name;
+	
+	public String getTitle() {
+		return title;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public String getServID() {
@@ -109,38 +93,6 @@ public class Posting {
 		this.servID = servID;
 	}
 
-	public String getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(String startDate) {
-		this.startDate = startDate;
-	}
-
-	public String getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(String endDate) {
-		this.endDate = endDate;
-	}
-
-	public String getStartTime() {
-		return startTime;
-	}
-
-	public void setStartTime(String startTime) {
-		this.startTime = startTime;
-	}
-
-	public String getEndTime() {
-		return endTime;
-	}
-
-	public void setEndTime(String endTime) {
-		this.endTime = endTime;
-	}
-
 	public String getDetails() {
 		return details;
 	}
@@ -148,4 +100,13 @@ public class Posting {
 	public void setDetails(String details) {
 		this.details = details;
 	}
+
+	public Boolean getIsPost() {
+		return isPost;
+	}
+
+	public void setIsPost(Boolean isPost) {
+		this.isPost = isPost;
+	}
+
 }

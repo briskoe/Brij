@@ -1,5 +1,6 @@
 package ca.brij.bean.user;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -15,6 +16,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -24,8 +27,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 		@NamedQuery(name = "User.findUser", query = "FROM User WHERE username = :username AND password = :password")
 })
 @Table(name = "users")
-public class User {
+public class User implements Serializable {
 
+	private static final long serialVersionUID = -1401790070620926402L;
 
 	@Id
 	@Column(name = "username", nullable = false, unique = true)
@@ -191,10 +195,13 @@ public class User {
 
 	public static List<User> getPriviligedUser(){
 		List<User> users = new ArrayList<User>();
-		User admin = new User("Admin", "Admin", "Admin", true);
-		UserRole userRole = new UserRole(admin, "ROLE_ADMIN");
+		String encryptedPassword = new BCryptPasswordEncoder().encode("admin");
+		User admin = new User("Admin", encryptedPassword, "Admin", true);
+		UserRole adminRole = new UserRole(admin, "ROLE_ADMIN");
+		UserRole userRole = new UserRole(admin, "ROLE_USER");
 		admin.getUserRole().add(userRole);
-
+		admin.getUserRole().add(adminRole);
+		users.add(admin);
 		return users;
 	}
 	

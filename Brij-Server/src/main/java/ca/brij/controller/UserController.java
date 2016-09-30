@@ -2,7 +2,9 @@ package ca.brij.controller;
 
 import java.security.Principal;
 import java.util.ArrayList;
-import org.apache.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,25 +29,33 @@ public class UserController {
 	
 	@RequestMapping(value = "/user/register", method = RequestMethod.POST)
 	@ResponseBody
-	public String register(@RequestBody User userEntity) {
-		userEntity.setEnabled(true);
-		String encryptedPassword = new BCryptPasswordEncoder().encode(userEntity.getPassword());
-		userEntity.setPassword(encryptedPassword);
-		UserRole userRole = new UserRole(userEntity, "ROLE_USER");
-		userEntity.getUserRole().add(userRole);
-		User savedUser = userDao.save(userEntity);
-		UserDetails userDetails = userDetailsService.loadUserByUsername(userEntity.getUsername());
-		UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails,
-				encryptedPassword, userDetails.getAuthorities());
-		SecurityContextHolder.getContext().setAuthentication(auth);
-		
-		return "it was registered!";
+	public String register(@RequestBody User userEntity) throws Exception {
+		try{
+			logger.info("Registering user: " + userEntity.getUsername());
+			userEntity.setEnabled(true);
+			String encryptedPassword = new BCryptPasswordEncoder().encode(userEntity.getPassword());
+			userEntity.setPassword(encryptedPassword);
+			UserRole userRole = new UserRole(userEntity, "ROLE_USER");
+			userEntity.getUserRole().add(userRole);
+			userDao.save(userEntity);
+			UserDetails userDetails = userDetailsService.loadUserByUsername(userEntity.getUsername());
+			UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails,
+					encryptedPassword, userDetails.getAuthorities());
+			SecurityContextHolder.getContext().setAuthentication(auth);
+		}catch(Exception e){
+			logger.error("Error registering user: " + userEntity.getUsername() + " message " + e.getMessage());
+			throw e;
+		}
+
+		logger.info("Successfully registered user: " + userEntity.getUsername());
+		return "Success";
 
 	}
 	@RequestMapping(value = "/user/save", method = RequestMethod.POST)
 	@ResponseBody
-	public String updateUser(@RequestBody User updatedUser, Principal principal) {
+	public String updateUser(@RequestBody User updatedUser, Principal principal) throws Exception {
 		try {
+			logger.info("Saving user: " + principal.getName());
 			//password and enabled goes to null as we can't allow to be updated through this request
 			updatedUser.setPassword(null);
 			updatedUser.setEnabled(null);
@@ -54,24 +64,30 @@ public class UserController {
 			MergeBeanUtil.copyNonNullProperties(updatedUser,originalUser );
 			userDao.save(originalUser);
 		} catch (Exception ex) {
-			return "Error updating the user: " + ex.toString();
+			logger.error("Error saving user" + principal.getName() + "message: " +ex.getMessage());
+			throw ex;
 		}
-		return "User succesfully updated!";
+		logger.info("Updating user " + principal.getName() + " was successful");
+		return "Success";
 	}
 
 	/**
 	 * GET /delete --> Delete the user having the passed id.
+	 * @throws Exception 
 	 */
 	@RequestMapping(value = "/admin/user/delete", method = RequestMethod.DELETE)
 	@ResponseBody
-	public String delete(String username) {
+	public String delete(String username) throws Exception {
 		try {
+			logger.info("Deleting user" + username);
 			User user = new User(username);
 			userDao.delete(user);
 		} catch (Exception ex) {
-			return "Error deleting the user:" + ex.toString();
+			logger.error("Registering user" + username + " message: " + ex.getMessage());
+			throw ex;
 		}
-		return "User succesfully deleted!";
+		logger.info("Deleting user" + username + " was successful");
+		return "Success";
 	}
 	
 	@RequestMapping("/user/current")
@@ -108,10 +124,12 @@ public class UserController {
 	@RequestMapping(value = "/admin/user/findAll", method = RequestMethod.GET)
 	@ResponseBody
 	public ArrayList<User> getAllUser() {
+		logger.info("Fiding All users");
 		ArrayList<User> users;
 		try {
 			users = userDao.findAll();
 		} catch (Exception ex) {
+			logger.info("Failed to retrieve all users");
 			return null;
 		}
 		return users;
@@ -121,6 +139,6 @@ public class UserController {
 	
 	@Autowired
 	private MyUserDetailsService userDetailsService;
-	final static Logger logger = Logger.getLogger(UserController.class);
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 }

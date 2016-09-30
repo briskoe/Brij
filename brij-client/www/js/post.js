@@ -13,21 +13,6 @@ $(function () {
     });
 
 
-
-    /* var query_string = {};
-     var query = window.location.search.substring(1);
-     var vars = query.split("&");
-     for (var i = 0; i < vars.length; i++) {
-         var pair = vars[i].split("=");
-         // If first entry with this name
-         if (typeof query_string[pair[0]] === "undefined") {
-             query_string[pair[0]] = decodeURIComponent(pair[1]);
-
-
-         }
-     }
-     console.log(query_string);
-     */
     getPosts($.urlParam("id"));
 
 
@@ -52,13 +37,16 @@ var serviceArray = [
 
 function populatePost(data) {
     console.log(data.endTime);
-    $("#postForm #title").val(data.name);
+    $("#postForm #title").val(data.title);
     $("#postForm #service").val(serviceArray[data.servID]);
     $("#postForm #description").val(data.details);
-    $("#postForm #startDate").val(data.startDate);
-    $("#postForm #endDate").val(data.endDate);
-    $("#postForm #startTime").val(data.startTime);
-    $("#postForm #endTime").val(data.endTime);
-    $("#postForm #cost").val(data.price);
-
+    var messageInfo = "";
+    
+    if(data.isPost){
+        messageInfo = IS_POSTING_MESSAGE_FOR_OTHERS;
+    }else{
+        messageInfo = IS_REQUEST_MESSAGE_FOR_OTHERS;
+    }
+    
+    $("#isPostDiv").html(messageInfo);
 }
