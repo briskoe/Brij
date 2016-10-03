@@ -13,15 +13,24 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import ca.brij.bean.posting.Posting;
 import ca.brij.bean.request.Request;
+import ca.brij.dao.posting.PostingDao;
 import ca.brij.dao.request.RequestDao;
 import ca.brij.utils.MergeBeanUtil;
+import ca.brij.utils.NotificationSenderUtil;
 
 @RestController
 public class RequestController {
 
 	@Autowired
 	private RequestDao requestDao;
+	
+	@Autowired
+	private NotificationSenderUtil notificationUtils;
+	
+	@Autowired
+	private PostingDao postingDao;
 	
 	/**
 	 * Save request. The person who made the request becomes the owner
@@ -38,15 +47,29 @@ public class RequestController {
 		try{
 			logger.info("Saving request made by: " + principal.getName());
 			request.setUserID(principal.getName());
-			if(requestDao.findByUserAndPost(request.getUserID(), request.getPostID()) == null){
+			//see if the request exist
+			Request oldRequest = requestDao.findByUserAndPost(request.getUserID(), request.getPostID()) ;
+			if(oldRequest == null){
+				//if it doesn't set up creation date and assign the new request
 				request.setCreationDate(Calendar.getInstance());
+				oldRequest = request;
+			}else{
+				//if it old, set up the properties from the new changes to the old
+				MergeBeanUtil.copyNonNullProperties(request, oldRequest);
 			}
-			requestDao.save(request);
+			request = requestDao.save(oldRequest);
+			
+			Posting post = postingDao.getPostingById(request.getPostID());
+			if(post != null){
+				notificationUtils.makeNotification(post.getUserID(), NotificationSenderUtil.REQUEST_TYPE, request.getRequestID() ,
+						principal.getName() + " have made a request for your post");
+			}
+
 			
 		}catch(Exception e){
 			logger.error("Error saving request " + e.getMessage());
 			throw e;
-		}
+		} 
 		logger.info("Successfully saved request made by " + principal.getName());
 		return "Success";
 	}

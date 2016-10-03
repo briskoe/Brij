@@ -189,3 +189,12 @@ clear:both;
 	width: 100%;
 }
 
+#notificationBtn{
+    color: white;
+    font-size: 15px;
+}
+.notification-badge{
+    position: absolute;
+    bottom: 0;
+    background-color: red;
+}
