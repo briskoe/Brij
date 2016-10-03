@@ -34,10 +34,10 @@ public class Request implements Serializable{
 	@Column(name = "requestID", nullable = false, unique = true)
 	private Integer requestID;
 
-	@Column(name = "userID", nullable = false, unique = true)
+	@Column(name = "userID", nullable = false)
 	private String userID;
 	
-	@Column(name = "postID", nullable = false, unique = true)
+	@Column(name = "postID", nullable = false)
 	private Integer postID;
 	
 	@Column(name = "creationDate", nullable = false)

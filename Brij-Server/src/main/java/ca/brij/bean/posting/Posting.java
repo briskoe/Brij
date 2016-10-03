@@ -35,7 +35,7 @@ public class Posting implements Serializable{
 
 	// get this from the form (dropdown has values);
 	@Column(name = "servID", nullable = false)
-	private String servID;
+	private Integer servID;
 
 	@Column(name = "userID", nullable = false)
 	private String userID;
@@ -54,9 +54,9 @@ public class Posting implements Serializable{
 		this.title = name;
 	}
 
-	public Posting(Integer id, String name, String userID, String servID) {
+	public Posting(Integer id, String title, String userID, Integer servID) {
 		this.id = id;
-		this.title = name;
+		this.title = title;
 		this.userID = userID;
 		this.servID = servID;
 	}
@@ -85,11 +85,11 @@ public class Posting implements Serializable{
 		this.title = title;
 	}
 
-	public String getServID() {
+	public Integer getServID() {
 		return servID;
 	}
 
-	public void setServID(String servID) {
+	public void setServID(Integer servID) {
 		this.servID = servID;
 	}
 

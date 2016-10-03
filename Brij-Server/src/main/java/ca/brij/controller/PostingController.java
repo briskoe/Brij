@@ -91,7 +91,7 @@ public class PostingController {
 		try {
 			logger.info("retrieving post by id" +  id);
 			posting = postingDao.getPostingById(id);
-			Service service = serviceDao.getServiceById(Integer.parseInt(posting.getServID()));
+			Service service = serviceDao.getServiceById(posting.getServID());
 			String serviceName = service.getServiceName();
 			
 			map.put("serviceName", serviceName);
