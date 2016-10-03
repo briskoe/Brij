@@ -11,6 +11,8 @@ var GET_POST_BY_ID = "/posting/findById?id=:id";
 var GET_MY_POSTS = "/posting/findByUser";
 var GET_ALL_SERVICES = "/service/findAll";
 var GET_USER_NOTIFICATION = "/notification/findByUser";
+var CREATE_REQUEST = "/request/save";
+var GET_REQUEST_BY_ID = "/request/findById?id=:id";
 
 //Request Types
 var GET = "GET";
