@@ -3,6 +3,8 @@ package ca.brij.controller;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -121,17 +123,23 @@ public class RequestController {
 	}
 	@RequestMapping(value = "/request/findById", method = RequestMethod.GET)
 	@ResponseBody
-	public Request findById(int requestID) throws Exception{
+	public Map<String, Object> findById(int id) throws Exception{
+		Map<String, Object> requestDTO = new HashMap<String, Object>();
 		Request request = null;
+		Posting post = null;
 		try{
-			logger.info("Finding Request by ID: " + requestID);
-			request = requestDao.findById(requestID);
+			logger.info("Finding Request by ID: " + id);
+			request = requestDao.findById(id);
+			post = postingDao.getPostingById(request.getPostID());
+
 		}catch(Exception e){
 			logger.error("Error Finding request" + e.getMessage());
 			throw e;
 		}
-		logger.info("Successfully found request by id: " + requestID);
-		return request;
+		requestDTO.put("request", request);
+		requestDTO.put("posting", post);
+		logger.info("Successfully found request by id: " + id);
+		return requestDTO;
 	}
 	
 	/**
