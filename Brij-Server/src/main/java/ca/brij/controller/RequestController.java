@@ -19,6 +19,7 @@ import ca.brij.bean.posting.Posting;
 import ca.brij.bean.request.Request;
 import ca.brij.dao.posting.PostingDao;
 import ca.brij.dao.request.RequestDao;
+import ca.brij.dao.service.ServiceDao;
 import ca.brij.utils.MergeBeanUtil;
 import ca.brij.utils.NotificationSenderUtil;
 
@@ -33,6 +34,9 @@ public class RequestController {
 	
 	@Autowired
 	private PostingDao postingDao;
+	
+	@Autowired
+	private ServiceDao serviceDao;
 	
 	/**
 	 * Save request. The person who made the request becomes the owner
@@ -127,10 +131,12 @@ public class RequestController {
 		Map<String, Object> requestDTO = new HashMap<String, Object>();
 		Request request = null;
 		Posting post = null;
+		String serviceName = null;
 		try{
 			logger.info("Finding Request by ID: " + id);
 			request = requestDao.findById(id);
 			post = postingDao.getPostingById(request.getPostID());
+			serviceName = serviceDao.getServiceById(post.getServID()).getServiceName();
 
 		}catch(Exception e){
 			logger.error("Error Finding request" + e.getMessage());
@@ -138,6 +144,7 @@ public class RequestController {
 		}
 		requestDTO.put("request", request);
 		requestDTO.put("posting", post);
+		requestDTO.put("serviceName", serviceName);
 		logger.info("Successfully found request by id: " + id);
 		return requestDTO;
 	}
