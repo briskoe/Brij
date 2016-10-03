@@ -31,18 +31,14 @@ function getPosts(id) {
     console.log(id);
 }
 
-var serviceArray = [
-	"Cleaning", "Dog Walking", "Gardening", "Snow Shoveling", "Tutoring"
-];
-
 function populatePost(data) {
     console.log(data.endTime);
-    $("#postForm #title").val(data.title);
-    $("#postForm #service").val(serviceArray[data.servID]);
-    $("#postForm #description").val(data.details);
+    $("#postForm #title").val(data.posting.title);
+    $("#postForm #service").val(data.serviceName);
+    $("#postForm #description").val(data.posting.details);
     var messageInfo = "";
-    
-    if(data.isPost){
+        
+    if(data.posting.isPost){
         messageInfo = IS_POSTING_MESSAGE_FOR_OTHERS;
     }else{
         messageInfo = IS_REQUEST_MESSAGE_FOR_OTHERS;

@@ -7,9 +7,9 @@ var GET_CURRENT_USER = "/user/current";
 var UPDATE_USER = "/user/save";
 var CREATE_POST = "/posting/save";
 var GET_POSTS = "/posting/findAll";
-//Method does not exist yet
 var GET_POST_BY_ID = "/posting/findById?id=:id";
 var GET_MY_POSTS = "/posting/findByUser";
+var GET_ALL_SERVICES = "/service/findAll";
 
 //Request Types
 var GET = "GET";
