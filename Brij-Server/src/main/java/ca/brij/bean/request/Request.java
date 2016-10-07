@@ -20,7 +20,8 @@ import javax.persistence.Table;
 		@NamedQuery(name = "Request.findById", query = "FROM Request WHERE requestID = :requestID"),
 		@NamedQuery(name = "Request.findByUser", query = "FROM Request WHERE userID = :userID"),
 		@NamedQuery(name = "Request.findByPost", query = "FROM Request WHERE postID = :postID"),
-		@NamedQuery(name = "Request.findByUserAndPost", query = "FROM Request WHERE userID = :userID AND postID = :postID")
+		@NamedQuery(name = "Request.findByUserAndPost", query = "FROM Request WHERE userID = :userID AND postID = :postID"),
+		@NamedQuery(name = "Request.getCountForUser", query = "SELECT COUNT(*) FROM Request WHERE userID = :userID")
 })
 @Table(name = "request", indexes = { @Index(name = "request_userInd", columnList = "userID"),
 		@Index(name = "request_postInd", columnList = "postID")})
