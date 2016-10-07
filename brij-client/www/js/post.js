@@ -3,7 +3,6 @@ var isDisabled = true;
 
 $(function() {
     
-    makeRequest(GET_ALL_SERVICES, GET, "", "", populateServices, null);
     
     $("#btnBack").click(function (e) {
         e.preventDefault();
@@ -58,12 +57,9 @@ $(function() {
 		var updatePost = {
             id:postID,
 			title: $("#postForm #title" ).val(),
-            servID: $("#postForm #serviceDropdown").val(),
-			//service: $("#postForm #service" ).val(),
 			details: $("#postForm #description" ).val()
         };
          
-         console.log($("#postForm #serviceDropdown").val());
         
          makeRequest(SAVE_POST, POST, JSON.stringify(updatePost), APPLICATION_JSON, null, null);
 }
@@ -83,8 +79,9 @@ $(function() {
 
     function populatePost(data) {
         id = data.posting.id;
+        console.log(data.serviceName)
         $("#postForm #title").val(data.posting.title);
-        $("#postForm #serviceDropdown").val(data.posting.servID);
+        $("#postForm #serviceName").val(data.serviceName);
         $("#postForm #description").val(data.posting.details);
         var messageInfo = "";
     if (data.posting.isPost) {
@@ -97,15 +94,4 @@ $(function() {
     }
 
     $("#isPostDiv").html(messageInfo);
-}
-
-    function populateServices(data) {
-
-        var options;
-
-        for (var i = 0; i < data.length; i++) {
-            options += "<option value='" + data[i].id + "'>" + data[i].serviceName + "</option>"    
-        }
-
-        $("#serviceDropdown").html(options);
 }
