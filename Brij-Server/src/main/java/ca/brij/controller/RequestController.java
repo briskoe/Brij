@@ -9,9 +9,11 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -157,17 +159,34 @@ public class RequestController {
 	 */
 	@RequestMapping(value = "/request/findByRequester", method = RequestMethod.GET)
 	@ResponseBody
-	public ArrayList<Request> findByRequester(Principal principal) throws Exception{
+	public Map<String, Object> findByRequester(Principal principal, @RequestParam(value = "pageNo", required=false) Integer pageNo,@RequestParam(value = "pageSize", required=false) Integer pageSize ) throws Exception{
+		Map<String, Object> requestMap = new HashMap<String, Object>();
 		ArrayList<Request> requests = null;
+		int numberOfPages = 0;
+		String postTitle = "";
+		
 		try{
+			if(pageNo == null){
+				pageNo = 0;
+			}
+			if(pageSize == null){
+				pageSize = 10;
+			}
 			logger.info("Finding all request made by the requester " + principal.getName());
-			requests = requestDao.findByUser(principal.getName());
+			
+			requests = requestDao.findByUser(principal.getName(), new PageRequest(pageNo, pageSize));
+			numberOfPages = (int)Math.ceil((double)requestDao.getCountForUser(principal.getName()) / (double)pageSize);
+			
 		}catch(Exception e){
 			logger.error("Error finding all request made by the requester " + e.getMessage());
 			throw e;
 		}
 		logger.info("Successfully retrieved all requests made by : " + principal.getName());
-		return requests;
+		requestMap.put("list", requests);
+		requestMap.put("numberOfPages", numberOfPages);
+		requestMap.put("currentPage", (pageNo + 1));
+		
+		return requestMap;
 	}
 	
 	/**
@@ -178,17 +197,30 @@ public class RequestController {
 	 */
 	@RequestMapping(value = "/request/findByUser", method = RequestMethod.GET)
 	@ResponseBody
-	public ArrayList<Request> findByUser(String userID) throws Exception{
+	public Map<String, Object> findByUser(String userID, @RequestParam(value = "pageNo", required=false) Integer pageNo,@RequestParam(value = "pageSize", required=false) Integer pageSize ) throws Exception{
+		Map<String, Object> requestMap = new HashMap<String, Object>();
 		ArrayList<Request> requests = null;
+		int numberOfPages = 0;
+		
 		try{
+			if(pageNo == null){
+				pageNo = 0;
+			}
+			if(pageSize == null){
+				pageSize = 10;
+			}
 			logger.info("Finding all requests made by user " + userID);
-			requests = requestDao.findByUser(userID);
+			requests = requestDao.findByUser(userID, new PageRequest(pageNo, pageSize));
+			numberOfPages = (int)Math.ceil((double)requestDao.getCountForUser(userID) / (double)pageSize);
 		}catch(Exception e){
 			logger.error("Error finding all requests made by user " + userID);
 			throw e;
 		}
 		logger.info("Successfully find all request made by user " + userID);
-		return requests;
+		requestMap.put("list", requests);
+		requestMap.put("numberOfPages", numberOfPages);
+		requestMap.put("currentPage", (pageNo + 1));
+		return requestMap;
 	}
 	
 	/**
