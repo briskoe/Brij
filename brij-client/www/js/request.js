@@ -13,6 +13,7 @@ var GET_ALL_SERVICES = "/service/findAll";
 var GET_USER_NOTIFICATION = "/notification/findByUser";
 var CREATE_REQUEST = "/request/save";
 var GET_REQUEST_BY_ID = "/request/findById?id=:id";
+var CREATE_SERVICE = "/service/save";
 
 //Request Types
 var GET = "GET";
