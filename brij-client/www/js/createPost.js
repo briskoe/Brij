@@ -11,6 +11,12 @@ $(function () {
         window.location.href = "postings.html";
     });
 
+    $("#btnSaveService").click(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        saveService();
+    });
+
     $("#serviceDropdown").change(function () {
         if ($("#serviceDropdown").val() === "create") {
             createService();
@@ -52,5 +58,23 @@ function populateServices(data) {
 }
 
 function createService() {
-    window.location.href = "createService.html";
+    $("#myModal").modal('show');
+    //window.location.href = "createService.html";
+}
+
+function saveService() {
+    var newService = {
+        serviceName: $("#serviceName").val(),
+    };
+
+    makeRequest(CREATE_SERVICE, POST, JSON.stringify(newService), APPLICATION_JSON, saveServiceComplete, null);
+}
+
+function saveServiceComplete(data) {
+    //add successful check
+    $("#myModal").modal('hide');
+
+    $("#serviceDropdown").html("");
+    
+    makeRequest(GET_ALL_SERVICES, GET, "", "", populateServices, null);
 }
