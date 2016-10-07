@@ -12,7 +12,7 @@ $(function () {
     });
 
     $("#serviceDropdown").change(function () {
-        if ($("#serviceDropdown").val() == "create") {
+        if ($("#serviceDropdown").val() === "create") {
             createService();
         }
     });
