@@ -5,7 +5,7 @@ var LOGOUT = "/logout";
 var HEARTBEAT = "/heartbeat";
 var GET_CURRENT_USER = "/user/current";
 var UPDATE_USER = "/user/save";
-var CREATE_POST = "/posting/save";
+var SAVE_POST = "/posting/save";
 var GET_POSTS = "/posting/findAll";
 var GET_POST_BY_ID = "/posting/findById?id=:id";
 var GET_MY_POSTS = "/posting/findByUser";
