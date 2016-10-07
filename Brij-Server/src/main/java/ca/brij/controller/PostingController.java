@@ -100,9 +100,10 @@ public class PostingController {
 	 */
 	@RequestMapping(value = "/posting/findById", method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, Object> getPostingById(int id) {
+	public Map<String, Object> getPostingById(Principal principal, int id) {
 		Posting posting = null;
 		Map<String, Object> map = new HashMap<String, Object>();
+		Boolean isOwner = false;
 		
 		try {
 			logger.info("retrieving post by id" +  id);
@@ -110,6 +111,8 @@ public class PostingController {
 			Service service = serviceDao.getServiceById(posting.getServID());
 			String serviceName = service.getServiceName();
 			
+			isOwner = posting.getUserID().equals(principal.getName());
+						
 			map.put("serviceName", serviceName);
 			
 		} catch (Exception ex) {
@@ -119,6 +122,7 @@ public class PostingController {
 		logger.info("Successfully retrieved post by id " + id);
 		
 		map.put("posting", posting);
+		map.put("isOwner", isOwner);
 		
 		return map;
 	}
