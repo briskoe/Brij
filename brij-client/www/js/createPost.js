@@ -26,7 +26,7 @@ function savePost() {
 		
     };
 
-    makeRequest(CREATE_POST, POST, JSON.stringify(newPost), APPLICATION_JSON, savePostingComplete, null);
+    makeRequest(SAVE_POST, POST, JSON.stringify(newPost), APPLICATION_JSON, savePostingComplete, null);
 }
 
 function savePostingComplete(){
