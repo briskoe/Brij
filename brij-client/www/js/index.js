@@ -43,15 +43,13 @@ $(function () {
     if (window.location.href.indexOf("index.html") == -1) {
         checkIfOnline(null, true);
     }
-   // toast.show("message");
-    //toast.end
     
     initializeMainMenu();
 
     //set up a timer to look out for unread notifications
     notificationRequest();
     notification_timer = setInterval(notificationRequest, 50000);
-    
+
 });
 
 
@@ -84,21 +82,50 @@ function notificationRequest(){
 
 function fillNotifications(data){
     console.log(data);
-    $("#notificationBtn").html("<span class='badge notification-badge'>"+data.noOfUnRead+"</span>")
+    var noOfNotification = data.noOfUnRead;
+    if(noOfNotification !== undefined && noOfNotification !== 0 ){
+            $("#notificationBtn").html("<span class='badge notification-badge'>"+data.noOfUnRead+"</span>")
+    }
     var notifications = data.notifications;
     var navbar = "<li class='dropdown-header' ><h6 class=dropdown-header'>Notifications:</h6> </li>";
-    for(var i = 0; i < notifications.length; i++){
-        var href = "";
-        if(notifications[i].type === "request"){
-            href = "request.html?id=" + notifications[i].targetID;
+    if(notifications !== undefined){
+        for(var i = 0; i < notifications.length; i++){
+            var href = "";
+            var classCss = "";
+            if(!notifications[i].readFlag){
+                classCss = "bg-danger readFlag";
+            }
+            var notificationId = notifications[i].id;
+            if(notifications[i].type === "request"){
+                href = "request.html?id=" + notifications[i].targetID;
+            }
+            navbar += "<li class='dropdown-item " + classCss + "'><a id='notification_"+notificationId+"' onclick='return notificationOnClick(this)' href='"+href+"' class='"+classCss+"'> "+notifications[i].description+"</a></li>";
+
         }
-        navbar += "<li class='dropdown-item'><a href='"+href+"'> "+notifications[i].description+"</a></li>";
-        
     }
+
     navbar += "<li class='dropdown-item'><div class='dropdown-divider'></div></li> " +
         "<li class='dropdown-item' > <a href='#' >View all notifications</a> </li>";
     
     $("#notificationNavBar").html(navbar);
+}
+
+function notificationOnClick(anchor){
+    var nId = $(anchor).attr("id").split("_")[1];
+    var hasClass = $(anchor).hasClass("readFlag");
+    if(hasClass){
+        var notification = {
+            id : nId,
+            readFlag : true
+        };
+        makeRequest(UPDATE_NOTIFICATION, POST, JSON.stringify(notification), APPLICATION_JSON, function(){
+            window.location = $(anchor).attr("href");
+        
+        }, null);
+        return false;
+    }
+    return true;
+
 }
 
 $.urlParam = function (name) {
@@ -110,24 +137,40 @@ $.urlParam = function (name) {
     }
 }
 
+function paginationDiv(id, item){
+        var pagination = "<nav aria-label='Page navigation' id='"+id+"'><ul class='pagination'>" +
+        "<li class='page-item'> <a href='#' class='page-link backbtn' aria-label='Previous'>" +
+        "<span aria-hidden='true'>&laquo;</span>" +
+        "<span class='sr-only'>Previous</span></a> </li>" + 
+        item + 
+        "<li class='page-item'> <a class='page-link nextBtn' aria-label='Next'>" +
+        "<span aria-hidden='true'>&raquo;</span>" +
+        "<span class='sr-only'>Next</span></a> </li>" + 
+        "</lu></nav>";
+    return pagination;
+}
 
-var toast = {
-    show: function(msg){
-        	$("<div class='toastID'><h3>"+msg+"</h3></div>")
-            .css({ display: "block", 
-                opacity: 0.90, 
-                position: "fixed",
-                padding: "7px",
-                "text-align": "center",
-                  background:"black",
-                  color:"white",
-                width: "270px",
-                left: ($(window).width() - 284)/2,
-                top: $(window).height()/2 })
-            .appendTo( $("body") );
+
+var loading = {
+    show: function(){
+            if(!$("#loadingDiv").length){
+                $("<div id='loadingDiv'><h3>Loading<br><span class='glyphicon glyphicon-refresh gly-ani'></span></h3> </div>")
+                    .css({ display: "block", 
+                        opacity: 0.90, 
+                        position: "fixed",
+                        padding: "7px",
+                        "text-align": "center",
+                          background:"black",
+                          color:"white",
+                        width: "270px",
+                        left: ($(window).width() - 284)/2,
+                        top: $(window).height()/2 })
+                    .appendTo( $("body") );
+            }
+
     },
     end: function(){
-        $(".toastID").fadeOut("slow", function(){
+        $("#loadingDiv").fadeOut("slow", function(){
             this.remove();
         })
     }

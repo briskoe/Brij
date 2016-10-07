@@ -1,5 +1,6 @@
 var postID;
 var requestID;
+var isSavingRequest = false;
 
 $(function () {
     $("#btnBack").click(function (e) {
@@ -12,13 +13,31 @@ $(function () {
     $("#btnEdit").click(function (e) {
         e.preventDefault();
         e.stopPropagation();
-        //requestService();
+        isSavingRequest = !isSavingRequest;
+
+        $("#requestForm textarea").attr("disabled", !isSavingRequest);
+
+        if (isSavingRequest) {
+            $("#btnEdit").html("Save");
+            $("#btnCancel").removeClass("hide");
+        } else {
+            $("#btnEdit").html("Edit");
+            $("#btnCancel").addClass("hide");
+            updateRequest();
+        }
     });
 
     getRequest($.urlParam("id"));
 
 });
 
+function updateRequest() {
+    var updateRequest = {
+        notes: $("#requestForm #notes").val(),
+        postID: postID
+    };
+    makeRequest(CREATE_REQUEST, POST, JSON.stringify(updateRequest), APPLICATION_JSON, null, null);
+};
 
 function requestService() {
     window.location.href = "createRequest.html?id=" + id;

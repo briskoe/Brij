@@ -198,3 +198,38 @@ clear:both;
     bottom: 0;
     background-color: red;
 }
+
+
+#postingList{
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+#postingPagination{
+    text-align: center;
+}
+
+/*
+    LOADING
+*/
+#loadingDiv{
+    
+}
+
+   .gly-ani {
+        animation: ani 2s infinite linear;
+        padding: 5px;
+    }
+    @keyframes ani {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(359deg);
+      }
+    }
+
+/*
+    EnD OF LOADING
+*/

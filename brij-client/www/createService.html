@@ -12,10 +12,11 @@
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/request.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
-    <script type="text/javascript" src="js/postings.js"></script>
+    <script type="text/javascript" src="js/createService.js"></script>
+
 </head>
 
-<body>
+<body id="createPost">
     <!--HEADER-->
     <nav class="navbar navbar-inverse mainMenu">
         <div class="container-fluid">
@@ -33,23 +34,28 @@
             </ul>
         </div>
     </nav>
+    <!--END OF HEADER -->
     <div class="container">
         <img src="img/brij_logo.png" class="img-rounded" alt="Brij Logo" width="100%">
-        <a href="createPost.html" class="btn btn-primary btn-block btn-lg" role="button">Create New Post</a>
-    </div>
-    <!--END OF HEADER -->
+        <div class="page-header text-center">
+            <h1><span id="postName"></span></h1>
+            <div class="alert alert-info text-center"><span id="">Add New Service</span></div>
+        </div>
+        <form class="form-horizontal" id="requestForm">
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="serviceName">Service Name:</label>
+                <div class="col-sm-10">
+                    <input type="text" id="serviceName" class="form-control" />
+                </div>
+            </div>
 
-    <br>
-    <div class="btn-group btn-group-justified">
-        <a id="btnAll" href="#" class="btn btn-info btnPosts active">All Postings</a>
-        <a id="btnMyPosts" href="#" class="btn btn-info btnPosts">My Postings</a>
-        <a id="btnMyRequest" href="#" class="btn btn-info btnPosts">My Requests</a>
-    </div>
-    <div id="postingList" class="list-group">
 
-    </div>
-    
-    <div id="postingPagination">
+            <div class="form-group">
+                <button id="btnCancel" type="button" class="btn btn-default col-xs-6 btn-danger">Cancel</button>
+                <button id="btnSave" type="button" class="btn btn-default col-xs-6 btn-success">Save</button>
+            </div>
+        </form>
+
     </div>
 
 </body>

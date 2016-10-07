@@ -8,13 +8,16 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import ca.brij.bean.notification.Notification;
+import ca.brij.bean.posting.Posting;
 import ca.brij.dao.notification.NotificationDao;
+import ca.brij.utils.MergeBeanUtil;
 
 @RestController
 public class NotificationController {
@@ -22,6 +25,30 @@ public class NotificationController {
 	
 	@Autowired
 	private NotificationDao notificationDao;
+	
+	
+	@RequestMapping(value = "/notification/edit", method = RequestMethod.POST)
+	@ResponseBody
+	public String updateNotification(@RequestBody Notification notification) throws Exception {
+		try {
+			logger.info("saving notification " + notification.getId());
+			Integer id = notification.getId();
+			if(id == null){
+				throw new Exception("Notification lacks Ids");
+			}
+			Notification oldNotification = notificationDao.getNotificationById(id);
+			if(oldNotification == null){
+				oldNotification = notification;
+			}else{
+				MergeBeanUtil.copyNonNullProperties(notification, oldNotification);
+			}
+			notificationDao.save(oldNotification);
+		}catch(Exception e){
+			logger.error("Error saving notification");
+			throw e;
+		}
+		return "Success";
+	}
 	
 	/**
 	 * Find By User

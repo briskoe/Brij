@@ -1,5 +1,6 @@
 package ca.brij.bean.posting;
 import java.io.Serializable;
+import java.util.Calendar;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,9 +16,11 @@ import org.hibernate.annotations.DynamicUpdate;
 
 
 @Entity
-@NamedQueries({ @NamedQuery(name = "Posting.getAllPostings", query = "from Posting"),
+@NamedQueries({ @NamedQuery(name = "Posting.getAllPostings", query = "from Posting ORDER BY creationDate DESC"),
 		@NamedQuery(name = "Posting.getPostingById", query = "from Posting where id = :id"),
-		@NamedQuery(name = "Posting.getPostingsByUserID", query = "from Posting where userID = :userID") })
+		@NamedQuery(name = "Posting.getPostingsByUserID", query = "from Posting where userID = :userID ORDER BY creationDate DESC"),
+		@NamedQuery(name = "Posting.getCountOfAll", query = "SELECT count(*) from Posting ORDER BY creationDate DESC"),
+		@NamedQuery(name = "Posting.getCountOfUser", query = "SELECT count(*) from Posting  where userID = :userID ORDER BY creationDate DESC")})
 @Table(name = "posting", indexes = { @Index(name = "posting_userIdInd", columnList = "userID"),
 		@Index(name = "posting_nameInd", columnList = "title") })
 @DynamicUpdate
@@ -46,12 +49,16 @@ public class Posting implements Serializable{
 	@Column(name = "isPost")
 	private Boolean isPost;
 	
+	@Column(name = "creationDate")
+	private Calendar creationDate;
+	
 	public Posting() {
 	}
 
 	public Posting(Integer id, String name) {
 		this.id = id;
 		this.title = name;
+		this.creationDate = Calendar.getInstance();
 	}
 
 	public Posting(Integer id, String title, String userID, Integer servID) {
@@ -59,6 +66,7 @@ public class Posting implements Serializable{
 		this.title = title;
 		this.userID = userID;
 		this.servID = servID;
+		this.creationDate = Calendar.getInstance();
 	}
 
 	public String getUserID() {
@@ -108,5 +116,15 @@ public class Posting implements Serializable{
 	public void setIsPost(Boolean isPost) {
 		this.isPost = isPost;
 	}
+
+	public Calendar getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Calendar creationDate) {
+		this.creationDate = creationDate;
+	}
+	
+	
 
 }
