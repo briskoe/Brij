@@ -2,15 +2,18 @@ package ca.brij.controller;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -45,6 +48,7 @@ public class PostingController {
 			// means is new
 			if (origPost == null) {
 				origPost = post;
+				origPost.setCreationDate(Calendar.getInstance());
 			} else {
 				// update current one by saving only the changed values (not
 				// null)
@@ -66,17 +70,29 @@ public class PostingController {
 	 */
 	@RequestMapping(value = "/posting/findByUser", method = RequestMethod.GET)
 	@ResponseBody
-	public ArrayList<Posting> getPostingByUser(Principal principal) throws Exception {
+	public Map<String, Object> getPostingByUser(Principal principal, @RequestParam(value = "pageNo", required=false) Integer pageNo, @RequestParam(value = "pageSize", required=false) Integer pageSize) throws Exception {
+		Map<String, Object> postingsMap = new HashMap<String, Object>();
 		ArrayList<Posting> postings = null;
+		int numberOfPages = 0;
 		try {
 			logger.info("retrieving all posts made by: " + principal.getName());
-			postings = postingDao.getPostingsByUserID(principal.getName());
+			if(pageNo == null){
+				pageNo = 0;
+			}
+			if(pageSize == null){
+				pageSize = 10;
+			}
+			postings = postingDao.getPostingsByUserID(principal.getName(), new PageRequest(pageNo, pageSize));
+			numberOfPages = (int)Math.ceil((double)postingDao.getCountOfUser(principal.getName()) / (double)pageSize);
 		} catch (Exception ex) {
 			logger.error("Error retrieving all users made by " + principal.getName());
 			throw ex;
 		}
+		postingsMap.put("list", postings);
+		postingsMap.put("numberOfPages", numberOfPages);
+		postingsMap.put("currentPage", (pageNo + 1));
 		logger.info("successfully retrieved posts made by: " + principal.getName());
-		return postings;
+		return postingsMap;
 	}
 	
 	/**
@@ -113,16 +129,31 @@ public class PostingController {
 	 */
 	@RequestMapping(value = "/posting/findAll", method = RequestMethod.GET)
 	@ResponseBody
-	public ArrayList<Posting> getAllPosting() throws Exception {
+	public Map<String, Object> getAllPosting(@RequestParam(value = "pageNo", required=false) Integer pageNo,@RequestParam(value = "pageSize", required=false) Integer pageSize ) throws Exception {
+		Map<String, Object> postingsMap = new HashMap<String, Object>();
 		ArrayList<Posting> postings;
+		int numberOfPages = 0;
 		try {
 			logger.info("Retrieving all posts");
-			postings = postingDao.getAllPostings();
+			if(pageNo == null){
+				pageNo = 0;
+			}
+			if(pageSize == null){
+				pageSize = 10;
+			}
+			postings = postingDao.getAllPostings(new PageRequest(pageNo, pageSize));
+			//divide then take the decimal away. Ex 10.5 will give 10
+			numberOfPages = (int)Math.ceil((double)postingDao.getCountOfAll() / (double)pageSize);
+			
 		} catch (Exception ex) {
 			logger.error("Failed retrieving posts " + ex.getMessage());
 			throw ex;
 		}
-		return postings;
+		postingsMap.put("list", postings);
+		postingsMap.put("numberOfPages", numberOfPages);
+		postingsMap.put("currentPage", (pageNo + 1));
+
+		return postingsMap;
 	}
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 

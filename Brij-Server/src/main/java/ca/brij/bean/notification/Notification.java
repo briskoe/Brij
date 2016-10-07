@@ -1,6 +1,7 @@
 package ca.brij.bean.notification;
 
 import java.io.Serializable;
+import java.util.Calendar;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,9 +15,9 @@ import javax.persistence.Table;
 
 @Entity
 @NamedQueries({ @NamedQuery(name = "Notification.getAllNotifications", query = "from Notification"),
-		@NamedQuery(name = "Notification.getNotificationById", query = "from Notification where id = :id"),
-		@NamedQuery(name = "Notification.getNotificationByUserID", query = "from Notification where userID = :userID "),
-		@NamedQuery(name = "Notification.getCountOfUnread", query = "SELECT count(*) from Notification where userID = :userID ")})
+		@NamedQuery(name = "Notification.getNotificationById", query = "from Notification where id = :id ORDER BY creationDate DESC"),
+		@NamedQuery(name = "Notification.getNotificationByUserID", query = "from Notification where userID = :userID ORDER BY creationDate DESC"),
+		@NamedQuery(name = "Notification.getCountOfUnread", query = "SELECT count(*) from Notification where userID = :userID AND readFlag = 0")})
 @Table(name = "Notification", indexes = { @Index(name = "notification_userIDInd", columnList = "userID")})
 public class Notification implements Serializable {
 
@@ -31,6 +32,7 @@ public class Notification implements Serializable {
 		this.description = description;
 		this.targetID = targetID;
 		this.readFlag = false;
+		this.creationDate = Calendar.getInstance();
 	}
 
 
@@ -53,7 +55,12 @@ public class Notification implements Serializable {
 	@Column(name = "description")
 	private String description;
 	
+	@Column(name = "readFlag")
 	private Boolean readFlag;
+	
+	@Column(name = "creationDate")
+	private Calendar creationDate;
+	
 
 	public Integer getId() {
 		return id;
@@ -86,11 +93,21 @@ public class Notification implements Serializable {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public Boolean getRead() {
+
+	public Boolean getReadFlag() {
 		return readFlag;
 	}
-	public void setRead(Boolean read) {
-		this.readFlag = read;
+
+	public void setReadFlag(Boolean readFlag) {
+		this.readFlag = readFlag;
+	}
+
+	public Calendar getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Calendar creationDate) {
+		this.creationDate = creationDate;
 	}
 	
 	
