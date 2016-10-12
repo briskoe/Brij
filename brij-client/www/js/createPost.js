@@ -64,7 +64,7 @@ function createService() {
 
 function saveService() {
     var newService = {
-        serviceName: $("#serviceName").val(),
+        serviceName: $("#serviceName").val()
     };
 
     makeRequest(CREATE_SERVICE, POST, JSON.stringify(newService), APPLICATION_JSON, saveServiceComplete, null);

@@ -19,6 +19,36 @@ $(function () {
 
     });
 
+    $("#btnRegistration").click(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        $("#registerModal").modal('show');
+
+        var newUser = {
+            username: $("#registerForm #username").val(),
+            password: $("#registerForm #password").val(),
+            email: $("#registerForm #email").val()
+        };
+
+        makeRequest(REGISTER_USER, POST, JSON.stringify(newUser), APPLICATION_JSON, saveUserComplete, null);
+
+    });
+
+    $("#btnRegister").click(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var newUser = {
+            username: $("#registerForm #username").val(),
+            password: $("#registerForm #password").val(),
+            email: $("#registerForm #email").val()
+        };
+
+        makeRequest(REGISTER_USER, POST, JSON.stringify(newUser), APPLICATION_JSON, saveUserComplete, errorSavingUser);
+
+    });
+
     function goToHome() {
         window.location = "postings.html";
     }
@@ -30,3 +60,13 @@ $(function () {
     }
 
 });
+
+function saveUserComplete(data) {
+    $("#registerModal").modal('show');
+
+    alert("User Created!");
+}
+
+function errorSavingUser(date) {
+    alert(data.toString);
+}

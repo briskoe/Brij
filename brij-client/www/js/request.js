@@ -16,6 +16,7 @@ var CREATE_REQUEST = "/request/save";
 var GET_REQUEST_BY_ID = "/request/findById?id=:id";
 var CREATE_SERVICE = "/service/save";
 var GET_MY_REQUESTS = "/request/findByRequester";
+var REGISTER_USER = "/user/register";
 
 //Request Types
 var GET = "GET";
