@@ -19,20 +19,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ca.brij.bean.posting.Posting;
 import ca.brij.bean.service.Service;
-import ca.brij.dao.posting.PostingDao;
-import ca.brij.dao.service.ServiceDao;
+import ca.brij.utils.DaoHelper;
 import ca.brij.utils.MergeBeanUtil;
-
-
 
 @RestController
 public class PostingController {
 
 	@Autowired
-	private PostingDao postingDao;
+	private DaoHelper daoHelper;
 	
-	@Autowired
-	private ServiceDao serviceDao;
 
 	@RequestMapping(value = "/posting/save", method = RequestMethod.POST)
 	@ResponseBody
@@ -42,7 +37,7 @@ public class PostingController {
 			post.setUserID(principal.getName());
 			Posting origPost = null;
 			if(post.getId() != null){
-				origPost = postingDao.getPostingById(post.getId());
+				origPost = daoHelper.getPostingDao().getPostingById(post.getId());
 
 			}
 			// means is new
@@ -55,7 +50,7 @@ public class PostingController {
 				MergeBeanUtil.copyNonNullProperties(post, origPost);
 
 			}
-			postingDao.save(origPost);
+			daoHelper.getPostingDao().save(origPost);
 		} catch (Exception ex) {
 			logger.error("error saving post("+post.getTitle()+") made by: " + principal.getName() + " message " + ex.getMessage());
 			throw ex;
@@ -82,8 +77,8 @@ public class PostingController {
 			if(pageSize == null){
 				pageSize = 10;
 			}
-			postings = postingDao.getPostingsByUserID(principal.getName(), new PageRequest(pageNo, pageSize));
-			numberOfPages = (int)Math.ceil((double)postingDao.getCountOfUser(principal.getName()) / (double)pageSize);
+			postings = daoHelper.getPostingDao().getPostingsByUserID(principal.getName(), new PageRequest(pageNo, pageSize));
+			numberOfPages = (int)Math.ceil((double)daoHelper.getPostingDao().getCountOfUser(principal.getName()) / (double)pageSize);
 		} catch (Exception ex) {
 			logger.error("Error retrieving all users made by " + principal.getName());
 			throw ex;
@@ -107,8 +102,8 @@ public class PostingController {
 		
 		try {
 			logger.info("retrieving post by id" +  id);
-			posting = postingDao.getPostingById(id);
-			Service service = serviceDao.getServiceById(posting.getServID());
+			posting = daoHelper.getPostingDao().getPostingById(id);
+			Service service = daoHelper.getServiceDao().getServiceById(posting.getServID());
 			String serviceName = service.getServiceName();
 			
 			isOwner = posting.getUserID().equals(principal.getName());
@@ -145,9 +140,9 @@ public class PostingController {
 			if(pageSize == null){
 				pageSize = 10;
 			}
-			postings = postingDao.getAllPostings(new PageRequest(pageNo, pageSize));
+			postings = daoHelper.getPostingDao().getAllPostings(new PageRequest(pageNo, pageSize));
 			//divide then take the decimal away. Ex 10.5 will give 10
-			numberOfPages = (int)Math.ceil((double)postingDao.getCountOfAll() / (double)pageSize);
+			numberOfPages = (int)Math.ceil((double)daoHelper.getPostingDao().getCountOfAll() / (double)pageSize);
 			
 		} catch (Exception ex) {
 			logger.error("Failed retrieving posts " + ex.getMessage());
