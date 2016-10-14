@@ -79,14 +79,15 @@ function createRequestList(data) {
     var array = data.list;
     noOfPages = data.numberOfPages;
     currentPage = data.currentPage;
-    console.log(data)
+    var titles = data.postTitles;
+    console.log(titles)
     for (var i = 0; i < array.length && i < 10; i++) {
         var badge = "MY REQUEST";
-
+        var requestId = array[i].requestID;
         if (i % 2 === 0) {
-            listItems += "<a href='request.html?id=" + array[i].requestID + "' class='list-group-item' id='request#" + array[i].requestID + "'> <span class='badge'>" + badge + "</span> " + array[i].requestID + "</a>";
+            listItems += "<a href='request.html?id=" + requestId + "' class='list-group-item' id='request#" + requestId + "'> <span class='badge'>" + badge + "</span> " + titles[requestId] + "</a>";
         } else {
-            listItems += "<a href='request.html?id=" + array[i].requestID + "' class='list-group-item list-group-item-info' id='request#" + array[i].requestID + "'>" + "<span class='badge'>" + badge + "</span>" + array[i].requestID + "</a>";
+            listItems += "<a href='request.html?id=" + requestId + "' class='list-group-item list-group-item-info' id='request#" + requestId + "'>" + "<span class='badge'>" + badge + "</span>" + titles[requestId] + "</a>";
         }
     }
 

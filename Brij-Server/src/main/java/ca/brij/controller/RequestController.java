@@ -22,6 +22,7 @@ import ca.brij.bean.request.Request;
 import ca.brij.dao.posting.PostingDao;
 import ca.brij.dao.request.RequestDao;
 import ca.brij.dao.service.ServiceDao;
+import ca.brij.utils.DaoHelper;
 import ca.brij.utils.MergeBeanUtil;
 import ca.brij.utils.NotificationSenderUtil;
 
@@ -29,16 +30,11 @@ import ca.brij.utils.NotificationSenderUtil;
 public class RequestController {
 
 	@Autowired
-	private RequestDao requestDao;
+	public DaoHelper daoHelper;
 	
 	@Autowired
 	private NotificationSenderUtil notificationUtils;
 	
-	@Autowired
-	private PostingDao postingDao;
-	
-	@Autowired
-	private ServiceDao serviceDao;
 	
 	/**
 	 * Save request. The person who made the request becomes the owner
@@ -56,7 +52,7 @@ public class RequestController {
 			logger.info("Saving request made by: " + principal.getName());
 			request.setUserID(principal.getName());
 			//see if the request exist
-			Request oldRequest = requestDao.findByUserAndPost(request.getUserID(), request.getPostID()) ;
+			Request oldRequest = daoHelper.getRequestDao().findByUserAndPost(request.getUserID(), request.getPostID()) ;
 			if(oldRequest == null){
 				//if it doesn't set up creation date and assign the new request
 				request.setCreationDate(Calendar.getInstance());
@@ -65,9 +61,9 @@ public class RequestController {
 				//if it old, set up the properties from the new changes to the old
 				MergeBeanUtil.copyNonNullProperties(request, oldRequest);
 			}
-			request = requestDao.save(oldRequest);
+			request = daoHelper.getRequestDao().save(oldRequest);
 			
-			Posting post = postingDao.getPostingById(request.getPostID());
+			Posting post = daoHelper.getPostingDao().getPostingById(request.getPostID());
 			if(post != null){
 				notificationUtils.makeNotification(post.getUserID(), NotificationSenderUtil.REQUEST_TYPE, request.getRequestID() ,
 						principal.getName() + " have made a request for your post");
@@ -98,13 +94,13 @@ public class RequestController {
 			if(request.getRequestID() == null || request.getUserID() == null){
 				throw new Exception("No ID or user provided");
 			}
-			Request oldRequest = requestDao.findById(request.getRequestID());
+			Request oldRequest = daoHelper.getRequestDao().findById(request.getRequestID());
 			if(oldRequest == null){
 				oldRequest = request;
 			}else{
 				MergeBeanUtil.copyNonNullProperties(request, oldRequest);
 			}
-			requestDao.save(oldRequest);
+			daoHelper.getRequestDao().save(oldRequest);
 		}catch(Exception e){
 			logger.error("Error editing request " + e.getMessage());
 			throw e;
@@ -119,7 +115,7 @@ public class RequestController {
 		ArrayList<Request> requests = null;
 		try{
 			logger.info("Finding All Requests");
-			requests = requestDao.findAll();
+			requests = daoHelper.getRequestDao().findAll();
 		}catch(Exception e){
 			logger.error("Error finding all requests " + e.getMessage());
 			throw e;
@@ -136,9 +132,9 @@ public class RequestController {
 		String serviceName = null;
 		try{
 			logger.info("Finding Request by ID: " + id);
-			request = requestDao.findById(id);
-			post = postingDao.getPostingById(request.getPostID());
-			serviceName = serviceDao.getServiceById(post.getServID()).getServiceName();
+			request = daoHelper.getRequestDao().findById(id);
+			post = daoHelper.getPostingDao().getPostingById(request.getPostID());
+			serviceName = daoHelper.getServiceDao().getServiceById(post.getServID()).getServiceName();
 
 		}catch(Exception e){
 			logger.error("Error Finding request" + e.getMessage());
@@ -173,9 +169,15 @@ public class RequestController {
 				pageSize = 10;
 			}
 			logger.info("Finding all request made by the requester " + principal.getName());
-			
-			requests = requestDao.findByUser(principal.getName(), new PageRequest(pageNo, pageSize));
-			numberOfPages = (int)Math.ceil((double)requestDao.getCountForUser(principal.getName()) / (double)pageSize);
+			Map<Integer, String> titleMap = new HashMap<Integer, String>();
+			requests = daoHelper.getRequestDao().findByUser(principal.getName(), new PageRequest(pageNo, pageSize));
+			for(Request r : requests){
+				Posting post = daoHelper.getPostingDao().getPostingById(r.getPostID());
+				titleMap.put(r.getRequestID(), post.getTitle());
+
+			}
+			numberOfPages = (int)Math.ceil((double)daoHelper.getRequestDao().getCountForUser(principal.getName()) / (double)pageSize);
+			requestMap.put("postTitles", titleMap);
 			
 		}catch(Exception e){
 			logger.error("Error finding all request made by the requester " + e.getMessage());
@@ -210,8 +212,8 @@ public class RequestController {
 				pageSize = 10;
 			}
 			logger.info("Finding all requests made by user " + userID);
-			requests = requestDao.findByUser(userID, new PageRequest(pageNo, pageSize));
-			numberOfPages = (int)Math.ceil((double)requestDao.getCountForUser(userID) / (double)pageSize);
+			requests = daoHelper.getRequestDao().findByUser(userID, new PageRequest(pageNo, pageSize));
+			numberOfPages = (int)Math.ceil((double)daoHelper.getRequestDao().getCountForUser(userID) / (double)pageSize);
 		}catch(Exception e){
 			logger.error("Error finding all requests made by user " + userID);
 			throw e;
@@ -235,7 +237,7 @@ public class RequestController {
 		ArrayList<Request> requests = null;
 		try{
 			logger.info("Finding request made for post with ID " + postID);
-			requests = requestDao.findByPost(postID);
+			requests = daoHelper.getRequestDao().findByPost(postID);
 		}catch(Exception e){
 			logger.error("Error finding requests made for post with ID "+ postID + " " + e.getMessage());
 			throw e;
