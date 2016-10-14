@@ -17,7 +17,8 @@ var GET_REQUEST_BY_ID = "/request/findById?id=:id";
 var CREATE_SERVICE = "/service/save";
 var GET_MY_REQUESTS = "/request/findByRequester";
 var REGISTER_USER = "/user/register";
-
+var GET_CONVERSATION_BY_REQUEST = "/conversation/getByRequest?id=:id";
+var SAVE_MESSAGE = "/conversation/saveMessage?id=:id"
 //Request Types
 var GET = "GET";
 var POST = "POST";

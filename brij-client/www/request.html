@@ -12,7 +12,7 @@
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/request.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
-    <script type="text/javascript" src="/js/requestPage.js"></script>
+    <script type="text/javascript" src="js/requestPage.js"></script>
 
 </head>
 
@@ -64,13 +64,37 @@
                 </div>
             </div>
 
+            <button id="btnBack" type="button" class="btn btn-default form-control margin-bottom-5">Back</button>
+            <br>
+            <button id="btnEdit" type="button" class="btn btn-default btn-success form-control margin-bottom-5">Edit</button>
+            
+            <a class="btn btn-link form-control" href="#"  data-toggle="modal" id="btnOpenConvo">Open Conversation</a>
 
-            <div class="form-group">
-                <button id="btnBack" type="button" class="btn btn-default col-xs-6">Back</button>
-                <button id="btnEdit" type="button" class="btn btn-default col-xs-6 btn-success">Edit</button>
-            </div>
         </form>
     </div>
+    
+    
+    <div class="modal fade" id="chatRoomModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="modalTitle">Modal title</h4>
+      </div>
+      <div class="modal-body" id='modalBody'>
+        ...
+      </div>
+      <div class="modal-footer">
+        <textarea id="txtaComment" rows="5" class="form-control"></textarea>
+          <br>
+        <button type="button" class="btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class=" btn-primary" id="btnSaveMessage">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 </body>
 

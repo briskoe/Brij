@@ -22,16 +22,7 @@ $(function () {
     $("#btnRegistration").click(function (e) {
         e.preventDefault();
         e.stopPropagation();
-
         $("#registerModal").modal('show');
-
-        var newUser = {
-            username: $("#registerForm #username").val(),
-            password: $("#registerForm #password").val(),
-            email: $("#registerForm #email").val()
-        };
-
-        makeRequest(REGISTER_USER, POST, JSON.stringify(newUser), APPLICATION_JSON, saveUserComplete, null);
 
     });
 

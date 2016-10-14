@@ -1,6 +1,7 @@
 var postID;
 var requestID;
 var isSavingRequest = false;
+var conversationTimer;
 
 $(function () {
     $("#btnBack").click(function (e) {
@@ -27,9 +28,77 @@ $(function () {
         }
     });
 
+    $("#btnOpenConvo").click(function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        requestConversation();
+        conversationTimer = setInterval(requestConversation, 50000);
+    });
+    
+    $("#btnSaveMessage").click(function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        var url = SAVE_MESSAGE;
+        url = url.replace(":id", requestID);
+        var message = {
+            "message": $("#txtaComment").val()
+        }
+        makeRequest(url, POST, JSON.stringify(message), APPLICATION_JSON, function(data){
+            $("#txtaComment").val("");
+            requestConversation();
+        }, null);
+    })
+    
     getRequest($.urlParam("id"));
 
 });
+
+function requestConversation(){
+    var url = GET_CONVERSATION_BY_REQUEST;
+    url = url.replace(":id", requestID);
+    makeRequest(url, GET, "", "", openConversation, null);
+}
+function openConversation(data){
+    var conversation = data.conversation;
+    var currentUser = data.currentUser;
+    var body = createMessagesDiv(conversation.messages, currentUser);
+    $("#chatRoomModal #modalTitle").html(conversation.title);
+    $("#chatRoomModal #modalBody").css({"height": $(window).height() - 200});
+    $("#chatRoomModal #modalBody").scrollTop($("#chatRoomModal #modalBody").scrollHeight);
+    $("#chatRoomModal #modalBody").html(body);
+    $("#chatRoomModal").modal();
+}
+
+$('#chatRoomModal').on('hide.bs.modal', function (e) {
+    clearInterval(conversationTimer);
+    
+})
+
+function createMessagesDiv(messages, currentUser){
+    var div = "<div id='messageDiv' class='clearfix'>";
+    for(var i = 0; i < messages.length; i++){
+        var username = messages[i].username;
+        var message = messages[i].message;
+        var date = messages[i].date;
+        var correspondingClass = "";
+        var addressUser = "";
+        if(username === currentUser){
+            correspondingClass = "bg-success pull-right text-right"
+            addressUser = "You:";
+        }else{
+            correspondingClass = "pull-sm-left"
+            addressUser = username + ":";
+        }
+        
+        div += "<div class='individualMessage "+ correspondingClass+"'> <span class='chatUser'>"+addressUser+"</span> <p class='message'>"+message+"<br><span class='date'>"+new Date(date).toLocaleString()+"</span></p> </div>";
+        //add a clearfix div to put an space between both conversations
+        div += "<div class='clearfix'></div>"
+    }
+    
+    div += "</div>";
+    return div;
+    
+}
 
 function updateRequest() {
     var updateRequest = {
@@ -52,8 +121,8 @@ function getRequest(id) {
 
 function populateRequest(data) {
     postID = data.posting.id;
-    requestID = data.request.id;
-
+    requestID = data.request.requestID;
+    console.log(requestID);
     $("#postName").html(data.posting.title);
     if (data.posting.isPost) {
         $("#requestType").html("You have requested this service");
