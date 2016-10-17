@@ -34,15 +34,45 @@
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                             <h4 class="modal-title">Register User</h4>
                         </div>
+
                         <div class="modal-body" id="registerForm">
-                            <input type="text" class="form-control" id="username" placeholder="Username" /><br />
-                            <input type="text" class="form-control" id="password" placeholder="Password" /><br />
-                            <input type="text" class="form-control" id="email" placeholder="Email" />
+                            <input type="text" class="form-control" id="username" placeholder="Enter Username" />
+                            <br />
+                            <input type="password" class="form-control" id="password" placeholder="Enter Password" />
+                            <br />
+                            <input type="password" class="form-control" id="confirmPassword" placeholder="Re-enter Password" />
+                            <br />
+                            <input type="email" class="form-control" id="email" placeholder="Enter Email" />
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button id="btnRegister" type="button" class="btn btn-success" data-dismiss="modal">Save</button>
+                            <button id="btnRegister" type="button" class="btn btn-success" data-dismiss="modal">Register</button>
                         </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="completeAccountModal" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Complete Account Details</h4>
+                        </div>
+                        <div class="modal-body">
+                            <h5>Would you like to complete your Account Details now or later?</h5>
+                        </div>
+                        <div class="modal-footer">
+                            <button id="btnLater" type="button" class="btn btn-default" data-dismiss="modal">Later</button>
+                            <button id="btnNow" type="button" class="btn btn-success" data-dismiss="modal">Now</button>
+                        </div>
+
+
                     </div>
 
                 </div>

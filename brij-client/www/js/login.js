@@ -26,38 +26,79 @@ $(function () {
 
     });
 
+    $("#btnNow").click(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        completeAccount("Now");
+    });
+
+    $("#btnLater").click(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        completeAccount("Later");
+    });
+
     $("#btnRegister").click(function (e) {
         e.preventDefault();
         e.stopPropagation();
 
-        var newUser = {
-            username: $("#registerForm #username").val(),
-            password: $("#registerForm #password").val(),
-            email: $("#registerForm #email").val()
-        };
+        if (($("#registerForm #password").val() === $("#registerForm #confirmPassword").val()) && $("#registerForm #password").val().length >= PASSWORD_LENGTH) {
+            var newUser = {
+                username: $("#registerForm #username").val(),
+                password: $("#registerForm #password").val(),
+                email: $("#registerForm #email").val()
+            };
 
-        makeRequest(REGISTER_USER, POST, JSON.stringify(newUser), APPLICATION_JSON, saveUserComplete, errorSavingUser);
-
-    });
-
-    function goToHome() {
-        window.location = "postings.html";
-    }
-
-    function checkIfOnlineCallback(data) {
-        if (data) {
-            goToHome();
+            makeRequest(REGISTER_USER, POST, JSON.stringify(newUser), APPLICATION_JSON, saveUserComplete, errorSavingUser);
+        } else {
+            alert("ADD INFORMATIVE MESSAGE - Passwords do not match");
         }
-    }
+    });
 
 });
 
-function saveUserComplete(data) {
-    $("#registerModal").modal('show');
-
-    alert("User Created!");
+function checkIfOnlineCallback(data) {
+    if (data) {
+        goToHome("postings.html");
+    }
 }
 
-function errorSavingUser(date) {
+function goToHome(where) {
+    window.location = where;
+}
+
+function completeAccountDetails(data) {
+    if (data) {
+        goToHome("accountDetails.html");
+    }
+}
+
+function saveUserComplete() {
+    $("#registerModal").modal('hide');
+    $("#completeAccountModal").modal('show');
+
+}
+
+function errorSavingUser(data) {
     alert(data.toString);
+}
+
+function completeAccount(when) {
+    var username = $("#registerForm #username").val();
+    var password = $("#registerForm #password").val();
+    var callbackLocation = checkIfOnlineCallback;
+
+    var url = LOGIN;
+    url = url.replace(":username", username).replace(":password", password);
+
+    if (when === "Now") {
+        callbackLocation = completeAccountDetails;
+    }
+
+    makeRequest(url, POST, "", "", function (data) {
+        //if online go to the homePage as you have permission
+        checkIfOnline(callbackLocation, false);
+    }, defaultError);
+
+
 }
