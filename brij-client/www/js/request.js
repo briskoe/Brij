@@ -25,9 +25,6 @@ var POST = "POST";
 var PUT = "PUT";
 var DELETE = "DELETE";
 
-//Account Information
-var MINIMUM_PASSWORD_LENGTH = 5;
-
 var APPLICATION_JSON = "application/json; charset=utf-8";
 
 
