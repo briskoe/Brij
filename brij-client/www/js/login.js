@@ -42,7 +42,7 @@ $(function () {
         e.preventDefault();
         e.stopPropagation();
 
-        if (($("#registerForm #password").val() === $("#registerForm #confirmPassword").val()) && $("#registerForm #password").val().length >= PASSWORD_LENGTH) {
+        if (($("#registerForm #password").val() === $("#registerForm #confirmPassword").val()) && $("#registerForm #password").val().length >= MINIMUM_PASSWORD_LENGTH && $("#registerForm #password").val().length <= MAXIMUM_PASSWORD_LENGTH) {
             var newUser = {
                 username: $("#registerForm #username").val(),
                 password: $("#registerForm #password").val(),
