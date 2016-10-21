@@ -80,7 +80,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .anyRequest().hasRole("USER")
 				.and()
 		        .formLogin()
-		        .loginPage("/").permitAll()
 		        .successHandler(authenticationSuccessHandler)
 		        .failureHandler(new SimpleUrlAuthenticationFailureHandler())
 	            .and()
