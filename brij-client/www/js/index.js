@@ -66,6 +66,7 @@ function initializeMainMenu() {
     var navbar = "" +
         "<li class='menuLinks'><a href='postings.html'>Postings</a></li>" +
         "<li class='menuLinks'><a href='accountDetails.html'>Account Details</a></li>" +
+        "<li class='menuLinks'><a href='history.html'>History</a></li>" +
         "<li class='menuLinks'><a id='logoutMenuItem'>Logout</a></li>";
     $("#navbar").html(navbar);
 

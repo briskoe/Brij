@@ -91,6 +91,46 @@ public class PostingController {
 	}
 	
 	/**
+	 * Find By User
+	 * @throws Exception 
+	 */
+	@RequestMapping(value = "/posting/findHistoryByUser", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> getPostingHistorByUser(Principal principal, @RequestParam(value = "pageNo", required=false) Integer pageNo, @RequestParam(value = "pageSize", required=false) Integer pageSize) throws Exception {
+		Map<String, Object> postingsMap = new HashMap<String, Object>();
+		Map<String, Integer> countMap = new HashMap<String, Integer>(); 
+		ArrayList<Posting> postings = null;
+		int numberOfPages = 0;
+		
+		try {
+			logger.info("retrieving all posts made by: " + principal.getName());
+			if(pageNo == null){
+				pageNo = 0;
+			}
+			if(pageSize == null){
+				pageSize = 10;
+			}
+			postings = daoHelper.getPostingDao().getPostingsByUserID(principal.getName(), new PageRequest(pageNo, pageSize));
+			
+			for (Posting post : postings) {
+				int numOfReplies = daoHelper.getRequestDao().getCountForPost(post.getId());
+				countMap.put(post.getId().toString(), numOfReplies);	
+			}
+			
+			numberOfPages = (int)Math.ceil((double)daoHelper.getPostingDao().getCountOfUser(principal.getName()) / (double)pageSize);
+		} catch (Exception ex) {
+			logger.error("Error retrieving all users made by " + principal.getName());
+			throw ex;
+		}
+		postingsMap.put("list", postings);
+		postingsMap.put("numberOfPages", numberOfPages);
+		postingsMap.put("currentPage", (pageNo + 1));
+		postingsMap.put("countMap", countMap);
+		logger.info("successfully retrieved posts made by: " + principal.getName());
+		return postingsMap;
+	}
+	
+	/**
 	 * Find By id
 	 */
 	@RequestMapping(value = "/posting/findById", method = RequestMethod.GET)

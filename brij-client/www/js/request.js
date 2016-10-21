@@ -19,6 +19,7 @@ var GET_MY_REQUESTS = "/request/findByRequester";
 var REGISTER_USER = "/user/register";
 var GET_CONVERSATION_BY_REQUEST = "/conversation/getByRequest?id=:id";
 var SAVE_MESSAGE = "/conversation/saveMessage?id=:id"
+var GET_POST_HISTORY = "/posting/findHistoryByUser";
 //Request Types
 var GET = "GET";
 var POST = "POST";

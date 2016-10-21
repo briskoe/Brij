@@ -20,7 +20,7 @@ import org.hibernate.annotations.DynamicUpdate;
 		@NamedQuery(name = "Posting.getPostingById", query = "from Posting where id = :id"),
 		@NamedQuery(name = "Posting.getPostingsByUserID", query = "from Posting where userID = :userID ORDER BY creationDate DESC"),
 		@NamedQuery(name = "Posting.getCountOfAll", query = "SELECT count(*) from Posting ORDER BY creationDate DESC"),
-		@NamedQuery(name = "Posting.getCountOfUser", query = "SELECT count(*) from Posting  where userID = :userID ORDER BY creationDate DESC")})
+		@NamedQuery(name = "Posting.getCountOfUser", query = "SELECT count(*) from Posting  where userID = :userID")})
 @Table(name = "posting", indexes = { @Index(name = "posting_userIdInd", columnList = "userID"),
 		@Index(name = "posting_nameInd", columnList = "title") })
 @DynamicUpdate
