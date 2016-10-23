@@ -19,16 +19,26 @@ var GET_MY_REQUESTS = "/request/findByRequester";
 var REGISTER_USER = "/user/register";
 var GET_CONVERSATION_BY_REQUEST = "/conversation/getByRequest?id=:id";
 var SAVE_MESSAGE = "/conversation/saveMessage?id=:id"
+
+//ADMIN
+var GET_ALL_USERS = "/admin/user/findAll"
 //Request Types
 var GET = "GET";
 var POST = "POST";
 var PUT = "PUT";
 var DELETE = "DELETE";
 
+//PORTAL
+var HOME = SERVER_URL + "/homePage";
+var ADMIN_USER_PAGE = SERVER_URL + "/admin/userPage";
+
+
 
 var APPLICATION_JSON = "application/json; charset=utf-8";
 
-
+function logout(callback, errorCallBack){
+	makeRequest(LOGOUT, POST, "", "", callback, errorCallBack);
+}
 function initializeUser() {
     var user = {};
     user.firstName = "";

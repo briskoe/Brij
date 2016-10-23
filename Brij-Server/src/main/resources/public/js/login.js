@@ -41,7 +41,7 @@ $(function () {
     });
 
     function goToHome() {
-        window.location = "homePage";
+        window.location = HOME;
     }
 
     function checkIfOnlineCallback(data) {
