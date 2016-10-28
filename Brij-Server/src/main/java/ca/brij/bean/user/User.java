@@ -19,6 +19,7 @@ import javax.persistence.Table;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.maps.model.LatLng;
 
 @Entity
 @NamedQueries({ @NamedQuery(name = "User.findsomething", query = "SELECT u FROM User u WHERE u.email = :email"),
@@ -62,6 +63,12 @@ public class User implements Serializable {
 	
 	@Column(name = "province", length = 100)
 	private String province;
+	
+	@Column(name = "latitude")
+	private Double latitude;
+	
+	@Column(name = "longitude")
+	private Double longitude;
 	
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user" , cascade = CascadeType.ALL, orphanRemoval=true)
@@ -122,7 +129,22 @@ public class User implements Serializable {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	
+	public Double getLatitude() {
+		return latitude;
+	}
 
+	public void setLatitude(Double latitude) {
+		this.latitude = latitude;
+	}
+
+	public Double getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(Double longitude) {
+		this.longitude = longitude;
+	}
 
 	//isEnabled would be the convention
 	//But as it is, it needs to be get to be

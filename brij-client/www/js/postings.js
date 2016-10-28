@@ -35,8 +35,11 @@ $(function () {
 });
 
 function getAllPosts() {
-    makeRequest(GET_POSTS, GET, "", "", createPostingList, null);
-
+    var url = GET_POSTS;
+    if(search_km !== null){
+        url += "?distance="+ search_km;
+    }
+    makeRequest(url, GET, "", "", createPostingList, null);
 }
 
 function createPostingList(data) {
@@ -44,7 +47,6 @@ function createPostingList(data) {
     var array = data.list;
     noOfPages = data.numberOfPages;
     currentPage = data.currentPage;
-    console.log(data)
     for (var i = 0; i < array.length && i < 10; i++) {
         var badge = "REQUEST"
         if (array[i].isPost) {
@@ -80,7 +82,6 @@ function createRequestList(data) {
     noOfPages = data.numberOfPages;
     currentPage = data.currentPage;
     var titles = data.postTitles;
-    console.log(titles)
     for (var i = 0; i < array.length && i < 10; i++) {
         var badge = "MY REQUEST";
         var requestId = array[i].requestID;
@@ -137,6 +138,9 @@ function paginationButtonClick(anchor) {
         url = GET_MY_POSTS;
     }
 
-    url += "?pageNo=" + pageId + "";
+    url += "?pageNo=" + pageId;
+    if(search_km !== null){
+        url +="&distance="+ search_km;
+    }
     makeRequest(url, GET, "", "", createPostingList, null);
 }

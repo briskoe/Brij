@@ -17,6 +17,8 @@ public interface PostingDao extends JpaRepository<Posting, Long> {
 	
 	public ArrayList<Posting> getAllPostings(Pageable pageable);
 
+	public ArrayList<Posting> getPostsByLocation(Pageable pageable, @Param("latitude") Double latitude, @Param("longitude") Double longitude, @Param("distance") Double distance );
+	
 	public ArrayList<Posting> getPostingsByUserID(@Param("userID") String userID, Pageable pageable);
 	
 	public int getCountOfAll();

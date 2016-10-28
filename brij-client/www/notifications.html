@@ -12,7 +12,7 @@
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/request.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
-    <script type="text/javascript" src="js/postings.js"></script>
+    <script type="text/javascript" src="js/notifications.js"></script>
 </head>
 
 <body>
@@ -33,25 +33,20 @@
             </ul>
         </div>
     </nav>
-    <div class="container">
-        <img src="img/brij_logo.png" class="img-rounded" alt="Brij Logo" width="100%">
-        <a href="createPost.html" class="btn btn-primary btn-block btn-lg" role="button">Create New Post</a>
-    </div>
+
     <!--END OF HEADER -->
 
     <br>
-    <div class="btn-group btn-group-justified">
-        <a id="btnAll" href="#" class="btn btn-info btnPosts active">All Postings</a>
-        <a id="btnMyPosts" href="#" class="btn btn-info btnPosts">My Postings</a>
-        <a id="btnMyRequest" href="#" class="btn btn-info btnPosts">My Requests</a>
-    </div>
-    <div id="postingList" class="list-group">
-
-    </div>
-    
-    <div id="postingPagination" class="pager">
+    <div class="container">
+        <div class="page-header text-center">
+            <h1>Notifications</h1>
+        </div>
+        <div class="list-group scrollableArea" id="notificationDiv">
+        
+        </div>
     </div>
 
+ 
 </body>
 
 </html>

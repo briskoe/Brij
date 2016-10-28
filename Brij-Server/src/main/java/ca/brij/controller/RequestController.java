@@ -65,7 +65,7 @@ public class RequestController {
 			
 			Posting post = daoHelper.getPostingDao().getPostingById(request.getPostID());
 			if(post != null){
-				notificationUtils.makeNotification(post.getUserID(), NotificationSenderUtil.REQUEST_TYPE, request.getRequestID() ,
+				notificationUtils.makeNotification(post.getUser().getUsername(), NotificationSenderUtil.REQUEST_TYPE, request.getRequestID() ,
 						principal.getName() + " have made a request for your post");
 			}
 

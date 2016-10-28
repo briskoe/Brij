@@ -1,5 +1,9 @@
 package ca.brij.utils;
 
+import java.util.Calendar;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Repository;
@@ -23,7 +27,20 @@ public class NotificationSenderUtil {
 		notificationDao.save(notification);
 	}
 	public void makeNotification(String userID, String type, Integer targetID, String description){
-		makeNotification(new Notification(userID, type, targetID, description));
+		Notification notif = notificationDao.checkIfExist(userID, targetID, type);
+		try{
+			if(notif == null){
+				notif = new Notification(userID, type, targetID, description);
+			}else{
+				notif.setCreationDate(Calendar.getInstance());
+				notif.setDescription(description);
+				notif.setReadFlag(false);
+			}
+			makeNotification(notif);
+		}catch(Exception e){
+			logger.error("Error making notification - continue" + e.getMessage());
+		}
+
 	}
 
 	public  NotificationDao getNotificationDao() {
@@ -33,6 +50,7 @@ public class NotificationSenderUtil {
 	public  void setNotificationDao(NotificationDao notificationDao) {
 		this.notificationDao = notificationDao;
 	}
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	public static final String REQUEST_TYPE = "request";
 

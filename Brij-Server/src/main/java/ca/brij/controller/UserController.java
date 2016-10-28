@@ -15,22 +15,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import com.google.maps.model.LatLng;
 
 import ca.brij.bean.user.MyUserDetailsService;
 import ca.brij.bean.user.User;
 import ca.brij.bean.user.UserRole;
 import ca.brij.dao.user.UserDao;
+import ca.brij.utils.GeocodingHelper;
 import ca.brij.utils.MergeBeanUtil;
-
 
 @RestController
 public class UserController {
 
-	
 	@RequestMapping(value = "/user/register", method = RequestMethod.POST)
 	@ResponseBody
 	public String register(@RequestBody User userEntity) throws Exception {
-		try{
+		try {
 			logger.info("Registering user: " + userEntity.getUsername());
 			userEntity.setEnabled(true);
 			String encryptedPassword = new BCryptPasswordEncoder().encode(userEntity.getPassword());
@@ -42,7 +42,7 @@ public class UserController {
 			UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails,
 					encryptedPassword, userDetails.getAuthorities());
 			SecurityContextHolder.getContext().setAuthentication(auth);
-		}catch(Exception e){
+		} catch (Exception e) {
 			logger.error("Error registering user: " + userEntity.getUsername() + " message " + e.getMessage());
 			throw e;
 		}
@@ -51,20 +51,30 @@ public class UserController {
 		return "Success";
 
 	}
+
 	@RequestMapping(value = "/user/save", method = RequestMethod.POST)
 	@ResponseBody
 	public String updateUser(@RequestBody User updatedUser, Principal principal) throws Exception {
 		try {
 			logger.info("Saving user: " + principal.getName());
-			//password and enabled goes to null as we can't allow to be updated through this request
+			// password and enabled goes to null as we can't allow to be updated
+			// through this request
 			updatedUser.setPassword(null);
 			updatedUser.setEnabled(null);
 			updatedUser.setUserRole(null);
+			updatedUser.setUsername(null);
+			LatLng location = geoHelper.getLocationFromAddress(updatedUser.getAddress() + ", " + updatedUser.getCity() + ", " + updatedUser.getProvince());
+			if (location != null) {
+				updatedUser.setLatitude(location.lat);
+				updatedUser.setLongitude(location.lng);
+			}
+
 			User originalUser = userDao.findByUserName(principal.getName());
-			MergeBeanUtil.copyNonNullProperties(updatedUser,originalUser );
+			MergeBeanUtil.copyNonNullProperties(updatedUser, originalUser);
+
 			userDao.save(originalUser);
 		} catch (Exception ex) {
-			logger.error("Error saving user" + principal.getName() + "message: " +ex.getMessage());
+			logger.error("Error saving user" + principal.getName() + "message: " + ex.getMessage());
 			throw ex;
 		}
 		logger.info("Updating user " + principal.getName() + " was successful");
@@ -73,7 +83,8 @@ public class UserController {
 
 	/**
 	 * GET /delete --> Delete the user having the passed id.
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "/admin/user/delete", method = RequestMethod.DELETE)
 	@ResponseBody
@@ -89,7 +100,7 @@ public class UserController {
 		logger.info("Deleting user" + username + " was successful");
 		return "Success";
 	}
-	
+
 	@RequestMapping("/user/current")
 	@ResponseBody
 	public User getCurrentUser(Principal principal) {
@@ -134,11 +145,16 @@ public class UserController {
 		}
 		return users;
 	}
+
 	@Autowired
 	private UserDao userDao;
-	
+
 	@Autowired
 	private MyUserDetailsService userDetailsService;
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	@Autowired
+	private GeocodingHelper geoHelper;
+
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 }

@@ -16,8 +16,11 @@ import javax.persistence.Table;
 @Entity
 @NamedQueries({ @NamedQuery(name = "Notification.getAllNotifications", query = "from Notification"),
 		@NamedQuery(name = "Notification.getNotificationById", query = "from Notification where id = :id ORDER BY creationDate DESC"),
+		@NamedQuery(name = "Notification.checkIfExist", query = "from Notification where userID = :userID AND targetID = :targetID AND type = :type ORDER BY creationDate DESC"),
 		@NamedQuery(name = "Notification.getNotificationByUserID", query = "from Notification where userID = :userID ORDER BY creationDate DESC"),
-		@NamedQuery(name = "Notification.getCountOfUnread", query = "SELECT count(*) from Notification where userID = :userID AND readFlag = 0")})
+		@NamedQuery(name = "Notification.getCountOfUnread", query = "SELECT count(*) from Notification where userID = :userID AND readFlag = 0"),
+		@NamedQuery(name = "Notification.getCountOfNotificationUser", query = "SELECT count(*) from Notification where userID = :userID")
+})
 @Table(name = "Notification", indexes = { @Index(name = "notification_userIDInd", columnList = "userID")})
 public class Notification implements Serializable {
 

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ca.brij.bean.posting.Posting;
 import ca.brij.bean.service.Service;
+import ca.brij.bean.user.User;
 import ca.brij.utils.DaoHelper;
 import ca.brij.utils.MergeBeanUtil;
 
@@ -34,7 +35,8 @@ public class PostingController {
 	public String updatePost(@RequestBody Posting post, Principal principal) throws Exception {
 		try {
 			logger.info("saving post("+post.getTitle()+") made by: " + principal.getName());
-			post.setUserID(principal.getName());
+			User user = daoHelper.getUserDao().findByUserName(principal.getName());
+			post.setUser(user);;
 			Posting origPost = null;
 			if(post.getId() != null){
 				origPost = daoHelper.getPostingDao().getPostingById(post.getId());
@@ -146,7 +148,7 @@ public class PostingController {
 			Service service = daoHelper.getServiceDao().getServiceById(posting.getServID());
 			String serviceName = service.getServiceName();
 			
-			isOwner = posting.getUserID().equals(principal.getName());
+			isOwner = posting.getUser().getUsername().equals(principal.getName());
 						
 			map.put("serviceName", serviceName);
 			
@@ -168,7 +170,7 @@ public class PostingController {
 	 */
 	@RequestMapping(value = "/posting/findAll", method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, Object> getAllPosting(@RequestParam(value = "pageNo", required=false) Integer pageNo,@RequestParam(value = "pageSize", required=false) Integer pageSize ) throws Exception {
+	public Map<String, Object> getAllPosting(Principal principal, @RequestParam(value = "pageNo", required=false) Integer pageNo,@RequestParam(value = "pageSize", required=false) Integer pageSize, @RequestParam(value = "distance", required=false) Double distance ) throws Exception {
 		Map<String, Object> postingsMap = new HashMap<String, Object>();
 		ArrayList<Posting> postings;
 		int numberOfPages = 0;
@@ -180,7 +182,17 @@ public class PostingController {
 			if(pageSize == null){
 				pageSize = 10;
 			}
-			postings = daoHelper.getPostingDao().getAllPostings(new PageRequest(pageNo, pageSize));
+			if(distance == null){
+				distance = 25.0;
+			}
+			User currentUser = daoHelper.getUserDao().findByUserName(principal.getName());
+			Double lat = currentUser.getLatitude();
+			Double lng = currentUser.getLongitude();
+			if(lat == null || lng == null){
+				postings = daoHelper.getPostingDao().getAllPostings(new PageRequest(pageNo, pageSize));
+			}else{
+				postings = daoHelper.getPostingDao().getPostsByLocation(new PageRequest(pageNo, pageSize), currentUser.getLatitude(), currentUser.getLongitude(), distance);
+			}
 			//divide then take the decimal away. Ex 10.5 will give 10
 			numberOfPages = (int)Math.ceil((double)daoHelper.getPostingDao().getCountOfAll() / (double)pageSize);
 			

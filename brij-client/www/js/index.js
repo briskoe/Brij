@@ -8,8 +8,25 @@ var IS_REQUEST_MESSAGE_FOR_OTHERS = "This post is requesting for help";
 var IS_POSTING_MESSAGE_FOR_OTHERS = "This post is offering a service"
 var MINIMUM_PASSWORD_LENGTH = 5;
 var MAXIMUM_PASSWORD_LENGTH = 15;
+var global_notifications;
+var NOTIFICATION_LIMIT = 10;
+//settings values
+var search_km = 25;
 
 var notification_timer;
+var PROVINCES = {
+    ON: "Ontario",
+    QC: "Quebec",
+    NS: "Nova Scotia",
+    NB: "New Brunswick",
+    MB: "Manitoba",
+    BC: "British Columbia",
+    PE: "Prince Edward Island",
+    SK: "Saskatchewan",
+    AB: "Alberta",
+    NL: "Newfoundland and Labrador"
+    
+}
 var app = {
     // Application Constructor
     initialize: function () {
@@ -38,7 +55,6 @@ var app = {
         listeningElement.setAttribute('style', 'display:none;');
         receivedElement.setAttribute('style', 'display:block;');
 
-        console.log('Received Event: ' + id);
     }
 };
 
@@ -52,9 +68,70 @@ $(function () {
     //set up a timer to look out for unread notifications
     notificationRequest();
     notification_timer = setInterval(notificationRequest, 50000);
-
+    
+    setupStorage();
+    setupSettingModal();
+    setupScrollable();
 });
 
+function setupScrollable(){
+    var window_height = $(window).height(),
+    content_height = window_height - 200;
+    $('.scrollableArea').height(content_height);
+}
+$( window ).resize(function() {
+   var window_height = $(window).height(),
+   content_height = window_height - 200;
+   $('.scrollableArea').height(content_height);
+});
+
+function setupSettingModal(){
+    var modal = "<div class='container' ><div id='settingModal' class='modal fade' role='dialog'>" +
+        "<div class='modal-dialog'>" +
+        "<div class='modal-content'> <div class='modal-header'>" +
+        "<button type='button' class='close' data-disiss='modal'>&times;</button>"+
+        "<h4>Setting</h4> </div>" +
+        "<div class='modal-body'> " +
+        settingBody() +
+        "</div><div class='modal-footer'>" +
+        "<button type='button' class='btn btn-info' id='btnSaveSetting' > Save </button>" +
+        "<button type='button' class='btn btn-default' data-dismiss='modal'>close</button>" + "</div> </div> </div>" +
+        "</div> </div>";
+    $("body").append(modal);
+    
+    
+    $("#btnSaveSetting").click(function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        //get the distance for the km.
+        var distanceKm = $("#txtKm").val();
+        if(window.localStorage){
+            window.localStorage.setItem("searchKm", distanceKm);
+            search_km = distanceKm;
+            $("#txtKm").val(distanceKm);
+            $("#settingModal").modal("hide");
+        }
+    })
+}
+
+function settingBody(){
+    var modalBody = "<div>"
+    +"<form novalidate onSubmit='return false'>"+
+        "<div class='form-group'><label>Distance to filter (km)</label> <input class='form-control' type='number' id='txtKm' value='"+search_km+"'/> </div> " + 
+    "</form> </div>"
+    return modalBody;
+}
+function setupStorage(){
+    if(window.localStorage){
+        var seachKmSetting = localStorage.getItem("searchKm");
+        if (seachKmSetting !== null) {
+            search_km = seachKmSetting;
+        }else{
+            window.localStorage.setItem("searchKm", 25);
+        }
+
+    }
+}
 
 function initializeMainMenu() {
     $("nav.mainMenu .navbar-header").append(
@@ -67,6 +144,7 @@ function initializeMainMenu() {
         "<li class='menuLinks'><a href='postings.html'>Postings</a></li>" +
         "<li class='menuLinks'><a href='accountDetails.html'>Account Details</a></li>" +
         "<li class='menuLinks'><a href='history.html'>History</a></li>" +
+        "<li class='menuLinks'><a href='#' id='btnSetting' >Settings </a></li>" +
         "<li class='menuLinks'><a id='logoutMenuItem'>Logout</a></li>";
     $("#navbar").html(navbar);
 
@@ -84,6 +162,14 @@ function initializeMainMenu() {
         e.stopPropagation();
         window.location.href = "postings.html";
     });
+    
+    $("#btnSetting").click(function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        $("#txtKm").val(search_km);
+        $("#settingModal").modal();
+        $("#myNavbar").removeClass("in");
+    })
 }
 
 function notificationRequest() {
@@ -91,7 +177,7 @@ function notificationRequest() {
 }
 
 function fillNotifications(data) {
-    console.log(data);
+    global_notifications = data;
     var noOfNotification = data.noOfUnRead;
     if (noOfNotification !== undefined && noOfNotification !== 0) {
         $("#notificationBtn").html("<span class='badge notification-badge'>" + data.noOfUnRead + "</span>")
@@ -108,6 +194,8 @@ function fillNotifications(data) {
             var notificationId = notifications[i].id;
             if (notifications[i].type === "request") {
                 href = "request.html?id=" + notifications[i].targetID;
+            } else if (notifications[i].type === "conversation") {
+                href = "request.html?id=" + notifications[i].targetID + "&openConvo=true";
             }
             navbar += "<li class='dropdown-item " + classCss + "'><a id='notification_" + notificationId + "' onclick='return notificationOnClick(this)' href='" + href + "' class='" + classCss + "'> " + notifications[i].description + "</a></li>";
 
@@ -115,7 +203,7 @@ function fillNotifications(data) {
     }
 
     navbar += "<li class='dropdown-item'><div class='dropdown-divider'></div></li> " +
-        "<li class='dropdown-item' > <a href='#' >View all notifications</a> </li>";
+        "<li class='dropdown-item' > <a href='notifications.html' >View all notifications</a> </li>";
 
     $("#notificationNavBar").html(navbar);
 }
@@ -123,7 +211,9 @@ function fillNotifications(data) {
 function notificationOnClick(anchor) {
     var nId = $(anchor).attr("id").split("_")[1];
     var hasClass = $(anchor).hasClass("readFlag");
+    console.log(anchor);
     if (hasClass) {
+        console.log("As")
         var notification = {
             id: nId,
             readFlag: true
@@ -159,6 +249,11 @@ function paginationDiv(id, item) {
         "</lu></nav>";
     return pagination;
 }
+/**
+*   SETUP settings
+*/
+
+
 
 
 var loading = {
