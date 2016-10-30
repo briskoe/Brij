@@ -22,6 +22,18 @@ var SAVE_MESSAGE = "/conversation/saveMessage?id=:id"
 
 //ADMIN
 var GET_ALL_USERS = "/admin/user/findAll"
+var GET_USER = "/admin/user/current";
+var GET_LIKE_USER = "/admin/user/like";
+var UPDATE_USER_BY_NAME = "/admin/user/save";
+var GET_ALL_POSTS = "/admin/posting/findAll";
+var SAVE_POST_ADMIN = "/admin/posting/save";
+var GET_POST_BY_ID_ADMIN = "/admin/posting/findById";
+var GET_LIKE_POSTS = "/admin/posting/like";
+var GET_ALL_SERVICES_ADMIN = "/admin/service/findAll";
+var GET_SERVICE_BY_ID_ADMIN = "/admin/service/findById";
+var GET_SERVICE_LIKE_TITLE_ADMIN = "/admin/service/findLikeTitle";
+var SAVE_SERVICE_ADMIN = "/admin/service/save";
+
 //Request Types
 var GET = "GET";
 var POST = "POST";
@@ -31,6 +43,9 @@ var DELETE = "DELETE";
 //PORTAL
 var HOME = SERVER_URL + "/homePage";
 var ADMIN_USER_PAGE = SERVER_URL + "/admin/userPage";
+var ADMIN_POST_PAGE = SERVER_URL + "/admin/postPage";
+var ADMIN_SERVICES_PAGE = SERVER_URL + "/admin/servicePage";
+
 
 
 

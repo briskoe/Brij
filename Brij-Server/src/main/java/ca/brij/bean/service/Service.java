@@ -13,9 +13,18 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import ca.brij.utils.ConstantsUtil;
+
 @Entity
-@NamedQueries({ @NamedQuery(name = "Service.getAllServices", query = "from Service"), 
-	@NamedQuery(name = "Service.getServiceById", query = "from Service where id = :id")})
+@NamedQueries({ @NamedQuery(name = "Service.getAllServices", query = "from Service WHERE status <> 'closed'"), 
+	@NamedQuery(name = "Service.getServiceById", query = "from Service where id = :id AND status <> 'closed'"),
+	@NamedQuery(name = "Service.getAllServicesAdmin", query = "from Service"), 
+	@NamedQuery(name = "Service.getServiceByIdAdmin", query = "from Service where id = :id"),
+	@NamedQuery(name = "Service.getServicesLikeNameAdmin", query = "from Service where LOWER(serviceName) LIKE LOWER('%' || :serviceName || '%' ) "),
+	@NamedQuery(name = "Service.countAllServicesAdmin", query = "SElECT count(*) from Service"),
+	@NamedQuery(name = "Service.countServicesLikeNameAdmin", query = "SELECT count(*) from Service where LOWER(serviceName) LIKE LOWER('%' || :serviceName || '%' ) "),
+
+})
 @Table(name = "service")
 public class Service implements Serializable {
 
@@ -28,7 +37,7 @@ public class Service implements Serializable {
 	public Service(String serviceName) {
 		super();
 		this.serviceName = serviceName;
-		this.status = "active";
+		this.status = ConstantsUtil.ACTIVE;
 	}
 
 	@Id

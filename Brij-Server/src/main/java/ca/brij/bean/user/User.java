@@ -21,10 +21,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.maps.model.LatLng;
 
+import ca.brij.utils.ConstantsUtil;
+
 @Entity
-@NamedQueries({ @NamedQuery(name = "User.findsomething", query = "SELECT u FROM User u WHERE u.email = :email"),
-		@NamedQuery(name = "User.findAll", query = "FROM User"),
+@NamedQueries({ 
+		@NamedQuery(name = "User.getAll", query = "FROM User"),
+		@NamedQuery(name = "User.getCountAll", query = "SELECT COUNT(*) FROM User"),
 		@NamedQuery(name = "User.findByUserName", query = "FROM User WHERE username = :username"),
+		@NamedQuery(name = "User.findByUserLike", query = "FROM User WHERE LOWER(username) LIKE LOWER('%' || :username || '%' )"),
+		@NamedQuery(name = "User.countUserLike", query = "SELECT COUNT(*) FROM User WHERE LOWER(username) LIKE LOWER('%' || :username || '%' )"),
 		@NamedQuery(name = "User.findUser", query = "FROM User WHERE username = :username AND password = :password")
 })
 @Table(name = "users")
@@ -69,6 +74,9 @@ public class User implements Serializable {
 	
 	@Column(name = "longitude")
 	private Double longitude;
+	
+	@Column(name = "status")
+	private String status;
 	
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user" , cascade = CascadeType.ALL, orphanRemoval=true)
@@ -214,18 +222,28 @@ public class User implements Serializable {
 	public void setProvince(String province) {
 		this.province = province;
 	}
+	public String getStatus() {
+		return status;
+	}
 
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
 	public static List<User> getPriviligedUser(){
 		List<User> users = new ArrayList<User>();
 		String encryptedPassword = new BCryptPasswordEncoder().encode("admin");
 		User admin = new User("Admin", encryptedPassword, "Admin", true);
 		UserRole adminRole = new UserRole(admin, "ROLE_ADMIN");
 		UserRole userRole = new UserRole(admin, "ROLE_USER");
+		admin.setStatus(ConstantsUtil.ACTIVE);
 		admin.getUserRole().add(userRole);
 		admin.getUserRole().add(adminRole);
 		users.add(admin);
 		return users;
 	}
+
+
 	
 	
 }

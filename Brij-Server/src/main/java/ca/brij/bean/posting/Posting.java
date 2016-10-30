@@ -1,4 +1,5 @@
 package ca.brij.bean.posting;
+
 import java.io.Serializable;
 import java.util.Calendar;
 
@@ -16,23 +17,26 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.DynamicUpdate;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import ca.brij.bean.user.User;
 
 
+
 @Entity
-@NamedQueries({ @NamedQuery(name = "Posting.getAllPostings", query = "from Posting ORDER BY creationDate DESC"),
-		@NamedQuery(name = "Posting.getPostsByLocation", query="SELECT Posting FROM Posting Posting  WHERE ( 6371 * acos( cos( radians(:latitude) ) * cos( radians( user.latitude ) ) * cos( radians( user.longitude ) - radians(:longitude) ) + sin( radians(:latitude) ) * sin( radians( user.latitude ) ) ) ) < :distance"),
-		@NamedQuery(name = "Posting.getPostingById", query = "from Posting where id = :id"),
-		@NamedQuery(name = "Posting.getPostingsByUserID", query = "from Posting where user.username = :userID ORDER BY creationDate DESC"),
-		@NamedQuery(name = "Posting.getCountOfAll", query = "SELECT count(*) from Posting ORDER BY creationDate DESC"),
-		@NamedQuery(name = "Posting.getCountOfUser", query = "SELECT count(*) from Posting  where user.username = :userID")})
-@Table(name = "posting", indexes = { 
-		@Index(name = "posting_nameInd", columnList = "title") })
+@NamedQueries({
+		@NamedQuery(name = "Posting.getAllPostings", query = "from Posting WHERE status <> 'closed' ORDER BY creationDate DESC "),
+		@NamedQuery(name = "Posting.getAllPostingsAdmin", query = "from Posting ORDER BY creationDate DESC "),
+		@NamedQuery(name = "Posting.getCountOfAllAdmin", query = "SELECT count(*) from Posting ORDER BY creationDate DESC "),
+		@NamedQuery(name = "Posting.getPostsByLocation", query = "SELECT Posting FROM Posting Posting  WHERE ( 6371 * acos( cos( radians(:latitude) ) * cos( radians( user.latitude ) ) * cos( radians( user.longitude ) - radians(:longitude) ) + sin( radians(:latitude) ) * sin( radians( user.latitude ) ) ) ) < :distance AND status <> 'closed' ORDER BY creationDate DESC"),
+		@NamedQuery(name = "Posting.getPostingById", query = "from Posting where id = :id AND status <> 'closed'"),
+		@NamedQuery(name = "Posting.getPostingByIdAdmin", query = "from Posting where id = :id"),
+		@NamedQuery(name = "Posting.getPostingsLikeTitleAdmin", query = "from Posting where LOWER(title) LIKE LOWER('%' || :title || '%')"),
+		@NamedQuery(name = "Posting.getCountOfPostLikeAdmin", query = "SELECT count(*) from Posting where LOWER(title) LIKE LOWER('%' || :title || '%')"),
+		@NamedQuery(name = "Posting.getPostingsByUserID", query = "from Posting where user.username = :userID AND status <> 'closed' ORDER BY creationDate DESC"),
+		@NamedQuery(name = "Posting.getCountOfAll", query = "SELECT count(*) from Posting WHERE status <> 'closed' ORDER BY creationDate DESC"),
+		@NamedQuery(name = "Posting.getCountOfUser", query = "SELECT count(*) from Posting  where user.username = :userID AND  status <> 'closed'") })
+@Table(name = "posting", indexes = { @Index(name = "posting_nameInd", columnList = "title") })
 @DynamicUpdate
-public class Posting implements Serializable{
+public class Posting implements Serializable {
 
 	private static final long serialVersionUID = 8816634543519363815L;
 
@@ -48,7 +52,6 @@ public class Posting implements Serializable{
 	@Column(name = "servID", nullable = false)
 	private Integer servID;
 
-	@JsonIgnore
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "username")
 	private User user;
@@ -58,10 +61,13 @@ public class Posting implements Serializable{
 
 	@Column(name = "isPost")
 	private Boolean isPost;
-	
+
 	@Column(name = "creationDate")
 	private Calendar creationDate;
-	
+
+	@Column(name = "status")
+	private String status;
+
 	public Posting() {
 	}
 
@@ -94,7 +100,7 @@ public class Posting implements Serializable{
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	
+
 	public String getTitle() {
 		return title;
 	}
@@ -134,7 +140,14 @@ public class Posting implements Serializable{
 	public void setCreationDate(Calendar creationDate) {
 		this.creationDate = creationDate;
 	}
-	
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 	
 
 }

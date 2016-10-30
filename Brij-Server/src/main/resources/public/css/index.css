@@ -402,3 +402,10 @@ rotate
 #ACTable{
 	margin-left: 10px;
 }
+.ACTable_Body{
+	height: 500px;
+	overflow-y: auto;
+}
+#btnSearch{
+	position:absolute;
+}
