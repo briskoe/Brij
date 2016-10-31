@@ -249,7 +249,7 @@ public class PostingController {
 			postings = daoHelper.getPostingDao().getAllPostingsAdmin(new PageRequest(pageNo, pageSize));
 			for (Posting post : postings) {
 				Integer numOfReplies = daoHelper.getRequestDao().getCountForPost(post.getId());
-				Service service = daoHelper.getServiceDao().getServiceById(post.getServID());
+				Service service = daoHelper.getServiceDao().getServiceByIdAdmin(post.getServID());
 				String serviceName = service.getServiceName();
 				postingsMap.put("service_" +post.getId(), serviceName);
 				postingsMap.put("replies_"+post.getId().toString(), numOfReplies);
