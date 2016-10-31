@@ -1,8 +1,10 @@
 package ca.brij.controller;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -18,13 +20,18 @@ import ca.brij.bean.conversation.Conversation;
 import ca.brij.bean.conversation.Message;
 import ca.brij.bean.posting.Posting;
 import ca.brij.bean.request.Request;
+import ca.brij.bean.user.User;
 import ca.brij.utils.DaoHelper;
+import ca.brij.utils.NotificationSenderUtil;
 
 @RestController
 public class ConversationController {
 
 	@Autowired
 	public DaoHelper daoHelper;
+	
+	@Autowired
+	public NotificationSenderUtil notifHelper;
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -45,6 +52,10 @@ public class ConversationController {
 
 				// use the info to fill the conversation
 				conv = new Conversation(id, "Conversation for " + post.getTitle());
+				List<String> users = new ArrayList<String>();
+				users.add(post.getUser().getUsername());
+				users.add(req.getUserID());
+				conv.setUsers(users);
 				conv = daoHelper.getConversationDao().save(conv);
 
 			}
@@ -72,6 +83,14 @@ public class ConversationController {
 			//add the new message
 			conv.getMessages().add(message);
 			daoHelper.getConversationDao().save(conv);
+			String user = "";
+			for(String u: conv.getUsers()){
+				if(!u.equals(principal.getName())){
+					user = u;
+				}
+			}
+			notifHelper.makeNotification(user, "conversation", conv.getRequestID(), principal.getName() + " sent you a message");
+			
 		} catch (Exception e) {
 			logger.error("Error occurred retrieving conversation by request " + e.getMessage());
 			throw e;

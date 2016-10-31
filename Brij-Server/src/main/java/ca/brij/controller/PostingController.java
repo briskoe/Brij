@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ca.brij.bean.posting.Posting;
 import ca.brij.bean.service.Service;
+import ca.brij.bean.user.User;
+import ca.brij.utils.ConstantsUtil;
 import ca.brij.utils.DaoHelper;
 import ca.brij.utils.MergeBeanUtil;
 
@@ -27,16 +29,16 @@ public class PostingController {
 
 	@Autowired
 	private DaoHelper daoHelper;
-	
 
 	@RequestMapping(value = "/posting/save", method = RequestMethod.POST)
 	@ResponseBody
 	public String updatePost(@RequestBody Posting post, Principal principal) throws Exception {
 		try {
-			logger.info("saving post("+post.getTitle()+") made by: " + principal.getName());
-			post.setUserID(principal.getName());
+			logger.info("saving post(" + post.getTitle() + ") made by: " + principal.getName());
+			User user = daoHelper.getUserDao().findByUserName(principal.getName());
+			post.setUser(user);
 			Posting origPost = null;
-			if(post.getId() != null){
+			if (post.getId() != null) {
 				origPost = daoHelper.getPostingDao().getPostingById(post.getId());
 
 			}
@@ -44,41 +46,49 @@ public class PostingController {
 			if (origPost == null) {
 				origPost = post;
 				origPost.setCreationDate(Calendar.getInstance());
+				origPost.setStatus(ConstantsUtil.ACTIVE);
 			} else {
 				// update current one by saving only the changed values (not
 				// null)
+				post.setStatus(null);
 				MergeBeanUtil.copyNonNullProperties(post, origPost);
 
 			}
 			daoHelper.getPostingDao().save(origPost);
 		} catch (Exception ex) {
-			logger.error("error saving post("+post.getTitle()+") made by: " + principal.getName() + " message " + ex.getMessage());
+			logger.error("error saving post(" + post.getTitle() + ") made by: " + principal.getName() + " message "
+					+ ex.getMessage());
 			throw ex;
 		}
-		logger.info("Successfully saved post("+post.getTitle()+") made by: " + principal.getName());
+		logger.info("Successfully saved post(" + post.getTitle() + ") made by: " + principal.getName());
 		return "Success";
 	}
 
 	/**
 	 * Find By User
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "/posting/findByUser", method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, Object> getPostingByUser(Principal principal, @RequestParam(value = "pageNo", required=false) Integer pageNo, @RequestParam(value = "pageSize", required=false) Integer pageSize) throws Exception {
+	public Map<String, Object> getPostingByUser(Principal principal,
+			@RequestParam(value = "pageNo", required = false) Integer pageNo,
+			@RequestParam(value = "pageSize", required = false) Integer pageSize) throws Exception {
 		Map<String, Object> postingsMap = new HashMap<String, Object>();
 		ArrayList<Posting> postings = null;
 		int numberOfPages = 0;
 		try {
 			logger.info("retrieving all posts made by: " + principal.getName());
-			if(pageNo == null){
+			if (pageNo == null) {
 				pageNo = 0;
 			}
-			if(pageSize == null){
+			if (pageSize == null) {
 				pageSize = 10;
 			}
-			postings = daoHelper.getPostingDao().getPostingsByUserID(principal.getName(), new PageRequest(pageNo, pageSize));
-			numberOfPages = (int)Math.ceil((double)daoHelper.getPostingDao().getCountOfUser(principal.getName()) / (double)pageSize);
+			postings = daoHelper.getPostingDao().getPostingsByUserID(principal.getName(),
+					new PageRequest(pageNo, pageSize));
+			numberOfPages = (int) Math
+					.ceil((double) daoHelper.getPostingDao().getCountOfUser(principal.getName()) / (double) pageSize);
 		} catch (Exception ex) {
 			logger.error("Error retrieving all users made by " + principal.getName());
 			throw ex;
@@ -89,35 +99,40 @@ public class PostingController {
 		logger.info("successfully retrieved posts made by: " + principal.getName());
 		return postingsMap;
 	}
-	
+
 	/**
 	 * Find By User
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "/posting/findHistoryByUser", method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, Object> getPostingHistorByUser(Principal principal, @RequestParam(value = "pageNo", required=false) Integer pageNo, @RequestParam(value = "pageSize", required=false) Integer pageSize) throws Exception {
+	public Map<String, Object> getPostingHistorByUser(Principal principal,
+			@RequestParam(value = "pageNo", required = false) Integer pageNo,
+			@RequestParam(value = "pageSize", required = false) Integer pageSize) throws Exception {
 		Map<String, Object> postingsMap = new HashMap<String, Object>();
-		Map<String, Integer> countMap = new HashMap<String, Integer>(); 
+		Map<String, Integer> countMap = new HashMap<String, Integer>();
 		ArrayList<Posting> postings = null;
 		int numberOfPages = 0;
-		
+
 		try {
 			logger.info("retrieving all posts made by: " + principal.getName());
-			if(pageNo == null){
+			if (pageNo == null) {
 				pageNo = 0;
 			}
-			if(pageSize == null){
+			if (pageSize == null) {
 				pageSize = 10;
 			}
-			postings = daoHelper.getPostingDao().getPostingsByUserID(principal.getName(), new PageRequest(pageNo, pageSize));
-			
+			postings = daoHelper.getPostingDao().getPostingsByUserID(principal.getName(),
+					new PageRequest(pageNo, pageSize));
+
 			for (Posting post : postings) {
 				int numOfReplies = daoHelper.getRequestDao().getCountForPost(post.getId());
-				countMap.put(post.getId().toString(), numOfReplies);	
+				countMap.put(post.getId().toString(), numOfReplies);
 			}
-			
-			numberOfPages = (int)Math.ceil((double)daoHelper.getPostingDao().getCountOfUser(principal.getName()) / (double)pageSize);
+
+			numberOfPages = (int) Math
+					.ceil((double) daoHelper.getPostingDao().getCountOfUser(principal.getName()) / (double) pageSize);
 		} catch (Exception ex) {
 			logger.error("Error retrieving all users made by " + principal.getName());
 			throw ex;
@@ -129,7 +144,7 @@ public class PostingController {
 		logger.info("successfully retrieved posts made by: " + principal.getName());
 		return postingsMap;
 	}
-	
+
 	/**
 	 * Find By id
 	 */
@@ -139,51 +154,66 @@ public class PostingController {
 		Posting posting = null;
 		Map<String, Object> map = new HashMap<String, Object>();
 		Boolean isOwner = false;
-		
+
 		try {
-			logger.info("retrieving post by id" +  id);
+			logger.info("retrieving post by id" + id);
 			posting = daoHelper.getPostingDao().getPostingById(id);
 			Service service = daoHelper.getServiceDao().getServiceById(posting.getServID());
 			String serviceName = service.getServiceName();
-			
-			isOwner = posting.getUserID().equals(principal.getName());
-						
+
+			isOwner = posting.getUser().getUsername().equals(principal.getName());
+
 			map.put("serviceName", serviceName);
-			
+
 		} catch (Exception ex) {
 			logger.error("Error occurred retrieving post " + ex.getMessage());
 			return null;
 		}
 		logger.info("Successfully retrieved post by id " + id);
-		
+
 		map.put("posting", posting);
 		map.put("isOwner", isOwner);
-		
+
 		return map;
 	}
 
 	/**
 	 * Get all the postings in the db
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "/posting/findAll", method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, Object> getAllPosting(@RequestParam(value = "pageNo", required=false) Integer pageNo,@RequestParam(value = "pageSize", required=false) Integer pageSize ) throws Exception {
+	public Map<String, Object> getAllPosting(Principal principal,
+			@RequestParam(value = "pageNo", required = false) Integer pageNo,
+			@RequestParam(value = "pageSize", required = false) Integer pageSize,
+			@RequestParam(value = "distance", required = false) Double distance) throws Exception {
 		Map<String, Object> postingsMap = new HashMap<String, Object>();
 		ArrayList<Posting> postings;
 		int numberOfPages = 0;
 		try {
 			logger.info("Retrieving all posts");
-			if(pageNo == null){
+			if (pageNo == null) {
 				pageNo = 0;
 			}
-			if(pageSize == null){
+			if (pageSize == null) {
 				pageSize = 10;
 			}
-			postings = daoHelper.getPostingDao().getAllPostings(new PageRequest(pageNo, pageSize));
-			//divide then take the decimal away. Ex 10.5 will give 10
-			numberOfPages = (int)Math.ceil((double)daoHelper.getPostingDao().getCountOfAll() / (double)pageSize);
-			
+			if (distance == null) {
+				distance = 25.0;
+			}
+			User currentUser = daoHelper.getUserDao().findByUserName(principal.getName());
+			Double lat = currentUser.getLatitude();
+			Double lng = currentUser.getLongitude();
+			if (lat == null || lng == null) {
+				postings = daoHelper.getPostingDao().getAllPostings(new PageRequest(pageNo, pageSize));
+			} else {
+				postings = daoHelper.getPostingDao().getPostsByLocation(new PageRequest(pageNo, pageSize),
+						currentUser.getLatitude(), currentUser.getLongitude(), distance);
+			}
+			// divide then take the decimal away. Ex 10.5 will give 10
+			numberOfPages = (int) Math.ceil((double) daoHelper.getPostingDao().getCountOfAll() / (double) pageSize);
+
 		} catch (Exception ex) {
 			logger.error("Failed retrieving posts " + ex.getMessage());
 			throw ex;
@@ -194,7 +224,149 @@ public class PostingController {
 
 		return postingsMap;
 	}
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	/**
+	 * Get all the postings in the db
+	 * 
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/admin/posting/findAll", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> getAllPostingAdmin(Principal principal,
+			@RequestParam(value = "pageNo", required = false) Integer pageNo,
+			@RequestParam(value = "pageSize", required = false) Integer pageSize) throws Exception {
+		Map<String, Object> postingsMap = new HashMap<String, Object>();
+		ArrayList<Posting> postings;
+		int numberOfPages = 0;
+		try {
+			logger.info("Retrieving all posts");
+			if (pageNo == null) {
+				pageNo = 0;
+			}
+			if (pageSize == null) {
+				pageSize = 10;
+			}
+			postings = daoHelper.getPostingDao().getAllPostingsAdmin(new PageRequest(pageNo, pageSize));
+			for (Posting post : postings) {
+				Integer numOfReplies = daoHelper.getRequestDao().getCountForPost(post.getId());
+				Service service = daoHelper.getServiceDao().getServiceByIdAdmin(post.getServID());
+				String serviceName = service.getServiceName();
+				postingsMap.put("service_" +post.getId(), serviceName);
+				postingsMap.put("replies_"+post.getId().toString(), numOfReplies);
+			}
+			// divide then take the decimal away. Ex 10.5 will give 10
+			numberOfPages = (int) Math.ceil((double) daoHelper.getPostingDao().getCountOfAll() / (double) pageSize);
+
+		} catch (Exception ex) {
+			logger.error("Failed retrieving posts " + ex.getMessage());
+			throw ex;
+		}
+		postingsMap.put("list", postings);
+		postingsMap.put("numberOfPages", numberOfPages);
+		postingsMap.put("currentPage", (pageNo + 1));
+
+		return postingsMap;
+	}
+	
+	@RequestMapping(value = "/admin/posting/like", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> getLikePosts(Principal principal, String title,
+			@RequestParam(value = "pageNo", required = false) Integer pageNo,
+			@RequestParam(value = "pageSize", required = false) Integer pageSize) throws Exception {
+		Map<String, Object> postingsMap = new HashMap<String, Object>();
+		ArrayList<Posting> postings;
+		int numberOfPages = 0;
+		try {
+			logger.info("Retrieving all posts");
+			if (pageNo == null) {
+				pageNo = 0;
+			}
+			if (pageSize == null) {
+				pageSize = 10;
+			}
+			postings = daoHelper.getPostingDao().getPostingsLikeTitleAdmin(title ,new PageRequest(pageNo, pageSize));
+			for (Posting post : postings) {
+				Integer numOfReplies = daoHelper.getRequestDao().getCountForPost(post.getId());
+				Service service = daoHelper.getServiceDao().getServiceById(post.getServID());
+				String serviceName = service.getServiceName();
+				postingsMap.put("service_" +post.getId(), serviceName);
+				postingsMap.put("replies_"+post.getId().toString(), numOfReplies);	
+			}
+			// divide then take the decimal away. Ex 10.5 will give 10
+			numberOfPages = (int) Math.ceil((double) daoHelper.getPostingDao().getCountOfPostLikeAdmin(title) / (double) pageSize);
+
+		} catch (Exception ex) {
+			logger.error("Failed retrieving posts " + ex.getMessage());
+			throw ex;
+		}
+		postingsMap.put("list", postings);
+		postingsMap.put("numberOfPages", numberOfPages);
+		postingsMap.put("currentPage", (pageNo + 1));
+
+		return postingsMap;
+	}
+	
+	/**
+	 * Find By id
+	 */
+	@RequestMapping(value = "/admin/posting/findById", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> getPostingByIdAdmin(Principal principal, Integer id) {
+		Posting posting = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		Boolean isOwner = false;
+
+		try {
+			logger.info("retrieving post by id" + id);
+			posting = daoHelper.getPostingDao().getPostingByIdAdmin(id);
+			Service service = daoHelper.getServiceDao().getServiceById(posting.getServID());
+			String serviceName = service.getServiceName();
+
+			isOwner = posting.getUser().getUsername().equals(principal.getName());
+
+			map.put("serviceName", serviceName);
+
+		} catch (Exception ex) {
+			logger.error("Error occurred retrieving post " + ex.getMessage());
+			return null;
+		}
+		logger.info("Successfully retrieved post by id " + id);
+
+		map.put("posting", posting);
+		map.put("isOwner", isOwner);
+
+		return map;
+	}
+	
+	@RequestMapping(value = "/admin/posting/save", method = RequestMethod.POST)
+	@ResponseBody
+	public String updatePostAdmin(@RequestBody Posting post, Principal principal) throws Exception {
+		try {
+			logger.info("saving post(" + post.getTitle() + ") administer by " + principal.getName());
+			Posting origPost = null;
+			if (post.getId() != null) {
+				origPost = daoHelper.getPostingDao().getPostingByIdAdmin(post.getId());
+
+			}
+			// means is new
+			if (origPost == null) {
+				throw new Exception("Post Doesn't exist");
+			} else {
+				// update current one by saving only the changed values (not
+				// null)
+				MergeBeanUtil.copyNonNullProperties(post, origPost);
+
+			}
+			daoHelper.getPostingDao().save(origPost);
+		} catch (Exception ex) {
+			logger.error("error saving post(" + post.getTitle() + ") administer by: " + principal.getName() + " message "
+					+ ex.getMessage());
+			throw ex;
+		}
+		logger.info("Successfully saved post(" + post.getTitle() + ") administer by: " + principal.getName());
+		return "Success";
+	}
+
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 }
-

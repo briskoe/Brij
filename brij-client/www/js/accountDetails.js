@@ -11,7 +11,7 @@ $(function () {
         e.preventDefault();
         e.stopPropagation();
         isSavingUser = !isSavingUser;
-        $("#userForm input").attr("disabled", !isSavingUser);
+        $("#userForm .userInput").attr("disabled", !isSavingUser);
         if (isSavingUser) {
             $("#btnEdit").html("Save");
             $("#btnCancel").removeClass("hide");
@@ -27,7 +27,7 @@ $(function () {
         e.stopPropagation();
         //when user clicks cancel, save changes to edit
         isSavingUser = false;
-        $("#userForm input").attr("disabled", true);
+        $("#userForm .userInput").attr("disabled", true);
 
         //hiding button
         $("#btnCancel").addClass("hide");
@@ -38,9 +38,18 @@ $(function () {
 
 
     });
-
+    
+    populateProvinces();
 });
 
+function populateProvinces(){
+    $("#lstProvinces").html("");
+    for (var key in PROVINCES) {
+        if (PROVINCES.hasOwnProperty(key)) {
+            $("#lstProvinces").append("<option value='"+key+"'>"+PROVINCES[key]+"</option>")
+        }
+    }
+}
 function saveUser() {
     var updateUser = {
         firstName: $("#userForm #firstName").val(),
@@ -48,10 +57,10 @@ function saveUser() {
         phoneNumber: $("#userForm #phoneNumber").val(),
         address: $("#userForm #address").val(),
         city: $("#userForm #city").val(),
-        province: $("#userForm #province").val(),
+        province: $("#userForm #lstProvinces").val(),
         email: $("#userForm #email").val()
     };
-
+    
     makeRequest(UPDATE_USER, POST, JSON.stringify(updateUser), APPLICATION_JSON, null, null);
 }
 
@@ -77,14 +86,13 @@ function recoverStateForm() {
 }
 
 function refreshForm(data) {
-    console.log(data);
     $("#username").html(data.username);
     $("#userForm #firstName").val(data.firstName);
     $("#userForm #lastName").val(data.lastName);
     $("#userForm #phoneNumber").val(data.phoneNumber);
     $("#userForm #address").val(data.address);
     $("#userForm #city").val(data.city);
-    $("#userForm #province").val(data.province);
+    $("#userForm #lstProvinces").val(data.province);
     $("#userForm #email").val(data.email);
     $("#userForm #firstName").html();
 }

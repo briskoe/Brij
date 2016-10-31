@@ -54,6 +54,10 @@ public class Conversation {
 	@Column(name = "messages")
 	private List<Message> messages = new ArrayList<Message>();
 	
+	@ElementCollection(fetch=FetchType.EAGER)
+	@Column(name = "users")
+	private List<String> users = new ArrayList<String>();
+	
 	@Column(name = "status")
 	private String status;
 
@@ -95,6 +99,14 @@ public class Conversation {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public List<String> getUsers() {
+		return users;
+	}
+
+	public void setUsers(List<String> users) {
+		this.users = users;
 	}
 	
 	

@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import ca.brij.dao.user.UserDao;
+import ca.brij.utils.ConstantsUtil;
 
 @Service("authService")
 public class MyUserDetailsService implements UserDetailsService{
@@ -25,6 +26,11 @@ public class MyUserDetailsService implements UserDetailsService{
 
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		ca.brij.bean.user.User user = userDao.findByUserName(username);
+		if(user == null){
+			throw new UsernameNotFoundException("User Not found");
+		}else if(user.getStatus().equals(ConstantsUtil.CLOSED)){
+			throw new UsernameNotFoundException("This account has been closed");
+		}
 		//TODO check for null
 		List<GrantedAuthority> authorities = buildUserAuthority(user.getUserRole());
 		return buildUserForAuthentication(user, authorities);

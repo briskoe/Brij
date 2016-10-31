@@ -29,7 +29,7 @@ public class PortalController {
 		Set<UserRole> roles = currentUser.getUserRole();
 		for(UserRole role : roles){
 			if(role.getRole().equals(UserRole.ADMIN)){
-				portal = "adminConsole.html";
+				portal = "/admin/adminConsole.html";
 			}
 		}
 		ModelAndView mv = new ModelAndView(portal);
@@ -37,5 +37,26 @@ public class PortalController {
 	}
 	
 
+	/**
+	 * FOR ADMIN
+	 */
 	
+	@RequestMapping("/admin/userPage")
+	public ModelAndView goToUsers(Model model) throws IOException{
+		ModelAndView mv = new ModelAndView("/admin/usersPage.html");
+		return mv;
+	}
+	
+	@RequestMapping("/admin/postPage")
+	public ModelAndView goToPosts(Model model) throws IOException{
+		ModelAndView mv = new ModelAndView("/admin/postsPage.html");
+		return mv;
+	}
+	
+	@RequestMapping("/admin/servicePage")
+	public ModelAndView goToServices(Model model) throws IOException{
+		ModelAndView mv = new ModelAndView("/admin/servicesPage.html");
+		return mv;
+	}
+
 }

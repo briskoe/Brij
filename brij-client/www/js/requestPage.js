@@ -2,7 +2,7 @@ var postID;
 var requestID;
 var isSavingRequest = false;
 var conversationTimer;
-
+var openConvo = false;
 $(function () {
     $("#btnBack").click(function (e) {
         e.preventDefault();
@@ -49,7 +49,13 @@ $(function () {
         }, null);
     })
     
+    $( window ).resize(function() {
+        $("#chatRoomModal #modalBody").css({"height": $(window).height() - 200});
+    });
+    
     getRequest($.urlParam("id"));
+    openConvo = $.urlParam("openConvo");
+    
 
 });
 
@@ -67,12 +73,13 @@ function openConversation(data){
     $("#chatRoomModal #modalBody").scrollTop($("#chatRoomModal #modalBody").scrollHeight);
     $("#chatRoomModal #modalBody").html(body);
     $("#chatRoomModal").modal();
+    
+    $('#chatRoomModal').on('hidden.bs.modal', function () {
+        clearInterval(conversationTimer);    
+    })
 }
 
-$('#chatRoomModal').on('hide.bs.modal', function (e) {
-    clearInterval(conversationTimer);
-    
-})
+
 
 function createMessagesDiv(messages, currentUser){
     var div = "<div id='messageDiv' class='clearfix'>";
@@ -132,4 +139,8 @@ function populateRequest(data) {
     $("#service").val(data.serviceName);
     $("#description").val(data.posting.details);
     $("#notes").val(data.request.notes);
+    if(openConvo){
+        requestConversation();
+        conversationTimer = setInterval(requestConversation, 50000);
+    }
 }
