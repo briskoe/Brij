@@ -20,7 +20,6 @@ import org.hibernate.annotations.DynamicUpdate;
 import ca.brij.bean.user.User;
 
 
-
 @Entity
 @NamedQueries({
 		@NamedQuery(name = "Posting.getAllPostings", query = "from Posting WHERE status <> 'closed' ORDER BY creationDate DESC "),
@@ -29,6 +28,7 @@ import ca.brij.bean.user.User;
 		@NamedQuery(name = "Posting.getPostsByLocation", query = "SELECT Posting FROM Posting Posting  WHERE ( 6371 * acos( cos( radians(:latitude) ) * cos( radians( user.latitude ) ) * cos( radians( user.longitude ) - radians(:longitude) ) + sin( radians(:latitude) ) * sin( radians( user.latitude ) ) ) ) < :distance AND status <> 'closed' ORDER BY creationDate DESC"),
 		@NamedQuery(name = "Posting.getPostingById", query = "from Posting where id = :id AND status <> 'closed'"),
 		@NamedQuery(name = "Posting.getPostingByIdAdmin", query = "from Posting where id = :id"),
+		@NamedQuery(name = "Posting.getPostingsByServID", query = "from Posting where servID = :servID"),
 		@NamedQuery(name = "Posting.getPostingsLikeTitleAdmin", query = "from Posting where LOWER(title) LIKE LOWER('%' || :title || '%')"),
 		@NamedQuery(name = "Posting.getCountOfPostLikeAdmin", query = "SELECT count(*) from Posting where LOWER(title) LIKE LOWER('%' || :title || '%')"),
 		@NamedQuery(name = "Posting.getPostingsByUserID", query = "from Posting where user.username = :userID AND status <> 'closed' ORDER BY creationDate DESC"),

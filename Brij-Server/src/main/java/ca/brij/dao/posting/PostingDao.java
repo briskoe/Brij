@@ -2,10 +2,11 @@ package ca.brij.dao.posting;
 
 import java.util.ArrayList;
 
-import javax.transaction.Transactional;
-
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import ca.brij.bean.posting.Posting;
@@ -23,6 +24,8 @@ public interface PostingDao extends JpaRepository<Posting, Long> {
 	
 	public ArrayList<Posting> getPostingsByUserID(@Param("userID") String userID, Pageable pageable);
 	
+	public ArrayList<Posting> getPostingsByServID(@Param("servID") int servID);
+	
 	public ArrayList<Posting> getPostingsLikeTitleAdmin(@Param("title") String title, Pageable pageable);
 	
 	public int getCountOfPostLikeAdmin(@Param("title") String title);
@@ -37,5 +40,8 @@ public interface PostingDao extends JpaRepository<Posting, Long> {
 
 	public Posting getPostingByIdAdmin(@Param("id") int i);
 
+	@Modifying(clearAutomatically = true)
+	@Query("UPDATE Posting set status = :status WHERE servID = :servID")
+	public void changeState(@Param("status") String status, @Param("servID") int servID);
 
 }
