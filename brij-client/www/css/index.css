@@ -94,8 +94,11 @@ body {
     background-color: #F0EAD6;
 }
 
-#titleDiv {
+#loginPage {
+    max-width: 400px;
 }
+
+#titleDiv {}
 
 input:focus {
     border: 3px solid #555;
@@ -173,9 +176,11 @@ input:focus {
 }
 */
 
+.form-login {}
+
 #btnSignIn,
-btnRegistration {
-    margin-bottom: 5px;
+#btnRegistration {
+    margin-bottom: 3px;
 }
 
 .left {
