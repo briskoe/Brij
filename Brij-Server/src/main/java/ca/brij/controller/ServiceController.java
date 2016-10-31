@@ -19,13 +19,14 @@ import ca.brij.bean.posting.Posting;
 import ca.brij.bean.service.Service;
 import ca.brij.dao.service.ServiceDao;
 import ca.brij.utils.ConstantsUtil;
+import ca.brij.utils.DaoHelper;
 import ca.brij.utils.MergeBeanUtil;
 
 @RestController
 public class ServiceController {
 
 	@Autowired
-	private ServiceDao serviceDao;
+	private DaoHelper daoHelper;
 
 	@RequestMapping(value = "/service/save", method = RequestMethod.POST)
 	@ResponseBody
@@ -34,7 +35,7 @@ public class ServiceController {
 		try {
 			logger.info("Saving service");
 			service.setStatus(ConstantsUtil.ACTIVE);
-			serviceDao.save(service);
+			daoHelper.getServiceDao().save(service);
 
 		} catch (Exception e) {
 			logger.error("Error saving service " + e.getMessage());
@@ -50,7 +51,7 @@ public class ServiceController {
 		ArrayList<Service> services = null;
 		try {
 			logger.info("Finding All Services");
-			services = serviceDao.getAllServices();
+			services = daoHelper.getServiceDao().getAllServices();
 		} catch (Exception e) {
 			logger.error("Error finding all services " + e.getMessage());
 			throw e;
@@ -65,7 +66,7 @@ public class ServiceController {
 		Service service = null;
 		try {
 			logger.info("Finding a service by id " + id);
-			service = serviceDao.getServiceById(id);
+			service = daoHelper.getServiceDao().getServiceById(id);
 		} catch (Exception e) {
 			logger.error("Error finding a service " + e.getMessage());
 			throw e;
@@ -90,8 +91,8 @@ public class ServiceController {
 			if (pageSize == null) {
 				pageSize = 10;
 			}
-			services = serviceDao.getAllServicesAdmin(new PageRequest(pageNo, pageSize));
-			numberOfPages = (int) Math.ceil((double) serviceDao.countAllServicesAdmin() / (double) pageSize);
+			services = daoHelper.getServiceDao().getAllServicesAdmin(new PageRequest(pageNo, pageSize));
+			numberOfPages = (int) Math.ceil((double) daoHelper.getServiceDao().countAllServicesAdmin() / (double) pageSize);
 		} catch (Exception e) {
 			logger.error("Error finding all services " + e.getMessage());
 			throw e;
@@ -109,7 +110,7 @@ public class ServiceController {
 		Service service = null;
 		try {
 			logger.info("Finding a service by id " + id);
-			service = serviceDao.getServiceByIdAdmin(id);
+			service = daoHelper.getServiceDao().getServiceByIdAdmin(id);
 		} catch (Exception e) {
 			logger.error("Error finding a service " + e.getMessage());
 			throw e;
@@ -134,8 +135,8 @@ public class ServiceController {
 			if (pageSize == null) {
 				pageSize = 10;
 			}
-			services = serviceDao.getServicesLikeNameAdmin(serviceName, new PageRequest(pageNo, pageSize));
-			numberOfPages = (int) Math.ceil((double) serviceDao.countServicesLikeNameAdmin(serviceName) / (double) pageSize);
+			services = daoHelper.getServiceDao().getServicesLikeNameAdmin(serviceName, new PageRequest(pageNo, pageSize));
+			numberOfPages = (int) Math.ceil((double) daoHelper.getServiceDao().countServicesLikeNameAdmin(serviceName) / (double) pageSize);
 
 		} catch (Exception e) {
 			logger.error("Error finding a service " + e.getMessage());
@@ -153,13 +154,18 @@ public class ServiceController {
 
 		try {
 			logger.info("Saving service");
-			Service oldService = serviceDao.getServiceByIdAdmin(service.getId());
+			Service oldService = daoHelper.getServiceDao().getServiceByIdAdmin(service.getId());
 			if(oldService == null){
 				throw new Exception("Service Doesn't exist");
 			}else{
 				MergeBeanUtil.copyNonNullProperties(service, oldService);
 			}
-			serviceDao.save(oldService);
+			daoHelper.getPostingDao().changeState(oldService.getStatus(), oldService.getId());
+			ArrayList<Posting> postingList = daoHelper.getPostingDao().getPostingsByServID(oldService.getId());
+			for(Posting post: postingList){
+				daoHelper.getRequestDao().changeState(oldService.getStatus(), post.getId());
+			}
+			daoHelper.getServiceDao().save(oldService);
 
 		} catch (Exception e) {
 			logger.error("Error saving service " + e.getMessage());

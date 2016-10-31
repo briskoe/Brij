@@ -319,7 +319,7 @@ public class PostingController {
 		try {
 			logger.info("retrieving post by id" + id);
 			posting = daoHelper.getPostingDao().getPostingByIdAdmin(id);
-			Service service = daoHelper.getServiceDao().getServiceById(posting.getServID());
+			Service service = daoHelper.getServiceDao().getServiceByIdAdmin(posting.getServID());
 			String serviceName = service.getServiceName();
 
 			isOwner = posting.getUser().getUsername().equals(principal.getName());
@@ -357,7 +357,12 @@ public class PostingController {
 				MergeBeanUtil.copyNonNullProperties(post, origPost);
 
 			}
-			daoHelper.getPostingDao().save(origPost);
+			Service service = daoHelper.getServiceDao().getServiceByIdAdmin(origPost.getServID());
+			if(!service.getStatus().equals(ConstantsUtil.CLOSED)){
+				daoHelper.getPostingDao().save(origPost);
+			}else{
+				throw new Exception("[Brij-Message] Service is closed; Can't update posting");
+			}
 		} catch (Exception ex) {
 			logger.error("error saving post(" + post.getTitle() + ") administer by: " + principal.getName() + " message "
 					+ ex.getMessage());
