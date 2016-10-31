@@ -16,13 +16,16 @@ $(function () {
         filterBy = "myPosts";
         $(".btnPosts").removeClass("active");
         $("#btnMyPosts").addClass("active");
+        getAllPosts();
     });
 
-    $("#btnReplies").click(function (e) {
+    $("#btnMyReplies").click(function (e) {
         e.preventDefault();
         e.stopPropagation();
+        filterBy = "myRequests";
         $(".btnPosts").removeClass("active");
         $("#btnReplies").addClass("active");
+        getAllRequests();
     });
 
 });
@@ -37,7 +40,10 @@ function loadInfo(callback) {
 
 function getAllPosts() {
     makeRequest(GET_POST_HISTORY, GET, "", "", createHistoryList, null);
+}
 
+function getAllRequests() {
+    makeRequest(GET_MY_REQUESTS, GET, "", "", createMyRequestList, null);
 }
 
 function createHistoryList(data) {
@@ -45,14 +51,14 @@ function createHistoryList(data) {
     var array = data.list;
     noOfPages = data.numberOfPages;
     currentPage = data.currentPage;
-    console.log(data)
+    console.log(data);
     for (var i = 0; i < array.length && i < 10; i++) {
         var badge = data.countMap[array[i].id];
 
         if (i % 2 === 0) {
-            listItems += "<a href='post.html?id=" + array[i].id + "' class='list-group-item' id='posting#" + array[i].id + "'> <span class='badge'>" + badge + "</span> " + array[i].title + "</a>";
+            listItems += "<a href='#' class='list-group-item historyListItem' id='" + array[i].id + "'> <span class='badge'>" + badge + "</span> " + array[i].title + "</a>";
         } else {
-            listItems += "<a href='post.html?id=" + array[i].id + "' class='list-group-item list-group-item-info' id='posting#" + array[i].id + "'>" + "<span class='badge'>" + badge + "</span>" + array[i].title + "</a>";
+            listItems += "<a href='#' class='list-group-item list-group-item-info historyListItem' id='" + array[i].id + "'>" + "<span class='badge'>" + badge + "</span>" + array[i].title + "</a>";
         }
     }
 
@@ -71,6 +77,13 @@ function createHistoryList(data) {
     $("#postingPagination .nextBtn").click(goForward);
     console.log(listItems);
     $("#historyList").html(listItems);
+
+    $(".historyListItem").click(function (e) {
+        $("#postInfoModal").modal('show');
+        var url = GET_REQUESTS_BY_POST_ID;
+        url += "?postID=" + this.id;
+        makeRequest(url, GET, "", "", createRequestList, null);
+    });
 }
 
 function goBack(e) {
@@ -104,4 +117,53 @@ function paginationButtonClick(anchor) {
 
     url += "?pageNo=" + pageId + "";
     makeRequest(url, GET, "", "", createPostingList, null);
+}
+
+function createRequestList(data) {
+    var listItems = "";
+    var array = data;
+    console.log(data);
+    for (var i = 0; i < array.length && i < 10; i++) {
+
+        if (i % 2 === 0) {
+            listItems += "<a href='request.html?id=" + array[i].requestID + "' class='list-group-item historyListItem' id='" + array[i].requestID + "'>" + array[i].userID + "</a>";
+        } else {
+            listItems += "<a href='request.html?id=" + array[i].requestID + "' class='list-group-item list-group-item-info historyListItem' id='" + array[i].requestID + "'>" + array[i].userID + "</a>";
+        }
+    }
+    console.log(listItems);
+    $("#requestList").html(listItems);
+}
+
+function createMyRequestList(data) {
+    var listItems = "";
+    var array = data.list;
+    noOfPages = data.numberOfPages;
+    currentPage = data.currentPage;
+    var titles = data.postTitles;
+    for (var i = 0; i < array.length && i < 10; i++) {
+        var requestId = array[i].requestID;
+        var badge = new Date(array[i].creationDate).toLocaleDateString();
+        if (i % 2 === 0) {
+            listItems += "<a href='request.html?id=" + requestId + "' class='list-group-item' id='request#" + requestId + "'> <span class='badge'>" + badge + "</span> " + titles[requestId] + "</a>";
+        } else {
+            listItems += "<a href='request.html?id=" + requestId + "' class='list-group-item list-group-item-info' id='request#" + requestId + "'>" + "<span class='badge'>" + badge + "</span>" + titles[requestId] + "</a>";
+        }
+    }
+
+    var paginatingBtn = "";
+    for (var i = 0; i < noOfPages; i++) {
+        var currentIndex = i + 1;
+        var paginationClass = "";
+        console.log(currentIndex + " " + currentPage)
+        if (currentIndex === currentPage) {
+            paginationClass = "disabled currentClass";
+        }
+        paginatingBtn += "<li class='page-item " + paginationClass + "'> <a id='paginationBtn_" + i + "' class='page-link' href='#' onclick='paginationButtonClick(this)'>" + (currentIndex) + "</a></li>"
+    }
+    $("#postingPagination").html(paginationDiv("pagination", paginatingBtn));
+    $("#postingPagination .backbtn").click(goBack);
+    $("#postingPagination .nextBtn").click(goForward);
+
+    $("#historyList").html(listItems);
 }
