@@ -25,7 +25,7 @@ var PROVINCES = {
     SK: "Saskatchewan",
     AB: "Alberta",
     NL: "Newfoundland and Labrador"
-    
+
 }
 var app = {
     // Application Constructor
@@ -68,28 +68,34 @@ $(function () {
     //set up a timer to look out for unread notifications
     notificationRequest();
     notification_timer = setInterval(notificationRequest, 50000);
-    
+
     setupStorage();
     setupSettingModal();
     setupScrollable();
+
+    $("#createPost").click(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        window.location.href = "createPost.html";
+    });
 });
 
-function setupScrollable(){
+function setupScrollable() {
     var window_height = $(window).height(),
-    content_height = window_height - 200;
+        content_height = window_height - 200;
     $('.scrollableArea').height(content_height);
 }
-$( window ).resize(function() {
-   var window_height = $(window).height(),
-   content_height = window_height - 200;
-   $('.scrollableArea').height(content_height);
+$(window).resize(function () {
+    var window_height = $(window).height(),
+        content_height = window_height - 200;
+    $('.scrollableArea').height(content_height);
 });
 
-function setupSettingModal(){
+function setupSettingModal() {
     var modal = "<div class='container' ><div id='settingModal' class='modal fade' role='dialog'>" +
         "<div class='modal-dialog'>" +
         "<div class='modal-content'> <div class='modal-header'>" +
-        "<button type='button' class='close' data-disiss='modal'>&times;</button>"+
+        "<button type='button' class='close' data-disiss='modal'>&times;</button>" +
         "<h4>Setting</h4> </div>" +
         "<div class='modal-body'> " +
         settingBody() +
@@ -98,14 +104,14 @@ function setupSettingModal(){
         "<button type='button' class='btn btn-default' data-dismiss='modal'>close</button>" + "</div> </div> </div>" +
         "</div> </div>";
     $("body").append(modal);
-    
-    
-    $("#btnSaveSetting").click(function(e){
+
+
+    $("#btnSaveSetting").click(function (e) {
         e.preventDefault();
         e.stopPropagation();
         //get the distance for the km.
         var distanceKm = $("#txtKm").val();
-        if(window.localStorage){
+        if (window.localStorage) {
             window.localStorage.setItem("searchKm", distanceKm);
             search_km = distanceKm;
             $("#txtKm").val(distanceKm);
@@ -114,19 +120,19 @@ function setupSettingModal(){
     })
 }
 
-function settingBody(){
-    var modalBody = "<div>"
-    +"<form novalidate onSubmit='return false'>"+
-        "<div class='form-group'><label>Distance to filter (km)</label> <input class='form-control' type='number' id='txtKm' value='"+search_km+"'/> </div> " + 
-    "</form> </div>"
+function settingBody() {
+    var modalBody = "<div>" + "<form novalidate onSubmit='return false'>" +
+        "<div class='form-group'><label>Distance to filter (km)</label> <input class='form-control' type='number' id='txtKm' value='" + search_km + "'/> </div> " +
+        "</form> </div>"
     return modalBody;
 }
-function setupStorage(){
-    if(window.localStorage){
+
+function setupStorage() {
+    if (window.localStorage) {
         var seachKmSetting = localStorage.getItem("searchKm");
         if (seachKmSetting !== null) {
             search_km = seachKmSetting;
-        }else{
+        } else {
             window.localStorage.setItem("searchKm", 25);
         }
 
@@ -162,8 +168,8 @@ function initializeMainMenu() {
         e.stopPropagation();
         window.location.href = "postings.html";
     });
-    
-    $("#btnSetting").click(function(e){
+
+    $("#btnSetting").click(function (e) {
         e.preventDefault();
         e.stopPropagation();
         $("#txtKm").val(search_km);
@@ -250,8 +256,8 @@ function paginationDiv(id, item) {
     return pagination;
 }
 /**
-*   SETUP settings
-*/
+ *   SETUP settings
+ */
 
 
 

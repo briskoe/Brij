@@ -74,33 +74,35 @@
 
                 </div>
             </div>
-
             <!-- Error -->
-            <div class="container">
+            <div class="container" style="max-width:400px">
                 <center>
                     <div id="error" class="alert alert-danger" style="display: none">
                         <a class="close" onclick="$('.alert').hide()">×</a><strong>Error with Username and/or Password</strong>
                     </div>
                 </center>
             </div>
-            <div class="page-header" id="titleDiv">
-                <center>
-                    <h1>BRIJ</h1>
-                </center>
+            <div id="parent">
+
+                <div class="page-header" id="titleDiv">
+                    <center>
+                        <h1>BRIJ</h1>
+                    </center>
+                </div>
+                <form class="form-horizontal" id="loginForm">
+                    <div class="form-group">
+                        <input type="text" class="form-control form-login col-xs-12" id="username" placeholder="Enter Username" />
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control form-login col-xs-12" id="password" placeholder="Enter Password" />
+                    </div>
+                    <div class="form-group">
+                        <input id="btnSignIn" type="submit" value="Sign In" class="btn btn-default col-xs-12" />
+                        <button id="btnRegistration" type="button" class="btn btn-default col-xs-12">Register</button>
+                        <a type="button" class="col-xs-12">Forgot Password? </a>
+                    </div>
+                </form>
             </div>
-            <form class="form-horizontal" id="loginForm">
-                <div class="form-group">
-                    <input type="text" class="form-control form-login col-xs-12" id="username" placeholder="Enter Username" />
-                </div>
-                <div class="form-group">
-                    <input type="password" class="form-control form-login col-xs-12" id="password" placeholder="Enter Password" />
-                </div>
-                <div class="form-group">
-                    <input id="btnSignIn" type="submit" value="Sign In" class="btn btn-default col-xs-12" />
-                    <button id="btnRegistration" type="button" class="btn btn-default col-xs-12">Register</button>
-                    <a type="button" class="col-xs-12">Forgot Password? </a>
-                </div>
-            </form>
             <script>
                 app.initialize()
             </script>
