@@ -98,7 +98,8 @@ body {
     max-width: 400px;
 }
 
-body, html {
+#loginBody,
+#loginHTML {
     width: 100%;
     height: 100%;
     margin: 0;
@@ -106,9 +107,9 @@ body, html {
     display: table;
 }
 
-body {
+#loginBody {
     display: table-cell;
-    vertical-align:middle;
+    vertical-align: middle;
 }
 
 #titleDiv {}
@@ -298,4 +299,24 @@ input:focus {
 
 .scrollableArea {
     overflow-x: auto;
+}
+
+
+/*
+    POSTINGS
+*/
+
+.stylish-input-group .input-group-addon {
+    background: white !important;
+}
+
+.stylish-input-group .form-control {
+    border-right: 0;
+    box-shadow: 0 0 0;
+    border-color: #ccc;
+}
+
+.stylish-input-group button {
+    border: 0;
+    background: transparent;
 }

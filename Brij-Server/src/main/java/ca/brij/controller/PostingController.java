@@ -1,5 +1,6 @@
 package ca.brij.controller;
 
+import java.io.Console;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -303,6 +304,55 @@ public class PostingController {
 		postingsMap.put("numberOfPages", numberOfPages);
 		postingsMap.put("currentPage", (pageNo + 1));
 
+		return postingsMap;
+	}
+	
+	/**
+	 * Get all the postings in the db
+	 * 
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/posting/like", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> getAllPostingLike(Principal principal, String title,
+			@RequestParam(value = "pageNo", required = false) Integer pageNo,
+			@RequestParam(value = "pageSize", required = false) Integer pageSize,
+			@RequestParam(value = "distance", required = false) Double distance) throws Exception {
+		Map<String, Object> postingsMap = new HashMap<String, Object>();
+		ArrayList<Posting> postings;
+		int numberOfPages = 0;
+		try {
+			logger.info("Retrieving all posts");
+			if (pageNo == null) {
+				pageNo = 0;
+			}
+			if (pageSize == null) {
+				pageSize = 10;
+			}
+			if (distance == null) {
+				distance = 25.0;
+			}
+			User currentUser = daoHelper.getUserDao().findByUserName(principal.getName());
+			Double lat = currentUser.getLatitude();
+			Double lng = currentUser.getLongitude();
+			if (lat == null || lng == null) {
+				//postings = daoHelper.getPostingDao().getAllPostings(new PageRequest(pageNo, pageSize));
+				postings = daoHelper.getPostingDao().getPostingsLikeTitle(title ,new PageRequest(pageNo, pageSize));
+			} else {
+				postings = daoHelper.getPostingDao().getPostingsLikeTitle(title ,new PageRequest(pageNo, pageSize),
+						currentUser.getLatitude(), currentUser.getLongitude(), distance);
+			}
+			// divide then take the decimal away. Ex 10.5 will give 10
+			numberOfPages = (int) Math.ceil((double) daoHelper.getPostingDao().getCountOfAll() / (double) pageSize);
+
+		} catch (Exception ex) {
+			logger.error("Failed retrieving posts " + ex.getMessage());
+			throw ex;
+		}
+		postingsMap.put("list", postings);
+		postingsMap.put("numberOfPages", numberOfPages);
+		postingsMap.put("currentPage", (pageNo + 1));
+		
 		return postingsMap;
 	}
 	

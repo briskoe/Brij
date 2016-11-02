@@ -73,7 +73,7 @@ $(function () {
     setupSettingModal();
     setupScrollable();
 
-    $("#createPost").click(function (e) {
+    $(".navbar #createPost").click(function (e) {
         e.preventDefault();
         e.stopPropagation();
         window.location.href = "createPost.html";

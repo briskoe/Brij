@@ -4,40 +4,27 @@ var noOfPages = 1;
 $(function () {
     getAllPosts();
 
-    $("#btnAll").click(function (e) {
+    $("#btnSearch").click(function (e) {
         e.preventDefault();
         e.stopPropagation();
-        $(".btnPosts").removeClass("active");
-        $("#btnAll").addClass("active");
-        filterBy = "allPosts";
-        getAllPosts();
-    });
+        if ($("#txtSearch").val().length > 0) {
+            var url = GET_POSTINGS_LIKE;
 
-    $("#btnMyPosts").click(function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        $(".btnPosts").removeClass("active");
-        $("#btnMyPosts").addClass("active");
-        filterBy = "myPosts";
-        makeRequest(GET_MY_POSTS, GET, "", "", createPostingList, null);
+            if (search_km !== null) {
+                url += "?distance=" + search_km;
+            }
 
-    });
+            url += "&title=" + $("#txtSearch").val();
 
-    $("#btnMyRequest").click(function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-        $(".btnPosts").removeClass("active");
-        $("#btnMyRequest").addClass("active");
-        filterBy = "myRequests";
-        makeRequest(GET_MY_REQUESTS, GET, "", "", createRequestList, null);
-
+            makeRequest(url, GET, "", "", createPostingList, null);
+        }
     });
 });
 
 function getAllPosts() {
     var url = GET_POSTS;
-    if(search_km !== null){
-        url += "?distance="+ search_km;
+    if (search_km !== null) {
+        url += "?distance=" + search_km;
     }
     makeRequest(url, GET, "", "", createPostingList, null);
 }
@@ -45,50 +32,18 @@ function getAllPosts() {
 function createPostingList(data) {
     var listItems = "";
     var array = data.list;
+    console.log(array);
     noOfPages = data.numberOfPages;
     currentPage = data.currentPage;
     for (var i = 0; i < array.length && i < 10; i++) {
         var badge = "REQUEST"
         if (array[i].isPost) {
-            badge = "POSTING";
+            badge = "OFFER";
         }
         if (i % 2 === 0) {
             listItems += "<a href='post.html?id=" + array[i].id + "' class='list-group-item' id='posting#" + array[i].id + "'> <span class='badge'>" + badge + "</span> " + array[i].title + "</a>";
         } else {
             listItems += "<a href='post.html?id=" + array[i].id + "' class='list-group-item list-group-item-info' id='posting#" + array[i].id + "'>" + "<span class='badge'>" + badge + "</span>" + array[i].title + "</a>";
-        }
-    }
-
-    var paginatingBtn = "";
-    for (var i = 0; i < noOfPages; i++) {
-        var currentIndex = i + 1;
-        var paginationClass = "";
-        console.log(currentIndex + " " + currentPage)
-        if (currentIndex === currentPage) {
-            paginationClass = "disabled currentClass";
-        }
-        paginatingBtn += "<li class='page-item " + paginationClass + "'> <a id='paginationBtn_" + i + "' class='page-link' href='#' onclick='paginationButtonClick(this)'>" + (currentIndex) + "</a></li>"
-    }
-    $("#postingPagination").html(paginationDiv("pagination", paginatingBtn));
-    $("#postingPagination .backbtn").click(goBack);
-    $("#postingPagination .nextBtn").click(goForward);
-
-    $("#postingList").html(listItems);
-}
-
-function createRequestList(data) {
-    var listItems = "";
-    var array = data.list;
-    noOfPages = data.numberOfPages;
-    currentPage = data.currentPage;
-    var titles = data.postTitles;
-    for (var i = 0; i < array.length && i < 10; i++) {
-        var badge = "MY REQUEST";
-        var requestId = array[i].requestID;
-        if (i % 2 === 0) {
-            listItems += "<a href='request.html?id=" + requestId + "' class='list-group-item' id='request#" + requestId + "'> <span class='badge'>" + badge + "</span> " + titles[requestId] + "</a>";
-        } else {
-            listItems += "<a href='request.html?id=" + requestId + "' class='list-group-item list-group-item-info' id='request#" + requestId + "'>" + "<span class='badge'>" + badge + "</span>" + titles[requestId] + "</a>";
         }
     }
 
@@ -139,8 +94,14 @@ function paginationButtonClick(anchor) {
     }
 
     url += "?pageNo=" + pageId;
-    if(search_km !== null){
-        url +="&distance="+ search_km;
+    if (search_km !== null) {
+        url += "&distance=" + search_km;
     }
     makeRequest(url, GET, "", "", createPostingList, null);
+}
+
+function checkNull() {
+    if ($("#txtSearch").val() == "") {
+        getAllPosts();
+    }
 }

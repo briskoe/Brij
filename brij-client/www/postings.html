@@ -34,22 +34,35 @@
             </ul>
         </div>
     </nav>
-    <div class="container">
-        <img src="img/brij_logo.png" class="img-rounded" alt="Brij Logo" width="100%">
-        <a href="createPost.html" class="btn btn-primary btn-block btn-lg" role="button">Create New Post</a>
-    </div>
     <!--END OF HEADER -->
-
-    <br>
-    <div class="btn-group btn-group-justified">
-        <a id="btnAll" href="#" class="btn btn-info btnPosts active">All Postings</a>
-        <a id="btnMyPosts" href="#" class="btn btn-info btnPosts">My Postings</a>
-        <a id="btnMyRequest" href="#" class="btn btn-info btnPosts">My Requests</a>
+    <div class="page-header" id="titleDiv">
+        <center>
+            <h1>Posts</h1>
+        </center>
     </div>
+    <form>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-10 col-sm-offset-1">
+                    <div id="imaginary_container">
+                        <div class="input-group stylish-input-group">
+                            <input type="text" class="form-control" placeholder="Search" id="txtSearch" onkeyup="checkNull()">
+                            <span class="input-group-addon">
+                            <button type="submit" id="btnSearch">
+                            <span class="glyphicon glyphicon-search"></span>
+                            </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <br />
     <div id="postingList" class="list-group">
 
     </div>
-    
+
     <div id="postingPagination" class="pager">
     </div>
 
