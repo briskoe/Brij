@@ -47,7 +47,13 @@ $(function () {
         }
     });
 
-
+    $("#reportBtn").click(function(e){
+        $("#txaMessage").val("");
+        $("#lstType").val("post");
+        $("#lstType").attr("disabled", true);
+        additionalTicketComment += "Post: " + postID;
+        $("#reportModal").modal(); 
+    });
 
     getPosts($.urlParam("id"));
 
@@ -74,12 +80,24 @@ function getPosts(id) {
     var url = GET_POST_BY_ID;
     url = url.replace(":id", id);
     makeRequest(url, GET, "", "", populatePost, null);
-    console.log(id);
+}
+
+function populateUserInfo(data){
+    $("#username").html(data.username);
+    $("#userForm #firstName").val(data.firstName);
+    $("#userForm #lastName").val(data.lastName);
+    $("#userForm #phoneNumber").val(data.phoneNumber);
+    $("#userForm #address").val(data.address);
+    $("#userForm #city").val(data.city);
+    $("#userForm #province").val(data.province);
+    $("#userForm #email").val(data.email);
+    $("#userForm #firstName").html();
 }
 
 function populatePost(data) {
     id = data.posting.id;
-    console.log(data.serviceName)
+    populateUserInfo(data.posting.user);
+    $("#postName").html(data.posting.title);
     $("#postForm #title").val(data.posting.title);
     $("#postForm #serviceName").val(data.serviceName);
     $("#postForm #description").val(data.posting.details);
@@ -94,7 +112,6 @@ function populatePost(data) {
     }
 
     $("#isPostDiv").html(messageInfo);
-    console.log("isOwner: " + data.isOwner);
     
     if (data.isOwner) {
         $("#btnRequest").hide();

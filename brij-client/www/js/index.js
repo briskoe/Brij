@@ -13,6 +13,14 @@ var NOTIFICATION_LIMIT = 10;
 //settings values
 var search_km = 25;
 
+
+/**
+ type of reports
+**/
+var additionalTicketComment = "";
+
+var REPORT_APP = "app";
+var REPORT_POST = "post";
 var notification_timer;
 var PROVINCES = {
     ON: "Ontario",
@@ -27,6 +35,15 @@ var PROVINCES = {
     NL: "Newfoundland and Labrador"
 
 }
+
+var reportTypes = {
+    login: "login/logout process",
+    user: "user",
+    post: "post",
+    request: "request",
+    other: "other"
+};
+
 var app = {
     // Application Constructor
     initialize: function () {
@@ -91,6 +108,65 @@ $(window).resize(function () {
     $('.scrollableArea').height(content_height);
 });
 
+function fillListType(){
+    var options = "";
+    for (var key in reportTypes) {
+        options += "<option value='"+reportTypes[key]+"'>"+reportTypes[key]+"</option>"
+    }
+    $("#lstType").html(options);
+
+}
+function setupReportModal(){
+    var modal = "<div class='container' ><div id='reportModal' class='modal fade' role='dialog'>" +
+        "<div class='modal-dialog'>" +
+        "<div class='modal-content'> <div class='modal-header'>" +
+        "<h2 id='typeOfReport'>Report</h2> </div>" +
+        "<div class='modal-body'> " +
+        reportBody() +
+        "</div><div class='modal-footer'>" +
+        "<button type='button' class='btn btn-info' id='btnSaveReport' > Send </button>" +
+        "<button type='button' class='btn btn-default' data-dismiss='modal'>close</button>" + "</div> </div> </div>" +
+        "</div> </div>";
+    $("body").append(modal);
+    
+    fillListType();
+
+    $("#btnSaveReport").click(function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        console.log("as")
+        var type = $("#lstType").val();
+        var comment = $("#txaMessage").val() + "<MESSAGE>" +additionalTicketComment;
+        var report = {
+            type: type,
+            comment: comment
+        }
+        
+        additionalTicketComment = "";
+        makeRequest(SAVE_TICKET, POST, JSON.stringify(report), APPLICATION_JSON, ticketSaved, null);
+        
+        
+        
+    })
+}
+function ticketSaved(data){
+    if(data !== ""){
+        $("#reportModal").modal("hide");
+    }
+}
+
+
+
+function reportBody(){
+    var modalBody = "<div>"
+    +"<form novalidate onSubmit='return false'>"+
+        "<div class='form-group'><label>Title</label> <select class='form-control' id='lstType' ></select> </div> " + 
+        "<label>Comment:</label> <textarea id='txaMessage' class='form-control'></textarea> </div> " + 
+    "</form> "
+    return modalBody;
+}
+
+
 function setupSettingModal() {
     var modal = "<div class='container' ><div id='settingModal' class='modal fade' role='dialog'>" +
         "<div class='modal-dialog'>" +
@@ -150,6 +226,7 @@ function initializeMainMenu() {
         "<li class='menuLinks'><a href='postings.html'>Postings</a></li>" +
         "<li class='menuLinks'><a href='accountDetails.html'>Account Details</a></li>" +
         "<li class='menuLinks'><a href='history.html'>History</a></li>" +
+        "<li class='menuLinks'><a href='#' id='btnReport' >Report a problem </a></li>" +
         "<li class='menuLinks'><a href='#' id='btnSetting' >Settings </a></li>" +
         "<li class='menuLinks'><a id='logoutMenuItem'>Logout</a></li>";
     $("#navbar").html(navbar);
@@ -174,8 +251,9 @@ function initializeMainMenu() {
         e.stopPropagation();
         $("#txtKm").val(search_km);
         $("#settingModal").modal();
-        $("#myNavbar").removeClass("in");
-    })
+        $("#navbar").removeClass("in");
+    });
+
 }
 
 function notificationRequest() {
@@ -258,9 +336,6 @@ function paginationDiv(id, item) {
 /**
  *   SETUP settings
  */
-
-
-
 
 var loading = {
     show: function () {

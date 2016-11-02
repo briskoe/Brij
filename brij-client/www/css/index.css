@@ -301,6 +301,10 @@ input:focus {
     overflow-x: auto;
 }
 
+.pageDiv{
+    background: #FFFFFF;
+    min-height: 600px;
+}
 
 /*
     POSTINGS

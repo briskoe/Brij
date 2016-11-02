@@ -52,7 +52,6 @@ $(function () {
     $( window ).resize(function() {
         $("#chatRoomModal #modalBody").css({"height": $(window).height() - 200});
     });
-    
     getRequest($.urlParam("id"));
     openConvo = $.urlParam("openConvo");
     
@@ -121,6 +120,7 @@ function requestService() {
 
 function getRequest(id) {
     //Need to get based on id
+        console.log(id);
     var url = GET_REQUEST_BY_ID;
     url = url.replace(":id", id);
     makeRequest(url, GET, "", "", populateRequest, null);

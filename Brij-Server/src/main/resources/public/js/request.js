@@ -1,5 +1,5 @@
 //hide this information
-var SERVER_URL = "http://localhost:8080";
+var SERVER_URL = "";
 var LOGIN = "/login?username=:username&password=:password";
 var LOGOUT = "/logout";
 var HEARTBEAT = "/heartbeat";
@@ -19,6 +19,9 @@ var GET_MY_REQUESTS = "/request/findByRequester";
 var REGISTER_USER = "/user/register";
 var GET_CONVERSATION_BY_REQUEST = "/conversation/getByRequest?id=:id";
 var SAVE_MESSAGE = "/conversation/saveMessage?id=:id"
+var GET_TICKET_BY_ID = "/ticket/findById";
+var GET_TICKET_BY_TYPE = "/ticket/byType";
+var GET_TICKET_USER = "ticket/findByUser";
 
 //ADMIN
 var GET_ALL_USERS = "/admin/user/findAll"
@@ -33,20 +36,41 @@ var GET_ALL_SERVICES_ADMIN = "/admin/service/findAll";
 var GET_SERVICE_BY_ID_ADMIN = "/admin/service/findById";
 var GET_SERVICE_LIKE_TITLE_ADMIN = "/admin/service/findLikeTitle";
 var SAVE_SERVICE_ADMIN = "/admin/service/save";
-
-//Request Types
-var GET = "GET";
-var POST = "POST";
-var PUT = "PUT";
-var DELETE = "DELETE";
+var GET_ALL_TICKETS_ADMIN = "/admin/ticket/findAll";
+var GET_TICKETS_BY_TYPE_ADMIN = "/admin/ticket/byType";
+var GET_ALL_TICKET_ADMIN = "/admin/ticket/findAll";
+var GET_TICKET_BY_TYPE_ADMIN = "/admin/ticket/byType";
+var GET_TICKET_USER_ADMIN = "/admin/ticket/findByUser";
+var SAVE_TICKET_ADMIN = "/admin/ticket/save";
 
 //PORTAL
 var HOME = SERVER_URL + "/homePage";
 var ADMIN_USER_PAGE = SERVER_URL + "/admin/userPage";
 var ADMIN_POST_PAGE = SERVER_URL + "/admin/postPage";
 var ADMIN_SERVICES_PAGE = SERVER_URL + "/admin/servicePage";
+var ADMIN_TICKET_PAGE = SERVER_URL + "/admin/ticketPage";
+
+$(function(){
+	 SERVER_URL =  "http://" + $(location).attr('host');
+	 HOME = SERVER_URL + "/homePage";
+	 ADMIN_USER_PAGE = SERVER_URL + "/admin/userPage";
+	 ADMIN_POST_PAGE = SERVER_URL + "/admin/postPage";
+	 ADMIN_SERVICES_PAGE = SERVER_URL + "/admin/servicePage";
+	 ADMIN_TICKET_PAGE = SERVER_URL + "/admin/ticketPage";
+
+})
+//Request Types
+var GET = "GET";
+var POST = "POST";
+var PUT = "PUT";
+var DELETE = "DELETE";
 
 
+
+function get_hostname(url) {
+    var m = url.match(/^http:\/\/[^/]+/);
+    return m ? m[0] : null;
+}
 
 
 var APPLICATION_JSON = "application/json; charset=utf-8";
