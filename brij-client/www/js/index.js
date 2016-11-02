@@ -89,6 +89,7 @@ $(function () {
     setupStorage();
     setupSettingModal();
     setupScrollable();
+    setupReportModal();
 
     $(".navbar #createPost").click(function (e) {
         e.preventDefault();
@@ -246,7 +247,16 @@ function initializeMainMenu() {
         window.location.href = "postings.html";
     });
 
-    $("#btnSetting").click(function (e) {
+    $("#btnReport").click(function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        $("#txaMessage").val("");
+        $("#lstType").attr("disabled", false);
+        additionalTicketComment= "";
+        $("#reportModal").modal(); 
+    })
+    
+    $("#btnSetting").click(function(e){
         e.preventDefault();
         e.stopPropagation();
         $("#txtKm").val(search_km);
