@@ -30,6 +30,7 @@ import ca.brij.bean.user.User;
 		@NamedQuery(name = "Posting.getPostingByIdAdmin", query = "from Posting where id = :id"),
 		@NamedQuery(name = "Posting.getPostingsByServID", query = "from Posting where servID = :servID"),
 		@NamedQuery(name = "Posting.getPostingsLikeTitleAdmin", query = "from Posting where LOWER(title) LIKE LOWER('%' || :title || '%')"),
+		@NamedQuery(name = "Posting.getPostingsLikeTitle", query = "from Posting where LOWER(title) LIKE LOWER('%' || :title || '%')"),
 		@NamedQuery(name = "Posting.getCountOfPostLikeAdmin", query = "SELECT count(*) from Posting where LOWER(title) LIKE LOWER('%' || :title || '%')"),
 		@NamedQuery(name = "Posting.getPostingsByUserID", query = "from Posting where user.username = :userID AND status <> 'closed' ORDER BY creationDate DESC"),
 		@NamedQuery(name = "Posting.getCountOfAll", query = "SELECT count(*) from Posting WHERE status <> 'closed' ORDER BY creationDate DESC"),
