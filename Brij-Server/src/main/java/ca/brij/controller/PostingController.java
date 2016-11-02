@@ -339,7 +339,7 @@ public class PostingController {
 				//postings = daoHelper.getPostingDao().getAllPostings(new PageRequest(pageNo, pageSize));
 				postings = daoHelper.getPostingDao().getPostingsLikeTitle(title ,new PageRequest(pageNo, pageSize));
 			} else {
-				postings = daoHelper.getPostingDao().getPostingsLikeTitle(title ,new PageRequest(pageNo, pageSize),
+				postings = daoHelper.getPostingDao().getPostsByLocationLikeTitle(title ,new PageRequest(pageNo, pageSize),
 						currentUser.getLatitude(), currentUser.getLongitude(), distance);
 			}
 			// divide then take the decimal away. Ex 10.5 will give 10

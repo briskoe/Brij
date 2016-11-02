@@ -17,6 +17,8 @@ $(function () {
             url += "&title=" + $("#txtSearch").val();
 
             makeRequest(url, GET, "", "", createPostingList, null);
+        } else {
+            getAllPosts();
         }
     });
 });

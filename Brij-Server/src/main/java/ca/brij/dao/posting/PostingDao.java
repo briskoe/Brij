@@ -31,7 +31,7 @@ public interface PostingDao extends JpaRepository<Posting, Long> {
 	
 	public ArrayList<Posting> getPostingsLikeTitle(@Param("title") String title, Pageable pageable);
 	
-	public ArrayList<Posting> getPostingsLikeTitle(@Param("title") String title, Pageable pageable, @Param("latitude") Double latitude, @Param("longitude") Double longitude, @Param("distance") Double distance);
+	public ArrayList<Posting> getPostsByLocationLikeTitle(@Param("title") String title, Pageable pageable, @Param("latitude") Double latitude, @Param("longitude") Double longitude, @Param("distance") Double distance);
 	
 	public int getCountOfPostLikeAdmin(@Param("title") String title);
 	
