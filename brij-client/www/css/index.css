@@ -324,3 +324,7 @@ input:focus {
     border: 0;
     background: transparent;
 }
+
+#chatRoomModal #modalBody{
+    max-height: 500px;
+}

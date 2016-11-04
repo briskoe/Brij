@@ -36,7 +36,7 @@
 		</div>
 	</nav>
 	<!--END OF HEADER -->
-	<div class="container pageDiv">
+	<div class="container pageDiv scrollableArea">
 		<div class="page-header">
 			<h1 id="postName"></h1>
 
@@ -44,6 +44,7 @@
 		<ul class="nav nav-tabs">
 			<li class="active"><a data-toggle="tab" href="#postInfo">Home</a></li>
 			<li><a data-toggle="tab" href="#userInfo">About the poster</a></li>
+            <li  class="showOwner hide"><a data-toggle="tab" id="btnShowRequest" href="#requests">Requests</a></li>
 			<li><a  id="reportBtn" href="#">Report</a></li>
 		</ul>
 		<div class="tab-content">
@@ -74,20 +75,27 @@
 								id="description" disabled></textarea>
 						</div>
 					</div>
+                    
+                        <div class="col-sm-6">
+                            <button id="btnBack" type="button"
+                                class="btn btn-default form-control margin-bottom-5">Back</button>
+                        </div>
 
-					<div class="form-group">
-						<button id="btnBack" type="button"
-							class="btn btn-default col-xs-6">Back</button>
-						<button id="btnRequest" type="button"
-							class="btn btn-default col-xs-6 btn-success">Request
-							Service</button>
-					</div>
-					<div class="form-group">
-						<button id="btnEdit" type="button"
-							class="btn btn-default col-xs-6">Edit</button>
-						<button id="btnCancel" type="button"
-							class="btn btn-default col-xs-6 btn-danger hide">Cancel</button>
-					</div>
+                        <div class="col-sm-6">
+                            <button id="btnRequest" type="button"
+                                class="btn btn-info form-control  margin-bottom-5 hide showUser">Request
+                                Service</button>
+                        </div>
+                        <div class="col-sm-6">
+                            <button id="btnEdit" type="button"
+                                class="btn btn-info form-control margin-bottom-5 hide showOwner">Edit</button>
+                        </div>
+                        <div class="col-sm-12">
+                            <button id="btnCancel" type="button"
+                                    class="btn btn-default form-control hide margin-bottom-5 ">Cancel</button>
+                        </div>
+
+
 				</form>
 
 			</div>
@@ -150,8 +158,14 @@
 						</div>
 					</form>
 				</div>
+            <div id="requests" class="tab-pane fade">
+                    <div id="requestList" class="list-group">
+            </div>
 
 			</div>
+
+			</div>
+
 
 
 

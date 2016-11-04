@@ -305,9 +305,7 @@ function fillNotifications(data) {
 function notificationOnClick(anchor) {
     var nId = $(anchor).attr("id").split("_")[1];
     var hasClass = $(anchor).hasClass("readFlag");
-    console.log(anchor);
     if (hasClass) {
-        console.log("As")
         var notification = {
             id: nId,
             readFlag: true
@@ -360,6 +358,7 @@ var loading = {
                     background: "black",
                     color: "white",
                     width: "270px",
+                    "z-index": 99999999,
                     left: ($(window).width() - 284) / 2,
                     top: $(window).height() / 2
                 })

@@ -55,10 +55,31 @@ $(function () {
         $("#reportModal").modal(); 
     });
 
+    $("#btnShowRequest").click(function(e){
+        var url = GET_REQUESTS_BY_POST_ID;
+        url += "?postID=" + postID;
+        makeRequest(url, GET, "", "", createRequestList, null);   
+    });
     getPosts($.urlParam("id"));
 
 });
 
+function createRequestList(data) {
+    var listItems = "";
+    var array = data;
+    for (var i = 0; i < array.length && i < 10; i++) {
+
+        if (i % 2 === 0) {
+            listItems += "<a href='request.html?id=" + array[i].requestID + "' class='list-group-item historyListItem' id='" + array[i].requestID + "'>" + array[i].userID + "</a>";
+        } else {
+            listItems += "<a href='request.html?id=" + array[i].requestID + "' class='list-group-item list-group-item-info historyListItem' id='" + array[i].requestID + "'>" + array[i].userID + "</a>";
+        }
+    }
+    if(array.length === 0){
+        listItems = "<h3 class='list-group-item'>No request to show</h3>"
+    }
+    $("#requestList").html(listItems);
+}
 function savePost() {
     var updatePost = {
         id: postID,
@@ -102,6 +123,7 @@ function populatePost(data) {
     $("#postForm #serviceName").val(data.serviceName);
     $("#postForm #description").val(data.posting.details);
     var messageInfo = "";
+    var hasRequest = data.hasRequested;
     if (data.posting.isPost) {
         messageInfo = IS_POSTING_MESSAGE_FOR_OTHERS;
         $("#btnRequest").html("Request Service");
@@ -110,13 +132,29 @@ function populatePost(data) {
         $("#btnRequest").html("Fulfill Request");
 
     }
+    
+    if(hasRequest){
+        $("#btnRequest").html("View your request");
+    }
+    $("#btnRequest").click(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if(hasRequest){
+            window.location = "request.html?id=" + data.requestID;
+        }else{
+            requestService();
+        }
+    });
+
 
     $("#isPostDiv").html(messageInfo);
     
-    if (data.isOwner) {
-        $("#btnRequest").hide();
-    } else {
-        $("#btnEdit").hide();
+    var isOwner = (data.isOwner);
+    if(isOwner){
+        $(".showOwner").removeClass("hide");
+    }else{
+        $(".showUser").removeClass("hide");
     }
+
     
 }

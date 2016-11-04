@@ -22,6 +22,9 @@ var SAVE_MESSAGE = "/conversation/saveMessage?id=:id"
 var GET_TICKET_BY_ID = "/ticket/findById";
 var GET_TICKET_BY_TYPE = "/ticket/byType";
 var GET_TICKET_USER = "ticket/findByUser";
+var UPDATE_STATUS_TICKET = "/ticket/updateStatus";
+var SAVE_TICKET_MESSAGE = "/ticket/saveMessage";
+var SAVE_TICKET = "/ticket/save";
 
 //ADMIN
 var GET_ALL_USERS = "/admin/user/findAll"
@@ -42,6 +45,7 @@ var GET_ALL_TICKET_ADMIN = "/admin/ticket/findAll";
 var GET_TICKET_BY_TYPE_ADMIN = "/admin/ticket/byType";
 var GET_TICKET_USER_ADMIN = "/admin/ticket/findByUser";
 var SAVE_TICKET_ADMIN = "/admin/ticket/save";
+
 
 //PORTAL
 var HOME = SERVER_URL + "/homePage";

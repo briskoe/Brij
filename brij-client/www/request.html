@@ -35,42 +35,112 @@
         </div>
     </nav>
     <!--END OF HEADER -->
-    <div class="container">
-        <img src="img/brij_logo.png" class="img-rounded" alt="Brij Logo" width="100%">
-        <div class="page-header text-center">
-            <h1><span id="postName"></span></h1>
-            <div class="alert alert-info text-center"><span id="requestType"></span></div>
+    <div class="container pageDiv scrollableArea" >
+        <div class="page-header ">
+            <h1><span id="postName"></span>  <span id="status"></span></h1>
         </div>
-        <form class="form-horizontal">
-            <div class="form-group">
-                <label class="control-label col-sm-2">Service:</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="service" disabled/>
-                </div>
-            </div>
-            <br/>
-            <div class="form-group">
-                <label class="control-label col-sm-2" for="description">Description:</label>
-                <div class="col-sm-10">
-                    <textarea class="form-control" rows="5" id="description" disabled></textarea>
-                </div>
-            </div>
-        </form>
-        <form class="form-horizontal" id="requestForm">
-            <div class="form-group">
-                <label class="control-label col-sm-2" for="notes">Notes:</label>
-                <div class="col-sm-10">
-                    <textarea class="form-control" rows="5" id="notes" disabled></textarea>
-                </div>
-            </div>
+        <ul class="nav nav-tabs">
+			<li class="active"><a data-toggle="tab" href="#requestInfo">Request Info</a></li>
+			<li><a data-toggle="tab" id="btnSeeUser"  href="#userInfo"></a></li>
+			<li><a  id="btnOpenConvo" href="#">Conversation</a></li>
+		</ul>
+        
+        <div class="tab-content">
+              <div id="requestInfo" class="tab-pane fade in active">
+                    <div class="alert alert-info text-center"><span id="requestType"></span></div>
 
-            <button id="btnBack" type="button" class="btn btn-default form-control margin-bottom-5">Back</button>
-            <br>
-            <button id="btnEdit" type="button" class="btn btn-default btn-success form-control margin-bottom-5">Edit</button>
-            
-            <a class="btn btn-link form-control" href="#"  data-toggle="modal" id="btnOpenConvo">Open Conversation</a>
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-sm-2">Service:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="service" disabled/>
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="description">Description:</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" rows="5" id="description" disabled></textarea>
+                        </div>
+                    </div>
+                </form>
+                <form class="form-horizontal" id="requestForm">
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="notes">Notes:</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" rows="5" id="notes" disabled></textarea>
+                        </div>
+                    </div>
 
-        </form>
+                    <button id="btnBack" type="button" class="btn btn-default form-control margin-bottom-5">Back</button>
+                    <br>
+                    <button id="btnEdit" type="button" class="btn btn-default btn-success form-control margin-bottom-5 showOwner hide">Edit</button>
+                    <button id="btnClose" type="button" class="btn btn-default active form-control margin-bottom-5 showOwner hide">Cancel request</button>
+                    <button id="btnDeny" type="button" class="btn btn-default btn-danger form-control margin-bottom-5 inPending hide">Deny</button>
+                    <button id="btnAccept" type="button" class="btn btn-default btn-primary form-control margin-bottom-5 inPending hide">Accept</button>
+                    <button id="btnComplete" type="button" class="btn btn-default btn-success form-control margin-bottom-5 inProgress hide">Complete</button>
+                </form>
+        </div>
+        <div id="userInfo" class="tab-pane fade">
+				<br>
+                    <h3 class="text-center" id="username"></h3>
+					<form class="form-horizontal" id="userForm">
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="firstName">First
+								Name:</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control userInput" id="firstName"
+									placeholder="first Name" disabled>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="lastName">Last
+								Name:</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control userInput" id="lastName"
+									placeholder="Last Name" disabled>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="phoneNumber">Phone
+								#:</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control userInput"
+									id="phoneNumber" placeholder="Phone Number" disabled>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="address">Address:</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control userInput" id="address"
+									placeholder="Address" disabled>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="city">City:</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control userInput" id="city"
+									placeholder="City" disabled>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="lstProvinces">Province:</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control userInput" id="province"
+									placeholder="name@domain.com" disabled>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-2" for="email">Email:</label>
+							<div class="col-sm-10">
+								<input type="email" class="form-control userInput" id="email"
+									placeholder="name@domain.com" disabled>
+							</div>
+						</div>
+					</form>
+				</div>
+        </div>
+
     </div>
     
     
@@ -89,8 +159,8 @@
       <div class="modal-footer">
         <textarea id="txtaComment" rows="5" class="form-control"></textarea>
           <br>
-        <button type="button" class="btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class=" btn-primary" id="btnSaveMessage">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class=" btn btn-primary" id="btnSaveMessage">Save changes</button>
       </div>
     </div>
   </div>
