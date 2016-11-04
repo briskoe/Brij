@@ -3,6 +3,7 @@ var requestID;
 var isSavingRequest = false;
 var conversationTimer;
 var openConvo = false;
+var status = "";
 $(function () {
     $("#btnBack").click(function (e) {
         e.preventDefault();
@@ -48,16 +49,40 @@ $(function () {
             requestConversation();
         }, null);
     })
+    $("#btnAccept").click(function(e){
+        changeStatus("in_progress"); 
+    });
+    
+    $("#btnDeny").click(function(e){
+        changeStatus("denied"); 
+    });
+    
+    $("#btnComplete").click(function(e){
+        changeStatus("complete"); 
+    });
+    $("#btnClose").click(function(e){
+        changeStatus("cancelled"); 
+    });
     
     $( window ).resize(function() {
         $("#chatRoomModal #modalBody").css({"height": $(window).height() - 200});
     });
-    
     getRequest($.urlParam("id"));
     openConvo = $.urlParam("openConvo");
     
 
 });
+
+
+
+function changeStatus(newStatus){
+    var url = CHANGE_REQUEST_STATUS + "?id= " + requestID + "&status=" + newStatus;
+    makeRequest(url, POST,"", APPLICATION_JSON, function(data){
+        var url = GET_REQUEST_BY_ID;
+        url = url.replace(":id", requestID);
+        makeRequest(url, GET, "", "", populateRequest, null);
+    }, null);
+}
 
 function requestConversation(){
     var url = GET_CONVERSATION_BY_REQUEST;
@@ -125,17 +150,78 @@ function getRequest(id) {
     url = url.replace(":id", id);
     makeRequest(url, GET, "", "", populateRequest, null);
 }
+function populateUserInfo(data){
+    $("#username").html(data.username);
+    $("#userForm #firstName").val(data.firstName);
+    $("#userForm #lastName").val(data.lastName);
+    $("#userForm #phoneNumber").val(data.phoneNumber);
+    $("#userForm #address").val(data.address);
+    $("#userForm #city").val(data.city);
+    $("#userForm #province").val(data.province);
+    $("#userForm #email").val(data.email);
+    $("#userForm #firstName").html();
+}
+
+
+function changeStatusInPage(status){
+    var message = status.replace("_", " ");
+    var classToUse = "label pull-right "; 
+    switch(status){
+        case "pending":
+          classToUse += "label-warning";
+          break;
+        case "in_progress":
+            classToUse += "label-info";
+            break;
+        case "completed":
+            classToUse += "label-success";
+      default:
+            classToUse += "label-default";
+            break;
+    }
+    $("#status").removeClass();
+    $("#status").html(message);
+    $("#status").addClass(classToUse);
+}
 
 function populateRequest(data) {
     postID = data.posting.id;
     requestID = data.request.requestID;
-    console.log(requestID);
-    $("#postName").html(data.posting.title);
-    if (data.posting.isPost) {
-        $("#requestType").html("You have requested this service");
-    } else {
-        $("#requestType").html("You have requested to perform this service");
+    var aboutUser = "About the requester";
+    var requestType = "You have requested this service";
+    status = data.request.status;
+    changeStatusInPage(status);
+    if(data.isOwner){
+        aboutUser = "About the poster";
+        populateUserInfo(data.posting.user);
+        $(".showOwner").removeClass("hide");
+        if(status === "complete" || status === "cancelled" || status === "denied"){
+            $(".showOwner").addClass("hide");
+        }
+    }else{
+        aboutUser = "About the requester"
+        if(status === "in_progress"){
+            $(".inProgress").removeClass("hide");
+            $(".inPending").addClass("hide");
+
+        }else if(status === "pending"){
+            $(".inPending").removeClass("hide");
+            $(".inProgress").addClass("hide");
+        } 
+            
+        
+        populateUserInfo(data.requester);
+        if (data.posting.isPost) {
+            requestType = data.requester.username + " has requested this service";
+        } else {
+            requestType = data.requester.username + " has requested to perform this service";
+        }
     }
+
+    $("#btnSeeUser").html(aboutUser);
+    $("#requestType").html(requestType);
+    $("#postName").html(data.posting.title);
+
     $("#service").val(data.serviceName);
     $("#description").val(data.posting.details);
     $("#notes").val(data.request.notes);

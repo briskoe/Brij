@@ -58,5 +58,11 @@ public class PortalController {
 		ModelAndView mv = new ModelAndView("/admin/servicesPage.html");
 		return mv;
 	}
+	
+	@RequestMapping("/admin/ticketPage")
+	public ModelAndView goToTickets(Model model) throws IOException{
+		ModelAndView mv = new ModelAndView("/admin/ticketsPage.html");
+		return mv;
+	}
 
 }

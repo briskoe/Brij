@@ -9,6 +9,7 @@ import ca.brij.dao.notification.NotificationDao;
 import ca.brij.dao.posting.PostingDao;
 import ca.brij.dao.request.RequestDao;
 import ca.brij.dao.service.ServiceDao;
+import ca.brij.dao.ticket.TicketDao;
 import ca.brij.dao.user.UserDao;
 
 @Component
@@ -35,6 +36,9 @@ public class DaoHelper {
 	
 	@Resource
 	private ConversationDao conversationDao;
+	
+	@Resource
+	private TicketDao ticketDao;
 
 	public PostingDao getPostingDao() {
 		return postingDao;
@@ -82,6 +86,14 @@ public class DaoHelper {
 
 	public void setConversationDao(ConversationDao conversationDao) {
 		this.conversationDao = conversationDao;
+	}
+
+	public TicketDao getTicketDao() {
+		return ticketDao;
+	}
+
+	public void setTicketDao(TicketDao ticketDao) {
+		this.ticketDao = ticketDao;
 	}
 	
 	

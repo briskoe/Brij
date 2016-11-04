@@ -301,6 +301,10 @@ input:focus {
     overflow-x: auto;
 }
 
+.pageDiv{
+    background: #FFFFFF;
+    min-height: 600px;
+}
 
 /*
     POSTINGS
@@ -319,4 +323,8 @@ input:focus {
 .stylish-input-group button {
     border: 0;
     background: transparent;
+}
+
+#chatRoomModal #modalBody{
+    max-height: 500px;
 }

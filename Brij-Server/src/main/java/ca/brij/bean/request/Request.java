@@ -20,7 +20,7 @@ import javax.persistence.Table;
 		@NamedQuery(name = "Request.findById", query = "FROM Request WHERE requestID = :requestID"),
 		@NamedQuery(name = "Request.findByUser", query = "FROM Request WHERE userID = :userID"),
 		@NamedQuery(name = "Request.findByPost", query = "FROM Request WHERE postID = :postID"),
-		@NamedQuery(name = "Request.findByUserAndPost", query = "FROM Request WHERE userID = :userID AND postID = :postID"),
+		@NamedQuery(name = "Request.findByUserAndPost", query = "FROM Request WHERE userID = :userID AND postID = :postID AND status IN('pending', 'in_progress')"),
 		@NamedQuery(name = "Request.getCountForUser", query = "SELECT COUNT(*) FROM Request WHERE userID = :userID"),
 		@NamedQuery(name = "Request.getCountForPost", query = "SELECT COUNT(*) FROM Request WHERE postID = :postID")
 })

@@ -409,3 +409,11 @@ rotate
 #btnSearch{
 	position:absolute;
 }
+
+.scrollableArea{
+	overflow-y: auto;
+}
+
+.precedence{
+	z-index: 9999999999;
+}

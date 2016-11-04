@@ -67,7 +67,7 @@ $(function() {
 
 	});
 	$(".ticketDiv").click(function(e) {
-
+		window.location = ADMIN_TICKET_PAGE;
 	});
 	$(".logoutDiv").click(function(e) {
 		logout(function(e) {

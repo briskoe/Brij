@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import ca.brij.bean.posting.Posting;
+import ca.brij.bean.request.Request;
 import ca.brij.bean.service.Service;
 import ca.brij.bean.user.User;
 import ca.brij.utils.ConstantsUtil;
@@ -155,26 +156,34 @@ public class PostingController {
 		Posting posting = null;
 		Map<String, Object> map = new HashMap<String, Object>();
 		Boolean isOwner = false;
-
+		boolean hasRequested = false;
+		Request oldRequestByUser = null;
+		int requestID = -1;
+		String serviceName = "";
 		try {
 			logger.info("retrieving post by id" + id);
 			posting = daoHelper.getPostingDao().getPostingById(id);
 			Service service = daoHelper.getServiceDao().getServiceById(posting.getServID());
-			String serviceName = service.getServiceName();
+			serviceName = service.getServiceName();
 
 			isOwner = posting.getUser().getUsername().equals(principal.getName());
-
-			map.put("serviceName", serviceName);
+			oldRequestByUser = daoHelper.getRequestDao().findByUserAndPost(principal.getName(), posting.getId());
+			hasRequested = oldRequestByUser != null;
+			
+			if(hasRequested){
+				requestID = oldRequestByUser.getRequestID();
+			}
 
 		} catch (Exception ex) {
 			logger.error("Error occurred retrieving post " + ex.getMessage());
 			return null;
 		}
 		logger.info("Successfully retrieved post by id " + id);
-
+		map.put("hasRequested", hasRequested);
+		map.put("requestID", requestID);
 		map.put("posting", posting);
 		map.put("isOwner", isOwner);
-
+		map.put("serviceName", serviceName);
 		return map;
 	}
 
