@@ -43,18 +43,12 @@ public class User implements Serializable {
 
 	@Id
 	@Column(name = "username", nullable = false, unique = true)
-	@NotEmpty(message = ConstantsUtil.NULL_USERNAME)
-	@Size(min = 5, max = 20, message = ConstantsUtil.USERNAME_LENGTH)
 	private String username;
 	
 	@Column(name = "password", nullable = false, length = 100)
-	@NotEmpty(message = ConstantsUtil.NULL_PASSWORD)
-	@Size(min = 5, max = 15, message = ConstantsUtil.PASSWORD_LENGTH)
 	private String password;
 	
 	@Column(name = "email", nullable = false)
-	@NotEmpty(message = "Please enter your email address")
-	@Size(min = 6, max = 30, message = "Your email does not match the required length")
 	private String email;
 
 	@JsonIgnore
@@ -62,32 +56,21 @@ public class User implements Serializable {
 	private Boolean enabled;
 
 	@Column(name = "firstName", length = 100)
-	@NotEmpty(message = "Please enter you first name")
-	@Size(min = 2, message = "Your first name does not match the minimum length")
 	private String firstName;
 	
 	@Column(name = "lastName", length = 100)
-	@NotEmpty(message = "Please enter your last name")
-	@Size(min = 2, message = "Your last name does not match the minimum length")
 	private String lastName;
 	
 	@Column(name = "phoneNumber", length = 100)
-	@NotEmpty(message = "Please enter your phone number")
-	@Size(min = 10, max = 12, message = "Your phone number must be 10 digits")
 	private String phoneNumber;
 	
 	@Column(name = "address", length = 100)
-	@NotEmpty(message = "Please enter your address")
 	private String address;
 
 	@Column(name = "city", length = 100)
-	@NotEmpty(message = "Please enter your city")
-	@Size(min = 3, message = "The city does not match the minimum length")
 	private String city;
 	
 	@Column(name = "province", length = 100)
-	@NotEmpty(message = "Please enter your province")
-	@Size(min = 3, message = "The province must be at least 3 letters long")
 	private String province;
 	
 	@Column(name = "latitude")

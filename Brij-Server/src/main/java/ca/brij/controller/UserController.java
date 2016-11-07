@@ -41,7 +41,7 @@ public class UserController {
 		try {
 			logger.info("Registering user: " + userEntity.getUsername());
 			userEntity.setEnabled(true);
-			String exceptions = Validator.userEntityValid(userEntity);
+			String exceptions = Validator.userRegisterValid(userEntity);
 			userEntity.setStatus(ConstantsUtil.INCOMPLETE);
 			if (exceptions.equals("")) {
 				String encryptedPassword = new BCryptPasswordEncoder().encode(userEntity.getPassword());
@@ -54,7 +54,7 @@ public class UserController {
 						encryptedPassword, userDetails.getAuthorities());
 				SecurityContextHolder.getContext().setAuthentication(auth);
 			} else {
-				throw new Exception(exceptions);
+				throw new Exception(ConstantsUtil.EXCEPTION_FLAG + exceptions);
 			}
 		} catch (Exception e) {
 			logger.error("Error registering user: " + userEntity.getUsername() + " message " + e.getMessage());

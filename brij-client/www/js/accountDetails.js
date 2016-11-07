@@ -57,8 +57,10 @@ function validUserDetails() {
     var phonenumber = $("#userForm #phoneNumber").val();
     var address = $("#userForm #address").val();
     var city = $("#userForm #city").val();
-    var province = $("#userForm #province").val();
+    var province = $("#userForm #lstProvinces").val();
 
+    phonenumber = phonenumber.replace(/-/g, "");
+    $("#userForm #phoneNumber").val(phonenumber);
     if (firstname.length < MINIMUM_FIRSTNAME_LENGTH || firstname.length > MAXIMUM_FIRSTNAME_LENGTH) {
         isValid = false;
         message = FIRSTNAME_ERROR + "</br>";
@@ -66,27 +68,27 @@ function validUserDetails() {
 
     if (lastname.length < MINIMUM_LASTNAME_LENGTH || lastname.length > MAXIMUM_LASTNAME_LENGTH) {
         isValid = false;
-        message = LASTNAME_ERROR + "</br>";
+        message += LASTNAME_ERROR + "</br>";
     }
 
-    if (phonenumber.length < PHONENUMBER_LENGTH || phonenumber.length > PHONENUMBER_LENGTH) {
+    if (phonenumber.length !== PHONE_NUMBER_LENGTH ) {
         isValid = false;
-        message = PHONENUMBER_ERROR + "</br>";
+        message += PHONENUMBER_ERROR + "</br>";
     }
 
     if (!address.length > 0) {
         isValid = false;
-        message = ADDRESS_ERROR + "</br>";
+        message += ADDRESS_ERROR + "</br>";
     }
 
     if (city.length < MINIMUM_CITY_LENGTH || city.length > MAXIMUM_CITY_LENGTH) {
         isValid = false;
-        message = CITY_ERROR;
+        message += CITY_ERROR + "</br>";
     }
 
     if (province.length > 2) {
         isValid = false;
-        message = PROVINCE_ERROR;
+        message += PROVINCE_ERROR + "</br>";
     }
     
     if (email.length < MINIMUM_EMAIL_LENGTH || email.length > MAXIMUM_EMAIL_LENGTH) {
@@ -95,23 +97,33 @@ function validUserDetails() {
     }
 
     if (!isValid) {
-        displayErrorInModal(message);
+        displayError(message);
     }
     return isValid;
 }
 
 function saveUser() {
-    var updateUser = {
-        firstName: $("#userForm #firstName").val(),
-        lastName: $("#userForm #lastName").val(),
-        phoneNumber: $("#userForm #phoneNumber").val(),
-        address: $("#userForm #address").val(),
-        city: $("#userForm #city").val(),
-        province: $("#userForm #lstProvinces").val(),
-        email: $("#userForm #email").val()
-    };
+    
+    if(validUserDetails()){
+        $("#errorDiv").remove();
+            var updateUser = {
+            firstName: $("#userForm #firstName").val(),
+            lastName: $("#userForm #lastName").val(),
+            phoneNumber: $("#userForm #phoneNumber").val(),
+            address: $("#userForm #address").val(),
+            city: $("#userForm #city").val(),
+            province: $("#userForm #lstProvinces").val(),
+            email: $("#userForm #email").val()
+        };
 
-    makeRequest(UPDATE_USER, POST, JSON.stringify(updateUser), APPLICATION_JSON, null, null);
+        makeRequest(UPDATE_USER, POST, JSON.stringify(updateUser), APPLICATION_JSON, null, null);
+    }
+
+}
+
+function displayError(message) {
+    $("#errorDiv").remove("");
+    $("#userForm").prepend("<div id='errorDiv' class='alert alert-danger'>" + message + "</div>");
 }
 
 function eraseForm() {
@@ -136,13 +148,17 @@ function recoverStateForm() {
 }
 
 function refreshForm(data) {
+    var province = data.province;
+    if(!province ){
+        province = "ON";
+    }
     $("#username").html(data.username);
     $("#userForm #firstName").val(data.firstName);
     $("#userForm #lastName").val(data.lastName);
     $("#userForm #phoneNumber").val(data.phoneNumber);
     $("#userForm #address").val(data.address);
     $("#userForm #city").val(data.city);
-    $("#userForm #lstProvinces").val(data.province);
+    $("#userForm #lstProvinces").val(province);
     $("#userForm #email").val(data.email);
     $("#userForm #firstName").html();
 }

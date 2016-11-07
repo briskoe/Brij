@@ -33,4 +33,7 @@ public class ConstantsUtil {
 	public static final String CITY = "The city must be a minimum of 3 characters long";
 	public static final String NULL_PROVINCE = "Please enter your province";
 	public static final String PROVINCE = "The province must be 2 characters long";
+	
+	public static final String EXCEPTION_FLAG = "brij_exception";
+
 }

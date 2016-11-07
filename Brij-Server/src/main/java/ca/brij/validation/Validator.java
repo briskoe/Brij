@@ -15,6 +15,43 @@ public class Validator {
 		return !(value == null);
 	}
 
+	public static String userRegisterValid(User userEntity) {
+
+		String exceptions = "";
+		String userName = userEntity.getUsername();
+
+		if (!Validator.valueValid(userName)) {
+			exceptions = ConstantsUtil.NULL_USERNAME + ";";
+		} else {
+			if (!Validator.lengthValid(5, 20, userName)) {
+				exceptions = ConstantsUtil.USERNAME_LENGTH + ";";
+			}
+		}
+
+		String password = userEntity.getPassword();
+
+		if (!Validator.valueValid(password)) {
+			exceptions += ConstantsUtil.NULL_PASSWORD + ";";
+		} else {
+			if (password.length() < 5 || password.length() > 15) {
+				exceptions += ConstantsUtil.PASSWORD_LENGTH + ";";
+			}
+		}
+
+		String email = userEntity.getEmail();
+
+		if (!Validator.valueValid(email)) {
+			exceptions += ConstantsUtil.NULL_EMAIL + ";";
+		} else {
+			if (email.length() < 6 || email.length() > 30) {
+				exceptions += ConstantsUtil.EMAIL_ADDRESS + ";";
+			}
+		}
+
+
+		return exceptions;
+	}
+	
 	public static String userEntityValid(User userEntity) {
 
 		String exceptions = "";

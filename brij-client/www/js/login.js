@@ -119,7 +119,11 @@ function displayErrorInModal(message) {
     $("#registerModal #registerForm").prepend("<div id='errorDiv' class='alert alert-danger'>" + message + "</div>");
 }
 function errorSavingUser(error) {
-    displayErrorInModal(error.responseJSON.message.replace(";", "</br>"));
+    var errorMsg = error.responseJSON.message.replace(";", "</br>");
+    if(errorMsg.indexOf("brij_exception") !== -1){
+        errorMsg = errorMsg.replace("brij_exception", "");
+        displayErrorInModal(errorMsg);
+    }
 }
 
 function completeAccount(when) {
