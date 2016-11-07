@@ -20,6 +20,8 @@ var MINIMUM_USERNAME_LENGTH = 5;
 var MAXIMUM_USERNAME_LENGTH = 20;
 var MINIMUM_PASSWORD_LENGTH = 5;
 var MAXIMUM_PASSWORD_LENGTH = 15;
+var MINIMUM_EMAIL_LENGTH = 6;
+var MAXIMUM_EMAIL_LENGTH = 30;
 var MINIMUM_FIRSTNAME_LENGTH = 2;
 var MAXIMUM_FIRSTNAME_LENGTH = 30;
 var MINIMUM_LASTNAME_LENGTH = 2;
@@ -410,4 +412,25 @@ var loading = {
         })
     }
 
+};
+
+var errorAlert = {
+    show: function(msg){
+         $("<div id='errorDiv'><h3>"+msg+"</h3></div>")
+            .css({ display: "block", 
+                opacity: 0.90, 
+                position: "fixed",
+                padding: "7px",
+                "text-align": "center",
+                  background:"black",
+                  color:"white",
+                width: "270px",
+                left: ($(window).width() - 284)/2,
+                top: 0 })
+            .appendTo( $("body") ).delay( 1500 );
+    },
+    end: function(){
+        $("#toastID").hide();
+    }
+      
 };

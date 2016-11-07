@@ -46,7 +46,7 @@ $(function () {
         e.preventDefault();
         e.stopPropagation();
 
-        if (($("#registerForm #password").val() === $("#registerForm #confirmPassword").val()) && $("#registerForm #password").val().length >= MINIMUM_PASSWORD_LENGTH && $("#registerForm #password").val().length <= MAXIMUM_PASSWORD_LENGTH) {
+        if (validUser()) {
             var newUser = {
                 username: $("#registerForm #username").val(),
                 password: $("#registerForm #password").val(),
@@ -54,8 +54,6 @@ $(function () {
             };
 
             makeRequest(REGISTER_USER, POST, JSON.stringify(newUser), APPLICATION_JSON, saveUserComplete, errorSavingUser);
-        } else {
-            alert("ADD INFORMATIVE MESSAGE - Passwords do not match");
         }
     });
 
@@ -116,8 +114,12 @@ function saveUserComplete() {
     $("#completeAccountModal").modal('show');
 }
 
-function errorSavingUser(data) {
-    alert(data.toString);
+function displayErrorInModal(message) {
+    $("#errorDiv").remove("");
+    $("#registerModal #registerForm").prepend("<div id='errorDiv' class='alert alert-danger'>" + message + "</div>");
+}
+function errorSavingUser(error) {
+    displayErrorInModal(error.responseJSON.message.replace(";", "</br>"));
 }
 
 function completeAccount(when) {
