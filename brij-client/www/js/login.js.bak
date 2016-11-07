@@ -128,6 +128,15 @@ function saveUserComplete() {
     $("#completeAccountModal").modal('show');
 }
 
+<<<<<<< HEAD
+function forgotEmailSent() {
+    alert("Email Sent");
+    $("#forgotPasswordModal").modal('hide');
+}
+
+function errorSavingUser(data) {
+    alert(data.toString);
+=======
 function displayErrorInModal(message) {
     $("#errorDiv").remove("");
     $("#registerModal #registerForm").prepend("<div id='errorDiv' class='alert alert-danger'>" + message + "</div>");
@@ -138,6 +147,7 @@ function errorSavingUser(error) {
         errorMsg = errorMsg.replace("brij_exception", "");
         displayErrorInModal(errorMsg);
     }
+>>>>>>> d18163508def716be0fe7b6c9a32353baf89bf4c
 }
 
 function completeAccount(when) {
@@ -160,8 +170,4 @@ function completeAccount(when) {
 
 function error(e) {
     $("#error").show();
-}
-
-function forgotEmailSent() {
-    $("#forgotPasswordModal").modal('hide');
 }

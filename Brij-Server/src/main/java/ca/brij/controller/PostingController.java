@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,7 +36,7 @@ public class PostingController {
 
 	@RequestMapping(value = "/posting/save", method = RequestMethod.POST)
 	@ResponseBody
-	public String updatePost(@RequestBody Posting post, Principal principal) throws Exception {
+	public String updatePost(@Validated @RequestBody Posting post, Principal principal) throws Exception {
 		try {
 			logger.info("saving post(" + post.getTitle() + ") made by: " + principal.getName());
 			User user = daoHelper.getUserDao().findByUserName(principal.getName());

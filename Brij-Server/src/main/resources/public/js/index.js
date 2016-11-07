@@ -69,6 +69,9 @@ $(function() {
 	$(".ticketDiv").click(function(e) {
 		window.location = ADMIN_TICKET_PAGE;
 	});
+	$(".reportDiv").click(function(e) {
+		window.location = ADMIN_REPORT_PAGE;
+	});
 	$(".logoutDiv").click(function(e) {
 		logout(function(e) {
 			// window.location = "index.html";
@@ -82,7 +85,7 @@ function makeMenu() {
 	div += "<ul id='sidebar_menu' class='sidebar-nav'>"
 			+ "<li class='sidebar-brand'><a id='menu-toggle' href='#'>Brij"
 			+ "<span id='main_icon' class='glyphicon glyphicon-align-justify'></span></a></li>"
-			+ "</ul";
+			+ "</ul>";
 
 	div += "<ul class='sidebar-nav' id='sidebar'> "
 			+ "<li><a href='#' class='menuItem usersDiv' id='menuBtnUser'> User <span class='glyphicon glyphicon-user'></span></a></li>"
@@ -90,6 +93,7 @@ function makeMenu() {
 			+ "<li><a href='#' class='menuItem serviceDiv' id='menuBtnService'> Services <span class='glyphicon glyphicon-globe'></span></a></li>"
 			+ "<li><a href='#' class='menuItem webPortalDiv' id='menuBtnPortal'> Web Portal <span class='glyphicon glyphicon-th-large'></span></a></li>"
 			+ "<li><a href='#' class='menuItem ticketDiv' id='menuBtnTicket'> Tickets <span class='glyphicon glyphicon-th-list'></span></a></li>"
+			+ "<li><a href='#' class='menuItem reportDiv' id='menuBtnReport'> Reports <span class='glyphicon glyphicon-th-signal'></span></a></li>"
 			+ "<li><a href='#' class='menuItem logoutDiv' id='menuBtnLogout'> Log-out <span class='glyphicon glyphicon-log-out'></span></a></li>"
 			+ "</ul> </div>";
 

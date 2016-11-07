@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,12 @@ import ca.brij.utils.ConstantsUtil;
 import ca.brij.utils.DaoHelper;
 import ca.brij.utils.GeocodingHelper;
 import ca.brij.utils.MergeBeanUtil;
+<<<<<<< HEAD
 import java.util.Properties;
 import java.util.UUID;
+=======
+import ca.brij.validation.Validator;
+>>>>>>> d18163508def716be0fe7b6c9a32353baf89bf4c
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -51,16 +56,21 @@ public class UserController {
 		try {
 			logger.info("Registering user: " + userEntity.getUsername());
 			userEntity.setEnabled(true);
+			String exceptions = Validator.userRegisterValid(userEntity);
 			userEntity.setStatus(ConstantsUtil.INCOMPLETE);
-			String encryptedPassword = new BCryptPasswordEncoder().encode(userEntity.getPassword());
-			userEntity.setPassword(encryptedPassword);
-			UserRole userRole = new UserRole(userEntity, "ROLE_USER");
-			userEntity.getUserRole().add(userRole);
-			userDao.save(userEntity);
-			UserDetails userDetails = userDetailsService.loadUserByUsername(userEntity.getUsername());
-			UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails,
-					encryptedPassword, userDetails.getAuthorities());
-			SecurityContextHolder.getContext().setAuthentication(auth);
+			if (exceptions.equals("")) {
+				String encryptedPassword = new BCryptPasswordEncoder().encode(userEntity.getPassword());
+				userEntity.setPassword(encryptedPassword);
+				UserRole userRole = new UserRole(userEntity, "ROLE_USER");
+				userEntity.getUserRole().add(userRole);
+				userDao.save(userEntity);
+				UserDetails userDetails = userDetailsService.loadUserByUsername(userEntity.getUsername());
+				UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails,
+						encryptedPassword, userDetails.getAuthorities());
+				SecurityContextHolder.getContext().setAuthentication(auth);
+			} else {
+				throw new Exception(ConstantsUtil.EXCEPTION_FLAG + exceptions);
+			}
 		} catch (Exception e) {
 			logger.error("Error registering user: " + userEntity.getUsername() + " message " + e.getMessage());
 			throw e;
@@ -83,8 +93,13 @@ public class UserController {
 			updatedUser.setUserRole(null);
 			updatedUser.setUsername(null);
 			updatedUser.setStatus(null);
+<<<<<<< HEAD
 			updatedUser.setResetID(null);
 			LatLng location = geoHelper.getLocationFromAddress(updatedUser.getAddress() + ", " + updatedUser.getCity() + ", " + updatedUser.getProvince());
+=======
+			LatLng location = geoHelper.getLocationFromAddress(
+					updatedUser.getAddress() + ", " + updatedUser.getCity() + ", " + updatedUser.getProvince());
+>>>>>>> d18163508def716be0fe7b6c9a32353baf89bf4c
 			if (location != null) {
 				updatedUser.setLatitude(location.lat);
 				updatedUser.setLongitude(location.lng);
@@ -92,8 +107,9 @@ public class UserController {
 
 			User originalUser = userDao.findByUserName(principal.getName());
 			MergeBeanUtil.copyNonNullProperties(updatedUser, originalUser);
-			//if the user didn't change anything in the status and the original user is incomplete then make it active
-			if(originalUser.getStatus().equals(ConstantsUtil.INCOMPLETE)){
+			// if the user didn't change anything in the status and the original
+			// user is incomplete then make it active
+			if (originalUser.getStatus().equals(ConstantsUtil.INCOMPLETE)) {
 				originalUser.setStatus(ConstantsUtil.ACTIVE);
 			}
 
@@ -105,7 +121,7 @@ public class UserController {
 		logger.info("Updating user " + principal.getName() + " was successful");
 		return "Success";
 	}
-	
+
 	@RequestMapping(value = "/admin/user/save", method = RequestMethod.POST)
 	@ResponseBody
 	public String updateUserByAdmin(@RequestBody User updatedUser, String username) throws Exception {
@@ -117,7 +133,8 @@ public class UserController {
 			updatedUser.setEnabled(null);
 			updatedUser.setUserRole(null);
 			updatedUser.setUsername(null);
-			LatLng location = geoHelper.getLocationFromAddress(updatedUser.getAddress() + ", " + updatedUser.getCity() + ", " + updatedUser.getProvince());
+			LatLng location = geoHelper.getLocationFromAddress(
+					updatedUser.getAddress() + ", " + updatedUser.getCity() + ", " + updatedUser.getProvince());
 			if (location != null) {
 				updatedUser.setLatitude(location.lat);
 				updatedUser.setLongitude(location.lng);
@@ -134,8 +151,6 @@ public class UserController {
 		logger.info("Updating user " + username + " was successful");
 		return "Success";
 	}
-	
-
 
 	/**
 	 * GET /delete --> Delete the user having the passed id.
@@ -168,6 +183,7 @@ public class UserController {
 		}
 		return user;
 	}
+
 	@RequestMapping("/admin/user/current")
 	@ResponseBody
 	public User getUser(String username) {
@@ -179,23 +195,25 @@ public class UserController {
 		}
 		return user;
 	}
-	
+
 	@RequestMapping("/admin/user/like")
 	@ResponseBody
-	public Map<String, Object> getLikeUsers(String username, @RequestParam(value = "pageNo", required=false) Integer pageNo,@RequestParam(value = "pageSize", required=false) Integer pageSize) {
-		Map <String, Object> userMap = new HashMap<String, Object>();
-		
+	public Map<String, Object> getLikeUsers(String username,
+			@RequestParam(value = "pageNo", required = false) Integer pageNo,
+			@RequestParam(value = "pageSize", required = false) Integer pageSize) {
+		Map<String, Object> userMap = new HashMap<String, Object>();
+
 		ArrayList<User> users;
 		int numberOfPages = 0;
 		try {
-			if(pageNo == null){
+			if (pageNo == null) {
 				pageNo = 0;
 			}
-			if(pageSize == null){
+			if (pageSize == null) {
 				pageSize = 10;
 			}
 			users = userDao.findByUserLike(username, new PageRequest(pageNo, pageSize));
-			numberOfPages = (int)Math.ceil((double)userDao.countUserLike(username) / (double)pageSize);
+			numberOfPages = (int) Math.ceil((double) userDao.countUserLike(username) / (double) pageSize);
 		} catch (Exception ex) {
 			logger.info("Failed to retrieve all users " + ex.getMessage());
 			return null;
@@ -205,26 +223,28 @@ public class UserController {
 		userMap.put("currentPage", (pageNo + 1));
 		return userMap;
 	}
+
 	/**
 	 * Get all the users in the db
 	 */
 	@RequestMapping(value = "/admin/user/findAll", method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, Object> getAllUser( @RequestParam(value = "pageNo", required=false) Integer pageNo,@RequestParam(value = "pageSize", required=false) Integer pageSize) {
+	public Map<String, Object> getAllUser(@RequestParam(value = "pageNo", required = false) Integer pageNo,
+			@RequestParam(value = "pageSize", required = false) Integer pageSize) {
 		logger.info("Fiding All users");
-		Map <String, Object> userMap = new HashMap<String, Object>();
-		
+		Map<String, Object> userMap = new HashMap<String, Object>();
+
 		ArrayList<User> users;
 		int numberOfPages = 0;
 		try {
-			if(pageNo == null){
+			if (pageNo == null) {
 				pageNo = 0;
 			}
-			if(pageSize == null){
+			if (pageSize == null) {
 				pageSize = 10;
 			}
 			users = userDao.getAll(new PageRequest(pageNo, pageSize));
-			numberOfPages = (int)Math.ceil((double)userDao.getCountAll() / (double)pageSize);
+			numberOfPages = (int) Math.ceil((double) userDao.getCountAll() / (double) pageSize);
 
 		} catch (Exception ex) {
 			logger.info("Failed to retrieve all users " + ex.getMessage());

@@ -54,6 +54,7 @@ var ADMIN_USER_PAGE = SERVER_URL + "/admin/userPage";
 var ADMIN_POST_PAGE = SERVER_URL + "/admin/postPage";
 var ADMIN_SERVICES_PAGE = SERVER_URL + "/admin/servicePage";
 var ADMIN_TICKET_PAGE = SERVER_URL + "/admin/ticketPage";
+var ADMIN_REPORT_PAGE = SERVER_URL + "/admin/reportPage";
 
 $(function(){
 	 SERVER_URL =  "http://" + $(location).attr('host');
@@ -62,6 +63,7 @@ $(function(){
 	 ADMIN_POST_PAGE = SERVER_URL + "/admin/postPage";
 	 ADMIN_SERVICES_PAGE = SERVER_URL + "/admin/servicePage";
 	 ADMIN_TICKET_PAGE = SERVER_URL + "/admin/ticketPage";
+	 ADMIN_REPORT_PAGE = SERVER_URL + "/admin/reportPage";
 
 })
 //Request Types
