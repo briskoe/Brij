@@ -242,6 +242,7 @@ function initializeMainMenu() {
         "<li class='menuLinks'><a href='history.html'>History</a></li>" +
         "<li class='menuLinks'><a href='#' id='btnReport' >Report a problem </a></li>" +
         "<li class='menuLinks'><a href='#' id='btnSetting' >Settings </a></li>" +
+        "<li class='menuLinks'><a href='#' id='btnDonate' >Donate </a></li>" +
         "<li class='menuLinks'><a id='logoutMenuItem'>Logout</a></li>";
     $("#navbar").html(navbar);
 
@@ -277,6 +278,13 @@ function initializeMainMenu() {
         $("#navbar").removeClass("in");
     });
 
+    $("#btnDonate").click(function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        donateModal();
+        $("#donateModal").modal("show");
+        $("#navbar").removeClass("in");
+    });
 }
 
 function notificationRequest() {
@@ -388,3 +396,24 @@ var loading = {
     }
 
 };
+
+function donateModal() {
+    var modal = "<center><div class='container' ><div id='donateModal' class='modal fade' role='dialog'>" +
+        "<div class='modal-dialog'>" +
+        "<div class='modal-content'>" +
+        '<div class="modal-header">' +
+        '<button type="button" class="close" data-dismiss="modal">&times;</button>' +
+        '<h4 class="modal-title">Donations</h4>' +
+        '</div>' +
+        "<div class='modal-body'> " +
+        '<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">' +
+        '<input type="hidden" name="cmd" value="_s-xclick">' +
+        '<input type="hidden" name="hosted_button_id" value="3FBBXRFYBYQSL">' +
+        '<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit"' + 'alt="PayPal - The safer, easier way to pay online!">' +
+        '<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">' +
+        '</form>' +
+        "</div></div> </div>" +
+        "</div> </div></center>";
+    
+    $("body").append(modal);
+}
