@@ -9,6 +9,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,11 +28,22 @@ import ca.brij.bean.user.MyUserDetailsService;
 import ca.brij.bean.user.User;
 import ca.brij.bean.user.UserRole;
 import ca.brij.dao.user.UserDao;
+import ca.brij.utils.ApplicationProperties;
 import ca.brij.utils.ConstantsUtil;
+import ca.brij.utils.DaoHelper;
 import ca.brij.utils.GeocodingHelper;
 import ca.brij.utils.MergeBeanUtil;
+import java.util.Properties;
+import java.util.UUID;
 import ca.brij.validation.Validator;
 
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 @RestController
 public class UserController {
 
@@ -78,8 +90,8 @@ public class UserController {
 			updatedUser.setUserRole(null);
 			updatedUser.setUsername(null);
 			updatedUser.setStatus(null);
-			LatLng location = geoHelper.getLocationFromAddress(
-					updatedUser.getAddress() + ", " + updatedUser.getCity() + ", " + updatedUser.getProvince());
+			updatedUser.setResetID(null);
+			LatLng location = geoHelper.getLocationFromAddress(updatedUser.getAddress() + ", " + updatedUser.getCity() + ", " + updatedUser.getProvince());
 			if (location != null) {
 				updatedUser.setLatitude(location.lat);
 				updatedUser.setLongitude(location.lng);
@@ -244,7 +256,88 @@ public class UserController {
 
 	@Autowired
 	private GeocodingHelper geoHelper;
+	
+	@Autowired
+	private ApplicationProperties applicationProperties;
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+	/**
+	 * forgotten password
+	 */
+	@RequestMapping(value = "/user/forgotpassword", method = RequestMethod.GET)
+	@ResponseBody
+	public void forgotPassword(String email) {
+	 	final String username = "noreply.brij@gmail.com";
+		final String password = "P@ssword1234";
+			
+		 Properties props = new Properties();
+		    props.put("mail.smtp.auth", "true");
+		    props.put("mail.smtp.starttls.enable", "true");
+		    props.put("mail.smtp.host", "smtp.gmail.com");
+		    props.put("mail.smtp.port", "587");
+
+		    Session session = Session.getInstance(props,
+		      new javax.mail.Authenticator() {
+		        protected PasswordAuthentication getPasswordAuthentication() {
+		            return new PasswordAuthentication(username, password);
+		        }
+		      });
+
+		    try {
+		    	String sub = "Brij App - Email Reset Link";
+		    	String msg = "Please go to the following link to reset your password:\n\n";
+		    	String sender = username;
+		    	String to = email;
+		    	final String FORGOT_PASSWORD_URL = "/resetpassword?resetid=";				
+		    	
+		    	String resetID = UUID.randomUUID().toString().replaceAll("-", "");
+		    	
+		    	User user = userDao.findByEmail(email);
+		    	if (user != null) { 
+			    	user.setResetID(resetID);
+			    	userDao.save(user);
+			    	
+				    msg += "<a href='" + "http://localhost:8080" + FORGOT_PASSWORD_URL + resetID + "'>Reset Link</a>";
+			    	//msg += "<a href='" + applicationProperties.getServerURL() + FORGOT_PASSWORD_URL + resetID + "'>Reset Link</a>";
+			    	
+			        Message message = new MimeMessage(session);
+			        message.setFrom(new InternetAddress(sender));
+			        message.setRecipients(Message.RecipientType.TO,
+			            InternetAddress.parse(to));
+			        message.setContent(msg, "text/html; charset=utf-8");
+			        message.setSubject(sub);
+	
+			        Transport.send(message);
+		    	}
+		    } catch (MessagingException e) {
+		        logger.info(e.getMessage());
+		    }
+	}
+	
+	@RequestMapping(value = "/user/updateForgotPassword", method = RequestMethod.GET)
+	@ResponseBody
+	public String updateForgotPassword(String password1, String password2, String resetid) throws Exception {
+		try {
+			if (password1.equals(password2)) {
+				User user = userDao.findUserByResetID(resetid);
+				
+				System.out.println(user.getResetID());
+				
+				if (user != null) { 
+					String encryptedPassword = new BCryptPasswordEncoder().encode(password1);
+					user.setPassword(encryptedPassword);
+					user.setResetID(null);
+					userDao.save(user);
+				} else {
+					return null;
+				}
+			}
+		} catch (Exception ex) {
+			//logger.error("Error updating password with resetID: " + resetID + " message: " + ex.getMessage());
+			throw ex;
+		}
+		//logger.error("Updating password with resetID: " + resetID);
+		return "Success";
+	}
 }

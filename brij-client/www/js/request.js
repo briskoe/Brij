@@ -25,6 +25,9 @@ var GET_REQUESTS_BY_POST_ID = "/request/findByPost";
 var GET_POSTINGS_LIKE = "/posting/like";
 var CHANGE_REQUEST_STATUS = "/request/changeStatus";
 var RATE_POST = "/posting/rate";
+var FORGOT_EMAIL = "/user/forgotpassword";
+var RATE_POST = "/posting/rate";
+
 //Request Types
 var GET = "GET";
 var POST = "POST";

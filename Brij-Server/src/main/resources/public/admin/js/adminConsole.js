@@ -71,6 +71,9 @@ $(function() {
 	$(".ticketDiv").click(function(e) {
 		window.location = ADMIN_TICKET_PAGE;
 	});
+	$(".reportDiv").click(function(e) {
+		window.location = ADMIN_REPORT_PAGE;
+	});
 	$(".logoutDiv").click(function(e) {
 		logout(function(e) {
 			// window.location = "index.html";
@@ -104,6 +107,7 @@ function makeMenu() {
 			+ "<li><a href='#' class='menuItem serviceDiv' id='menuBtnService'> Services <span class='glyphicon glyphicon-globe'></span></a></li>"
 			+ "<li><a href='#' class='menuItem webPortalDiv' id='menuBtnPortal'> Web Portal <span class='glyphicon glyphicon-th-large'></span></a></li>"
 			+ "<li><a href='#' class='menuItem ticketDiv' id='menuBtnTicket'> Tickets <span class='glyphicon glyphicon-th-list'></span></a></li>"
+			+ "<li><a href='#' class='menuItem reportDiv' id='menuBtnReport'> Reports <span class='glyphicon glyphicon-signal'></span></a></li>"
 			+ "<li><a href='#' class='menuItem logoutDiv' id='menuBtnLogout'> Log-out <span class='glyphicon glyphicon-log-out'></span></a></li>"
 			+ "</ul> </div>";
 

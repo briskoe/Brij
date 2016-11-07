@@ -183,14 +183,12 @@ function setupReportModal() {
 
         additionalTicketComment = "";
         makeRequest(SAVE_TICKET, POST, JSON.stringify(report), APPLICATION_JSON, ticketSaved, null);
-
-
-
+        
     })
 }
 
-function ticketSaved(data) {
-    if (data !== "") {
+function ticketSaved(data){
+    if(data !== ""){
         $("#reportModal").modal("hide");
     }
 }
@@ -442,6 +440,27 @@ var errorAlert = {
     }
       
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function donateModal() {
     var modal = "<center><div class='container' ><div id='donateModal' class='modal fade' role='dialog'>" +

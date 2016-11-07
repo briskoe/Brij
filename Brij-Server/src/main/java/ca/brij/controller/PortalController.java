@@ -6,13 +6,17 @@ import java.security.Principal;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import ca.brij.bean.user.User;
 import ca.brij.bean.user.UserRole;
+import ca.brij.dao.user.UserDao;
 import ca.brij.utils.DaoHelper;
 
 @Controller
@@ -35,8 +39,13 @@ public class PortalController {
 		ModelAndView mv = new ModelAndView(portal);
 		return mv;
 	}
-	
 
+	@RequestMapping("/resetpassword")
+	public ModelAndView goToUsers(String resetid) throws IOException{
+		ModelAndView mv = new ModelAndView("reset.html" + "?resetid=" + resetid);
+		return mv;
+	}
+	
 	/**
 	 * FOR ADMIN
 	 */
@@ -65,4 +74,9 @@ public class PortalController {
 		return mv;
 	}
 
+	@RequestMapping("/admin/reportPage")
+	public ModelAndView goToReports(Model model) throws IOException{
+		ModelAndView mv = new ModelAndView("/admin/reportsPage.html");
+		return mv;
+	}
 }
