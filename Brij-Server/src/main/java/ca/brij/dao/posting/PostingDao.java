@@ -45,6 +45,8 @@ public interface PostingDao extends JpaRepository<Posting, Long> {
 
 	public Posting getPostingByIdAdmin(@Param("id") int i);
 
+	public Double getAvgRating(@Param("id") int id);
+	
 	@Modifying(clearAutomatically = true)
 	@Query("UPDATE Posting set status = :status WHERE servID = :servID")
 	public void changeState(@Param("status") String status, @Param("servID") int servID);

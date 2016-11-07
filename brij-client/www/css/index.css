@@ -1,3 +1,8 @@
+html, body{
+    height: 100%;
+    width: 100%;
+}
+
 body {
     background-color: #c1f0c1;
 }
@@ -246,9 +251,9 @@ input:focus {
 }
 
 #postingList {
-    max-height: 300px;
+/*    max-height: 300px;
     overflow-y: auto;
-    overflow-x: hidden;
+    overflow-x: hidden;*/
 }
 
 #postingPagination {
@@ -327,4 +332,9 @@ input:focus {
 
 #chatRoomModal #modalBody{
     max-height: 500px;
+}
+
+.starDiv .star{
+    font-size:50px;
+    cursor: pointer;
 }

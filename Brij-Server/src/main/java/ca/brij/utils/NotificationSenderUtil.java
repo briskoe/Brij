@@ -53,5 +53,8 @@ public class NotificationSenderUtil {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	public static final String REQUEST_TYPE = "request";
+	public static final String REQUEST_COMPLETE = "requestComplete";
+
+
 
 }
