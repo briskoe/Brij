@@ -67,6 +67,40 @@ function checkIfOnlineCallback(data) {
     }
 }
 
+function validUser() {
+    var isValid = true;
+    var message = "";
+    var username = $("#registerForm #username").val();
+    var password = $("#registerForm #password").val();
+    var rePassword = $("#registerForm #confirmPassword").val();
+    var email = $("#registerForm #email").val();
+
+    if (username.length < MINIMUM_USERNAME_LENGTH || username.length > MAXIMUM_USERNAME_LENGTH) {
+        isValid = false;
+        message += USERNAME_ERROR + "</br>";
+    }
+
+    if (password.length < MINIMUM_PASSWORD_LENGTH || password.length > MAXIMUM_PASSWORD_LENGTH) {
+        isValid = false;
+        message += PASSWORD_ERROR + "</br>";
+    }
+
+    if (password !== rePassword) {
+        isValid = false;
+        message += PASSWORD_UNMATCHED + "</br>";
+    }
+
+    if (email.length < MINIMUM_EMAIL_LENGTH || email.length > MAXIMUM_EMAIL_LENGTH) {
+        isValid = false;
+        message += EMAIL_ERROR + "</br>";
+    }
+
+    if (!isValid) {
+        displayErrorInModal(message);
+    }
+    return isValid;
+}
+
 function goToHome(where) {
     window.location = where;
 }
@@ -80,7 +114,6 @@ function completeAccountDetails(data) {
 function saveUserComplete() {
     $("#registerModal").modal('hide');
     $("#completeAccountModal").modal('show');
-
 }
 
 function errorSavingUser(data) {

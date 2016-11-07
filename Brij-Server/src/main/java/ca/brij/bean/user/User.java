@@ -15,7 +15,9 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -83,7 +85,6 @@ public class User implements Serializable {
 	private Set<UserRole> userRole = new HashSet<UserRole>(0);
 
 	// Public methods
-
 	public User() {
 	}
 

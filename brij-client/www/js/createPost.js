@@ -26,8 +26,6 @@ $(function () {
     makeRequest(GET_ALL_SERVICES, GET, "", "", populateServices, null);
 });
 
-
-
 function savePost() {
     var newPost = {
         title: $("#postForm #title").val(),

@@ -5,14 +5,35 @@
     Constants
 */
 var IS_REQUEST_MESSAGE_FOR_OTHERS = "This post is requesting for help";
-var IS_POSTING_MESSAGE_FOR_OTHERS = "This post is offering a service"
+var IS_POSTING_MESSAGE_FOR_OTHERS = "This post is offering a service";
+var USERNAME_ERROR = "Your username must be between 5 and 20 characters long";
+var PASSWORD_ERROR = "Your password must be between 5 and 15 characters long";
+var PASSWORD_UNMATCHED = "Your password does not match the password entered above";
+var EMAIL_ERROR = "Your email does not match the required length";
+var FIRSTNAME_ERROR = "Your first name must be at least 2 characters";
+var LASTNAME_ERROR = "Your first name must be at least 2 characters";
+var PHONENUMBER_ERROR = "Your phone number must be 10 digits long";
+var ADDRESS_ERROR = "You must enter an address";
+var CITY_ERROR = "You must enter a city";
+var PROVINCE_ERROR = "You must enter a province";
+var MINIMUM_USERNAME_LENGTH = 5;
+var MAXIMUM_USERNAME_LENGTH = 20;
 var MINIMUM_PASSWORD_LENGTH = 5;
 var MAXIMUM_PASSWORD_LENGTH = 15;
+var MINIMUM_FIRSTNAME_LENGTH = 2;
+var MAXIMUM_FIRSTNAME_LENGTH = 30;
+var MINIMUM_LASTNAME_LENGTH = 2;
+var MAXIMUM_LASTNAME_LENGTH = 30;
+var PHONE_NUMBER_LENGTH = 10;
+//var MAXIMUM_PHONE_LENGTH = 12;
+var ADDRESS = true;
+var MINIMUM_CITY_LENGTH = 3;
+var MAXIMUM_CITY_LENGTH = 25;
+var PROVINCE_LENGTH = 2;
 var global_notifications;
 var NOTIFICATION_LIMIT = 10;
 //settings values
 var search_km = 25;
-
 
 /**
  type of reports
@@ -123,15 +144,16 @@ $(window).resize(function () {
     $('.scrollableArea').height(content_height);
 });
 
-function fillListType(){
+function fillListType() {
     var options = "";
     for (var key in reportTypes) {
-        options += "<option value='"+reportTypes[key]+"'>"+reportTypes[key]+"</option>"
+        options += "<option value='" + reportTypes[key] + "'>" + reportTypes[key] + "</option>"
     }
     $("#lstType").html(options);
 
 }
-function setupReportModal(){
+
+function setupReportModal() {
     var modal = "<div class='container' ><div id='reportModal' class='modal fade' role='dialog'>" +
         "<div class='modal-dialog'>" +
         "<div class='modal-content'> <div class='modal-header'>" +
@@ -143,41 +165,41 @@ function setupReportModal(){
         "<button type='button' class='btn btn-default' data-dismiss='modal'>close</button>" + "</div> </div> </div>" +
         "</div> </div>";
     $("body").append(modal);
-    
+
     fillListType();
 
-    $("#btnSaveReport").click(function(e){
+    $("#btnSaveReport").click(function (e) {
         e.preventDefault();
         e.stopPropagation();
         console.log("as")
         var type = $("#lstType").val();
-        var comment = $("#txaMessage").val() + "<MESSAGE>" +additionalTicketComment;
+        var comment = $("#txaMessage").val() + "<MESSAGE>" + additionalTicketComment;
         var report = {
             type: type,
             comment: comment
         }
-        
+
         additionalTicketComment = "";
         makeRequest(SAVE_TICKET, POST, JSON.stringify(report), APPLICATION_JSON, ticketSaved, null);
-        
-        
-        
+
+
+
     })
 }
-function ticketSaved(data){
-    if(data !== ""){
+
+function ticketSaved(data) {
+    if (data !== "") {
         $("#reportModal").modal("hide");
     }
 }
 
 
 
-function reportBody(){
-    var modalBody = "<div>"
-    +"<form novalidate onSubmit='return false'>"+
-        "<div class='form-group'><label>Title</label> <select class='form-control' id='lstType' ></select> </div> " + 
-        "<label>Comment:</label> <textarea id='txaMessage' class='form-control'></textarea> </div> " + 
-    "</form> "
+function reportBody() {
+    var modalBody = "<div>" + "<form novalidate onSubmit='return false'>" +
+        "<div class='form-group'><label>Title</label> <select class='form-control' id='lstType' ></select> </div> " +
+        "<label>Comment:</label> <textarea id='txaMessage' class='form-control'></textarea> </div> " +
+        "</form> "
     return modalBody;
 }
 
@@ -261,16 +283,16 @@ function initializeMainMenu() {
         window.location.href = "postings.html";
     });
 
-    $("#btnReport").click(function(e){
+    $("#btnReport").click(function (e) {
         e.preventDefault();
         e.stopPropagation();
         $("#txaMessage").val("");
         $("#lstType").attr("disabled", false);
-        additionalTicketComment= "";
-        $("#reportModal").modal(); 
+        additionalTicketComment = "";
+        $("#reportModal").modal();
     })
-    
-    $("#btnSetting").click(function(e){
+
+    $("#btnSetting").click(function (e) {
         e.preventDefault();
         e.stopPropagation();
         $("#txtKm").val(search_km);

@@ -35,21 +35,71 @@ $(function () {
         //change name
         $("#btnEdit").html("Edit");
         loadInfo(refreshForm)
-
-
     });
-    
+
     populateProvinces();
 });
 
-function populateProvinces(){
+function populateProvinces() {
     $("#lstProvinces").html("");
     for (var key in PROVINCES) {
         if (PROVINCES.hasOwnProperty(key)) {
-            $("#lstProvinces").append("<option value='"+key+"'>"+PROVINCES[key]+"</option>")
+            $("#lstProvinces").append("<option value='" + key + "'>" + PROVINCES[key] + "</option>")
         }
     }
 }
+
+function validUserDetails() {
+    var isValid = true;
+    var message = "";
+    var firstname = $("#userForm #firstName").val();
+    var lastname = $("#userForm #lastName").val();
+    var phonenumber = $("#userForm #phoneNumber").val();
+    var address = $("#userForm #address").val();
+    var city = $("#userForm #city").val();
+    var province = $("#userForm #province").val();
+
+    if (firstname.length < MINIMUM_FIRSTNAME_LENGTH || firstname.length > MAXIMUM_FIRSTNAME_LENGTH) {
+        isValid = false;
+        message = FIRSTNAME_ERROR + "</br>";
+    }
+
+    if (lastname.length < MINIMUM_LASTNAME_LENGTH || lastname.length > MAXIMUM_LASTNAME_LENGTH) {
+        isValid = false;
+        message = LASTNAME_ERROR + "</br>";
+    }
+
+    if (phonenumber.length < PHONENUMBER_LENGTH || phonenumber.length > PHONENUMBER_LENGTH) {
+        isValid = false;
+        message = PHONENUMBER_ERROR + "</br>";
+    }
+
+    if (!address.length > 0) {
+        isValid = false;
+        message = ADDRESS_ERROR + "</br>";
+    }
+
+    if (city.length < MINIMUM_CITY_LENGTH || city.length > MAXIMUM_CITY_LENGTH) {
+        isValid = false;
+        message = CITY_ERROR;
+    }
+
+    if (province.length > 2) {
+        isValid = false;
+        message = PROVINCE_ERROR;
+    }
+    
+    if (email.length < MINIMUM_EMAIL_LENGTH || email.length > MAXIMUM_EMAIL_LENGTH) {
+        isValid = false;
+        message += EMAIL_ERROR + "</br>";
+    }
+
+    if (!isValid) {
+        displayErrorInModal(message);
+    }
+    return isValid;
+}
+
 function saveUser() {
     var updateUser = {
         firstName: $("#userForm #firstName").val(),
@@ -60,7 +110,7 @@ function saveUser() {
         province: $("#userForm #lstProvinces").val(),
         email: $("#userForm #email").val()
     };
-    
+
     makeRequest(UPDATE_USER, POST, JSON.stringify(updateUser), APPLICATION_JSON, null, null);
 }
 
