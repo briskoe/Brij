@@ -24,15 +24,16 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+
 	<repositories>
-	  <repository>
-	  	<id>Java.Net</id>
-	  	<url>http://download.java.net/maven/2/</url>
-	  </repository>
+		<repository>
+			<id>Java.Net</id>
+			<url>http://download.java.net/maven/2/</url>
+		</repository>
 	</repositories>
-	
+
 	<dependencies>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -87,19 +88,19 @@
 			<artifactId>google-maps-services</artifactId>
 			<version>0.1.1</version>
 		</dependency>
-
-	    <dependency>
-	        <groupId>javax</groupId>
-	        <artifactId>javaee-api</artifactId>
-	        <version>6.0</version>
-	        <type>jar</type>
-	        <scope>provided</scope>            
-	    </dependency> 
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<version>6.0</version>
+			<type>jar</type>
+			<scope>provided</scope>
+		</dependency>
 
 		<dependency>
-		    <groupId>com.sun.mail</groupId>
+			<groupId>com.sun.mail</groupId>
 			<artifactId>javax.mail</artifactId>
 			<version>1.5.5</version>
 		</dependency>
+
 	</dependencies>
 </project>

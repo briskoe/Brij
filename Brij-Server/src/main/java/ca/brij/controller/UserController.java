@@ -33,12 +33,9 @@ import ca.brij.utils.ConstantsUtil;
 import ca.brij.utils.DaoHelper;
 import ca.brij.utils.GeocodingHelper;
 import ca.brij.utils.MergeBeanUtil;
-<<<<<<< HEAD
 import java.util.Properties;
 import java.util.UUID;
-=======
 import ca.brij.validation.Validator;
->>>>>>> d18163508def716be0fe7b6c9a32353baf89bf4c
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -93,13 +90,8 @@ public class UserController {
 			updatedUser.setUserRole(null);
 			updatedUser.setUsername(null);
 			updatedUser.setStatus(null);
-<<<<<<< HEAD
 			updatedUser.setResetID(null);
 			LatLng location = geoHelper.getLocationFromAddress(updatedUser.getAddress() + ", " + updatedUser.getCity() + ", " + updatedUser.getProvince());
-=======
-			LatLng location = geoHelper.getLocationFromAddress(
-					updatedUser.getAddress() + ", " + updatedUser.getCity() + ", " + updatedUser.getProvince());
->>>>>>> d18163508def716be0fe7b6c9a32353baf89bf4c
 			if (location != null) {
 				updatedUser.setLatitude(location.lat);
 				updatedUser.setLongitude(location.lng);
