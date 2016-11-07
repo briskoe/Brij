@@ -303,4 +303,29 @@ public class UserController {
 		    }
 	}
 	
+	@RequestMapping(value = "/user/updateForgotPassword", method = RequestMethod.GET)
+	@ResponseBody
+	public String updateForgotPassword(String password1, String password2, String resetid) throws Exception {
+		try {
+			if (password1.equals(password2)) {
+				User user = userDao.findUserByResetID(resetid);
+				
+				System.out.println(user.getResetID());
+				
+				if (user != null) { 
+					String encryptedPassword = new BCryptPasswordEncoder().encode(password1);
+					user.setPassword(encryptedPassword);
+					user.setResetID(null);
+					userDao.save(user);
+				} else {
+					return null;
+				}
+			}
+		} catch (Exception ex) {
+			//logger.error("Error updating password with resetID: " + resetID + " message: " + ex.getMessage());
+			throw ex;
+		}
+		//logger.error("Updating password with resetID: " + resetID);
+		return "Success";
+	}
 }
