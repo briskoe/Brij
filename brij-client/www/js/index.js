@@ -146,10 +146,9 @@ function setupReportModal(){
         additionalTicketComment = "";
         makeRequest(SAVE_TICKET, POST, JSON.stringify(report), APPLICATION_JSON, ticketSaved, null);
         
-        
-        
     })
 }
+
 function ticketSaved(data){
     if(data !== ""){
         $("#reportModal").modal("hide");

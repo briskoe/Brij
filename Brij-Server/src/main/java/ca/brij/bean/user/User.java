@@ -28,6 +28,8 @@ import ca.brij.utils.ConstantsUtil;
 		@NamedQuery(name = "User.getAll", query = "FROM User"),
 		@NamedQuery(name = "User.getCountAll", query = "SELECT COUNT(*) FROM User"),
 		@NamedQuery(name = "User.findByUserName", query = "FROM User WHERE username = :username"),
+		@NamedQuery(name = "User.findByEmail", query = "FROM User WHERE email = :email"),
+		@NamedQuery(name = "User.findUserByResetID", query = "FROM User WHERE resetID = :resetID"),
 		@NamedQuery(name = "User.findByUserLike", query = "FROM User WHERE LOWER(username) LIKE LOWER('%' || :username || '%' )"),
 		@NamedQuery(name = "User.countUserLike", query = "SELECT COUNT(*) FROM User WHERE LOWER(username) LIKE LOWER('%' || :username || '%' )"),
 		@NamedQuery(name = "User.findUser", query = "FROM User WHERE username = :username AND password = :password")
@@ -78,6 +80,17 @@ public class User implements Serializable {
 	@Column(name = "status")
 	private String status;
 	
+	@Column(name = "resetID")
+	private String resetID;
+	
+	public String getResetID() {
+		return resetID;
+	}
+
+	public void setResetID(String resetID) {
+		this.resetID = resetID;
+	}
+
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user" , cascade = CascadeType.ALL, orphanRemoval=true)
 	private Set<UserRole> userRole = new HashSet<UserRole>(0);

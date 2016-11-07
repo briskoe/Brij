@@ -30,6 +30,13 @@ $(function () {
 
     });
 
+    $("#btnForgotPassword").click(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $("#forgotPasswordModal").modal('show');
+
+    });
+    
     $("#btnNow").click(function (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -40,6 +47,13 @@ $(function () {
         e.preventDefault();
         e.stopPropagation();
         completeAccount("Later");
+    });
+
+    $("#btnSubmit").click(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var url = FORGOT_EMAIL + "?email=" + $("#forgotEmail").val();
+        makeRequest(url, GET, "", "", forgotEmailSent, null);
     });
 
     $("#btnRegister").click(function (e) {
@@ -81,6 +95,11 @@ function saveUserComplete() {
     $("#registerModal").modal('hide');
     $("#completeAccountModal").modal('show');
 
+}
+
+function forgotEmailSent() {
+    alert("Email Sent");
+    $("#forgotPasswordModal").modal('hide');
 }
 
 function errorSavingUser(data) {

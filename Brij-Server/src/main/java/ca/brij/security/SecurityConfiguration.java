@@ -74,8 +74,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		//TODO change admin to have role admin instead
 		http.httpBasic().and().authorizeRequests()
+				.antMatchers("/reset**").permitAll()
 				.antMatchers(HttpMethod.POST, "/user/register").permitAll()
 				.antMatchers(HttpMethod.POST, "/login**").permitAll()
+				.antMatchers(HttpMethod.GET, "/user/updateForgotPassword**").permitAll()
+				.antMatchers(HttpMethod.GET, "/user/forgotPassword**").permitAll()
 				.antMatchers(HttpMethod.GET, "/admin**").hasRole("ADMIN")
                 .anyRequest().hasRole("USER")
 				.and()

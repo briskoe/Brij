@@ -24,6 +24,8 @@ var SAVE_TICKET = "/ticket/save";
 var GET_REQUESTS_BY_POST_ID = "/request/findByPost";
 var GET_POSTINGS_LIKE = "/posting/like";
 var CHANGE_REQUEST_STATUS = "/request/changeStatus";
+var FORGOT_EMAIL = "/user/forgotpassword";
+var UPDATE_FORGOT_EMAIL = "/user/updateForgotPassword";
 
 //Request Types
 var GET = "GET";
