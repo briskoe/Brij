@@ -1,6 +1,7 @@
 var postID;
 var isDisabled = true;
-
+var post;
+var clicked = false;
 $(function () {
 
 
@@ -92,7 +93,36 @@ function savePost() {
 }
 
 function requestService() {
-    window.location.href = "createRequest.html?id=" + id;
+        if (post.isPost) {
+            $("#formModal #title").html("You are requesting this service");
+        } else {
+            $("#formModal #title").html("You are offering to fulfill this request");
+        }
+        $("#btnSaveForm").html("Send");
+        $("#btnSaveForm").click(function(e){
+            if(clicked) return;
+            clicked= true;
+            e.preventDefault();
+            e.stopPropagation();
+                var newRequest = {
+                notes: $("#requestForm #notes").val(),
+                postID: postID
+            };
+
+            makeRequest(CREATE_REQUEST, POST, JSON.stringify(newRequest), APPLICATION_JSON, function(data){
+                clicked = false;
+                $("#formModal").modal("hide");
+                getPosts(postID);
+                
+            }, null);
+        });
+    var requestForm = "<form>"+
+        "<label for='txtRequestNotes'>Notes:</label>" +
+        "<textarea id='txtRequestNotes' class='form-control'></textarea>" +
+        "</form>"        
+    $("#formModal .modal-body").html(requestForm);
+    $("txtRequestNotes").html("");
+    $("#formModal").modal();
 }
 
 function getPosts(id) {
@@ -115,13 +145,35 @@ function populateUserInfo(data){
     $("#userForm #firstName").html();
 }
 
+function fillRating(ratings, avgRate){
+    var noOfRatings = ratings.length;
+    var starDiv = "";
+    for(var i = 0; i < 5; i++){
+        var classToUse = "glyphicon ";
+        if(i < avgRate){
+            classToUse += "glyphicon-star";
+        }else{
+            classToUse += "glyphicon-star-empty";
+        }
+        starDiv += "<span class='"+classToUse+"'> </span>"
+    }
+    $("#starDiv").html(starDiv);
+    var wordUser = "users";
+    if(noOfRatings === 1){
+        wordUser = "user";
+    }
+    $("#ratingInfo").html(avgRate + " out of 5 - " + noOfRatings + " " + wordUser);
+}
+
 function populatePost(data) {
+    post = data.posting;
     id = data.posting.id;
     populateUserInfo(data.posting.user);
     $("#postName").html(data.posting.title);
     $("#postForm #title").val(data.posting.title);
     $("#postForm #serviceName").val(data.serviceName);
     $("#postForm #description").val(data.posting.details);
+    fillRating(data.posting.ratings, data.avgRate);
     var messageInfo = "";
     var hasRequest = data.hasRequested;
     if (data.posting.isPost) {

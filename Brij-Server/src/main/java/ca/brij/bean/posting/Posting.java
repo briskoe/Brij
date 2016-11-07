@@ -1,9 +1,12 @@
 package ca.brij.bean.posting;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -17,6 +20,8 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.DynamicUpdate;
+
+import ca.brij.bean.rating.Rating;
 import ca.brij.bean.user.User;
 
 
@@ -28,6 +33,7 @@ import ca.brij.bean.user.User;
 		@NamedQuery(name = "Posting.getPostsByLocation", query = "SELECT Posting FROM Posting Posting  WHERE ( 6371 * acos( cos( radians(:latitude) ) * cos( radians( user.latitude ) ) * cos( radians( user.longitude ) - radians(:longitude) ) + sin( radians(:latitude) ) * sin( radians( user.latitude ) ) ) ) < :distance AND status <> 'closed' ORDER BY creationDate DESC"),
 		@NamedQuery(name = "Posting.getPostingById", query = "from Posting where id = :id AND status <> 'closed'"),
 		@NamedQuery(name = "Posting.getPostingByIdAdmin", query = "from Posting where id = :id"),
+		@NamedQuery(name = "Posting.getAvgRating", query = "SELECT avg(r.value) from Posting p JOIN p.ratings r WHERE id = :id"),
 		@NamedQuery(name = "Posting.getPostingsByServID", query = "from Posting where servID = :servID"),
 		@NamedQuery(name = "Posting.getPostingsLikeTitleAdmin", query = "from Posting where LOWER(title) LIKE LOWER('%' || :title || '%')"),
 		@NamedQuery(name = "Posting.getPostingsLikeTitle", query = "from Posting where LOWER(title) LIKE LOWER('%' || :title || '%')"),
@@ -70,6 +76,11 @@ public class Posting implements Serializable {
 	@Column(name = "status")
 	private String status;
 
+	@ElementCollection(fetch=FetchType.EAGER)
+	@Column(name = "ratings")
+	private List<Rating> ratings = new ArrayList<Rating>();
+	
+	
 	public Posting() {
 	}
 
@@ -149,6 +160,14 @@ public class Posting implements Serializable {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public List<Rating> getRatings() {
+		return ratings;
+	}
+
+	public void setRatings(List<Rating> ratings) {
+		this.ratings = ratings;
 	}
 	
 

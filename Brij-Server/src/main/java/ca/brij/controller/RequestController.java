@@ -88,11 +88,30 @@ public class RequestController {
 		try {
 			logger.info("Saving request made by: " + principal.getName());
 			Request request = daoHelper.getRequestDao().findById(id);
-			if(request == null){
+			if (request == null) {
 				throw new Exception("Error - request doesn't exist");
 			}
 			request.setStatus(status);
 			daoHelper.getRequestDao().save(request);
+			// once it is saved notify the other user
+			String typeOfNotification = NotificationSenderUtil.REQUEST_TYPE;
+			if (status.equals(ConstantsUtil.COMPLETE)) {
+				typeOfNotification = NotificationSenderUtil.REQUEST_COMPLETE;
+			}
+			if (principal.getName().equals(request.getUserID())) {
+				Posting post = daoHelper.getPostingDao().getPostingById(request.getPostID());
+				if (post != null) {
+					//this is done so the post owner does not rate its own post
+					typeOfNotification = NotificationSenderUtil.REQUEST_TYPE;
+					notificationUtils.makeNotification(post.getUser().getUsername(), typeOfNotification,
+							request.getRequestID(), principal.getName() + " have changed the status of the request to: " + status);
+				}
+				
+			}else{
+				notificationUtils.makeNotification(request.getUserID(), typeOfNotification,
+						request.getRequestID(), principal.getName() + " have changed the status of the request to: " + status.replace("_", " "));
+			
+			}
 
 		} catch (Exception e) {
 			logger.error("Error saving request " + e.getMessage());
@@ -203,7 +222,7 @@ public class RequestController {
 				pageNo = 0;
 			}
 			if (pageSize == null) {
-				pageSize = 10;
+				pageSize = 25;
 			}
 			logger.info("Finding all request made by the requester " + principal.getName());
 			Map<Integer, String> titleMap = new HashMap<Integer, String>();
@@ -250,7 +269,7 @@ public class RequestController {
 				pageNo = 0;
 			}
 			if (pageSize == null) {
-				pageSize = 10;
+				pageSize = 25;
 			}
 			logger.info("Finding all requests made by user " + userID);
 			requests = daoHelper.getRequestDao().findByUser(userID, new PageRequest(pageNo, pageSize));

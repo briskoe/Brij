@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import ca.brij.bean.posting.Posting;
+import ca.brij.bean.rating.Rating;
 import ca.brij.bean.request.Request;
 import ca.brij.bean.service.Service;
 import ca.brij.bean.user.User;
@@ -65,6 +66,35 @@ public class PostingController {
 		logger.info("Successfully saved post(" + post.getTitle() + ") made by: " + principal.getName());
 		return "Success";
 	}
+	
+	@RequestMapping(value = "/posting/rate", method = RequestMethod.POST)
+	@ResponseBody
+	public String ratePost(int id, @RequestBody Rating rate, Principal principal) throws Exception {
+		try {
+			Posting post = daoHelper.getPostingDao().getPostingById(id);
+			rate.setDate(Calendar.getInstance());
+			rate.setUsername(principal.getName());
+			boolean isNew = true;
+			for(Rating rating : post.getRatings()){
+				if(rating.getUsername().equals(rate.getUsername())){
+					rating.setDate(rate.getDate());
+					rating.setValue(rate.getValue());
+					isNew = false;
+					break;
+				}
+			}
+			if(isNew){
+				post.getRatings().add(rate);
+			}
+			daoHelper.getPostingDao().save(post);
+		} catch (Exception ex) {
+			logger.error("error saving post(" + id + ") made by: " + principal.getName() + " message "
+					+ ex.getMessage());
+			throw ex;
+		}
+		logger.info("Successfully saved post(" +id + ") made by: " + principal.getName());
+		return "Success";
+	}
 
 	/**
 	 * Find By User
@@ -85,7 +115,7 @@ public class PostingController {
 				pageNo = 0;
 			}
 			if (pageSize == null) {
-				pageSize = 10;
+				pageSize = 25;
 			}
 			postings = daoHelper.getPostingDao().getPostingsByUserID(principal.getName(),
 					new PageRequest(pageNo, pageSize));
@@ -123,7 +153,7 @@ public class PostingController {
 				pageNo = 0;
 			}
 			if (pageSize == null) {
-				pageSize = 10;
+				pageSize = 25;
 			}
 			postings = daoHelper.getPostingDao().getPostingsByUserID(principal.getName(),
 					new PageRequest(pageNo, pageSize));
@@ -152,7 +182,7 @@ public class PostingController {
 	 */
 	@RequestMapping(value = "/posting/findById", method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, Object> getPostingById(Principal principal, int id) {
+	public Map<String, Object> getPostingById(Principal principal, int id)  throws Exception{
 		Posting posting = null;
 		Map<String, Object> map = new HashMap<String, Object>();
 		Boolean isOwner = false;
@@ -160,12 +190,13 @@ public class PostingController {
 		Request oldRequestByUser = null;
 		int requestID = -1;
 		String serviceName = "";
+		Double avgRate = 0.0;
 		try {
 			logger.info("retrieving post by id" + id);
 			posting = daoHelper.getPostingDao().getPostingById(id);
 			Service service = daoHelper.getServiceDao().getServiceById(posting.getServID());
 			serviceName = service.getServiceName();
-
+			avgRate = daoHelper.getPostingDao().getAvgRating(id);
 			isOwner = posting.getUser().getUsername().equals(principal.getName());
 			oldRequestByUser = daoHelper.getRequestDao().findByUserAndPost(principal.getName(), posting.getId());
 			hasRequested = oldRequestByUser != null;
@@ -176,7 +207,7 @@ public class PostingController {
 
 		} catch (Exception ex) {
 			logger.error("Error occurred retrieving post " + ex.getMessage());
-			return null;
+			throw ex;
 		}
 		logger.info("Successfully retrieved post by id " + id);
 		map.put("hasRequested", hasRequested);
@@ -184,6 +215,7 @@ public class PostingController {
 		map.put("posting", posting);
 		map.put("isOwner", isOwner);
 		map.put("serviceName", serviceName);
+		map.put("avgRate", avgRate == null? 0 : avgRate);
 		return map;
 	}
 
@@ -207,7 +239,7 @@ public class PostingController {
 				pageNo = 0;
 			}
 			if (pageSize == null) {
-				pageSize = 10;
+				pageSize = 25;
 			}
 			if (distance == null) {
 				distance = 25.0;
@@ -254,7 +286,7 @@ public class PostingController {
 				pageNo = 0;
 			}
 			if (pageSize == null) {
-				pageSize = 10;
+				pageSize = 25;
 			}
 			postings = daoHelper.getPostingDao().getAllPostingsAdmin(new PageRequest(pageNo, pageSize));
 			for (Posting post : postings) {
@@ -292,7 +324,7 @@ public class PostingController {
 				pageNo = 0;
 			}
 			if (pageSize == null) {
-				pageSize = 10;
+				pageSize = 25;
 			}
 			postings = daoHelper.getPostingDao().getPostingsLikeTitleAdmin(title ,new PageRequest(pageNo, pageSize));
 			for (Posting post : postings) {
@@ -336,7 +368,7 @@ public class PostingController {
 				pageNo = 0;
 			}
 			if (pageSize == null) {
-				pageSize = 10;
+				pageSize = 25;
 			}
 			if (distance == null) {
 				distance = 25.0;
