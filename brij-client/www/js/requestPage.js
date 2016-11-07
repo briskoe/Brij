@@ -3,7 +3,9 @@ var requestID;
 var isSavingRequest = false;
 var conversationTimer;
 var openConvo = false;
+var openRate = false;
 var status = "";
+var ratingValue = -1;
 $(function () {
     $("#btnBack").click(function (e) {
         e.preventDefault();
@@ -69,7 +71,8 @@ $(function () {
     });
     getRequest($.urlParam("id"));
     openConvo = $.urlParam("openConvo");
-    
+    openRate = $.urlParam("openRate");
+
 
 });
 
@@ -229,4 +232,82 @@ function populateRequest(data) {
         requestConversation();
         conversationTimer = setInterval(requestConversation, 50000);
     }
+    if(openRate){
+        $("#formModal #title").html("Rate post");
+        $("#btnSaveForm").html("Rate");
+        $("#btnSaveForm").click(function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            ratingValue = ratingValue > 5? 5 : ratingValue < 1? 0: ratingValue;
+            var rating = {
+                value: ratingValue
+            }
+            makeRequest(RATE_POST + "?id="+postID, POST, JSON.stringify(rating), APPLICATION_JSON, function(e){
+                $("#formModal").modal("hide");
+            }, null);
+            
+        });
+        var starFormBody = getStarForm();
+        $("#formModal .modal-body").html(starFormBody);
+        
+        $(".star").click(function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            var number = this.id.split("_")[1];
+            number = number > 5? 5: number;
+            $(".star").removeClass("glyphicon-star");
+            for(var i =1; i <= 5; i++){
+                if(number >= i){
+                    $("#star_" + i).removeClass("glyphicon-star-empty");
+                    $("#star_" + i).addClass("glyphicon-star"); 
+                }else{
+                    $("#star_" + i).addClass("glyphicon-star-empty");
+                }
+
+            }
+            ratingValue = number;
+        });
+        $(".star").hover(function(e){
+            e.preventDefault();
+            e.stopPropagation();
+                var number = this.id.split("_")[1];
+                number = number > 5? 5: number;
+                $(".star").removeClass("glyphicon-star");
+                for(var i =1; i <= 5; i++){
+                    if(number >= i){
+                        $("#star_" + i).removeClass("glyphicon-star-empty");
+                        $("#star_" + i).addClass("glyphicon-star"); 
+                    }else{
+                        $("#star_" + i).addClass("glyphicon-star-empty");
+                    }
+                }
+            
+
+        }, function(){
+            if(ratingValue === -1){
+                $(".star").removeClass("glyphicon-star");
+                $(".star").addClass("glyphicon-star-empty"); 
+                
+            }else{
+                for(var i =1; i <= 5; i++){
+                    if(ratingValue >= i){
+                        $("#star_" + i).removeClass("glyphicon-star-empty");
+                        $("#star_" + i).addClass("glyphicon-star"); 
+                    }else{
+                        $("#star_" + i).addClass("glyphicon-star-empty");
+                    }
+                }
+            }
+        })
+        $("#formModal").modal();
+    }
+}
+
+function getStarForm(){
+    var div = "<div class='text-center starDiv'>";
+    for(var i =1 ; i <= 5; i++){
+        div += "<span class='glyphicon glyphicon-star-empty star' id='star_"+i+"'></span>";
+    }
+    div += "</div>"
+    return div;
 }

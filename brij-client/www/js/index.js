@@ -90,6 +90,7 @@ $(function () {
     setupSettingModal();
     setupScrollable();
     setupReportModal();
+    createTwoButtonForm()
 
     $(".navbar #createPost").click(function (e) {
         e.preventDefault();
@@ -97,6 +98,19 @@ $(function () {
         window.location.href = "createPost.html";
     });
 });
+
+function createTwoButtonForm(){
+        var modal = "<div class='container' ><div id='formModal' class='modal fade' role='dialog'>" +
+        "<div class='modal-dialog'>" +
+        "<div class='modal-content'> <div class='modal-header'>" +
+        "<h2 id='title'></h2> </div>" +
+        "<div  class='modal-body'> " +
+        "</div><div class='modal-footer'>" +
+        "<button type='button' class='btn btn-info' id='btnSaveForm' > Send </button>" +
+        "<button type='button' class='btn btn-default' data-dismiss='modal'>close</button>" + "</div> </div> </div>" +
+        "</div> </div>";
+    $("body").append(modal);
+}
 
 function setupScrollable() {
     var window_height = $(window).height(),
@@ -236,7 +250,7 @@ function initializeMainMenu() {
         e.stopPropagation();
 
         makeRequest(LOGOUT, POST, "", "", function (data) {
-            window.location = "/index.html"
+            window.location = "index.html"
         }, null);
     });
 
@@ -287,7 +301,9 @@ function fillNotifications(data) {
             var notificationId = notifications[i].id;
             if (notifications[i].type === "request") {
                 href = "request.html?id=" + notifications[i].targetID;
-            } else if (notifications[i].type === "conversation") {
+            } else if(notifications[i].type === "requestComplete"){
+                href = "request.html?id=" + notifications[i].targetID + "&openRate=true";
+            }else if (notifications[i].type === "conversation") {
                 href = "request.html?id=" + notifications[i].targetID + "&openConvo=true";
             }
             navbar += "<li class='dropdown-item " + classCss + "'><a id='notification_" + notificationId + "' onclick='return notificationOnClick(this)' href='" + href + "' class='" + classCss + "'> " + notifications[i].description + "</a></li>";

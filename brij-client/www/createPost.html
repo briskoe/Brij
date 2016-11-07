@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <title>Postings</title>
-    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="css/index.css" />
     <script type="text/javascript" src="js/jquery.min.js"></script>
@@ -35,13 +35,13 @@
         </div>
     </nav>
     <!--END OF HEADER -->
-    <div class="container">
-        <img src="img/brij_logo.png" class="img-rounded" alt="Brij Logo" width="100%">
-
+    <div class="container scrollableArea pageDiv">
+        <div class="page-header text-center">
+            <h1>Create a post</h1>
+        </div>
         <!-- Modal -->
         <div class="modal fade" id="myModal" role="dialog">
             <div class="modal-dialog">
-
                 <!-- Modal content-->
                 <div class="modal-content">
                     <div class="modal-header">
@@ -59,7 +59,6 @@
 
             </div>
         </div>
-
 
         <form class="form-horizontal" id="postForm">
             <div class="form-group">
@@ -99,11 +98,8 @@
 
 
             </div>
-
-            <div class="form-group">
-                <button id="btnCancel" type="button" class="btn btn-default col-xs-6 btn-danger">Cancel</button>
-                <button id="btnSave" type="button" class="btn btn-default col-xs-6 btn-success">Save</button>
-            </div>
+                <button id="btnSave" type="button" class="btn btn-default btn-success form-control margin-bottom-5">Save</button>
+                <button id="btnCancel" type="button" class="btn btn-default form-control margin-bottom-5">Cancel</button>
         </form>
 
     </div>
