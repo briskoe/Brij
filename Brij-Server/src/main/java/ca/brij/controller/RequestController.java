@@ -27,7 +27,6 @@ import ca.brij.utils.ConstantsUtil;
 import ca.brij.utils.DaoHelper;
 import ca.brij.utils.MergeBeanUtil;
 import ca.brij.utils.NotificationSenderUtil;
-import scala.annotation.meta.getter;
 
 @RestController
 public class RequestController {
