@@ -27,6 +27,7 @@ import ca.brij.utils.ConstantsUtil;
 import ca.brij.utils.DaoHelper;
 import ca.brij.utils.MergeBeanUtil;
 import ca.brij.utils.NotificationSenderUtil;
+import scala.annotation.meta.getter;
 
 @RestController
 public class RequestController {
@@ -226,15 +227,18 @@ public class RequestController {
 			}
 			logger.info("Finding all request made by the requester " + principal.getName());
 			Map<Integer, String> titleMap = new HashMap<Integer, String>();
+			Map<Integer, String> serviceMap = new HashMap<Integer, String>();
+
 			requests = daoHelper.getRequestDao().findByUser(principal.getName(), new PageRequest(pageNo, pageSize));
 			for (Request r : requests) {
 				Posting post = daoHelper.getPostingDao().getPostingById(r.getPostID());
 				titleMap.put(r.getRequestID(), post.getTitle());
-
+				serviceMap.put(r.getRequestID(), daoHelper.getServiceDao().getServiceById(post.getServID()).getServiceName());
 			}
 			numberOfPages = (int) Math
 					.ceil((double) daoHelper.getRequestDao().getCountForUser(principal.getName()) / (double) pageSize);
 			requestMap.put("postTitles", titleMap);
+			requestMap.put("serviceTitles", serviceMap);
 
 		} catch (Exception e) {
 			logger.error("Error finding all request made by the requester " + e.getMessage());
