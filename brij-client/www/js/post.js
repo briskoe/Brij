@@ -92,6 +92,7 @@ function savePost() {
     makeRequest(SAVE_POST, POST, JSON.stringify(updatePost), APPLICATION_JSON, null, null);
 }
 
+
 function requestService() {
         if (post.isPost) {
             $("#formModal #title").html("You are requesting this service");
@@ -114,7 +115,7 @@ function requestService() {
                 $("#formModal").modal("hide");
                 getPosts(postID);
                 
-            }, null);
+            }, savePostErrorHandler);
         });
     var requestForm = "<form>"+
         "<label for='txtRequestNotes'>Notes:</label>" +
@@ -124,6 +125,17 @@ function requestService() {
     $("txtRequestNotes").html("");
     $("#formModal").modal();
 }
+function savePostErrorHandler(error){
+    $("#formModal").modal("hide");
+    var errorMsg = error.responseJSON.message.replace(";", "</br>");
+    if(errorMsg.indexOf("brij_exception") !== -1){
+
+        errorMsg = errorMsg.replace("brij_exception", "");
+        displayError($("#postForm"), errorMsg);
+    }
+
+}
+
 
 function getPosts(id) {
     //Need to get based on id

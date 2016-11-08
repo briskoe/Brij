@@ -475,3 +475,8 @@ function listItemGenerator(href, id, customClass, heading, body, badge1, body2) 
     '</a>';
     return li;
 }
+
+function displayError(div, message) {
+    $("#errorDiv").remove("");
+    $(div).prepend("<div id='errorDiv' class='alert alert-danger'>" + message + "</div>");
+}

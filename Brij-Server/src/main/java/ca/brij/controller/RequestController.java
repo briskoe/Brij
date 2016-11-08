@@ -20,9 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ca.brij.bean.posting.Posting;
 import ca.brij.bean.request.Request;
 import ca.brij.bean.user.User;
-import ca.brij.dao.posting.PostingDao;
-import ca.brij.dao.request.RequestDao;
-import ca.brij.dao.service.ServiceDao;
 import ca.brij.utils.ConstantsUtil;
 import ca.brij.utils.DaoHelper;
 import ca.brij.utils.MergeBeanUtil;
@@ -53,6 +50,10 @@ public class RequestController {
 		try {
 			logger.info("Saving request made by: " + principal.getName());
 			request.setUserID(principal.getName());
+			User user = daoHelper.getUserDao().findByUserName(principal.getName());
+			if(user == null || user.getStatus().equals(ConstantsUtil.INCOMPLETE)){
+				throw new Exception(ConstantsUtil.EXCEPTION_FLAG + " User needs to complete account before replying a post");
+			}
 			// see if the request exist
 			Request oldRequest = daoHelper.getRequestDao().findByUserAndPost(request.getUserID(), request.getPostID());
 			if (oldRequest == null) {

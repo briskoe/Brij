@@ -40,6 +40,9 @@ public class PostingController {
 		try {
 			logger.info("saving post(" + post.getTitle() + ") made by: " + principal.getName());
 			User user = daoHelper.getUserDao().findByUserName(principal.getName());
+			if(user == null || user.getStatus().equals(ConstantsUtil.INCOMPLETE)){
+				throw new Exception(ConstantsUtil.EXCEPTION_FLAG + " User needs to complete account before making a new post");
+			}
 			post.setUser(user);
 			Posting origPost = null;
 			if (post.getId() != null) {
@@ -238,6 +241,7 @@ public class PostingController {
 		Map<String, Object> postingsMap = new HashMap<String, Object>();
 		ArrayList<Posting> postings;
 		int numberOfPages = 0;
+
 		try {
 			logger.info("Retrieving all posts");
 			if (pageNo == null) {
@@ -258,6 +262,11 @@ public class PostingController {
 				postings = daoHelper.getPostingDao().getPostsByLocation(new PageRequest(pageNo, pageSize),
 						currentUser.getLatitude(), currentUser.getLongitude(), distance);
 			}
+			for(Posting post: postings){
+				Double avgRate = daoHelper.getPostingDao().getAvgRating(post.getId());
+				postingsMap.put("rate_"+post.getId(), avgRate);
+			}
+
 			// divide then take the decimal away. Ex 10.5 will give 10
 			numberOfPages = (int) Math.ceil((double) daoHelper.getPostingDao().getCountOfAll() / (double) pageSize);
 

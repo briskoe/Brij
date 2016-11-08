@@ -269,10 +269,13 @@ input:focus {
 }
 
 #postingList {
-/*    max-height: 300px;
-    overflow-y: auto;
-    overflow-x: hidden;*/
+    margin: 15px;
 }
+#postingList h3{
+    word-break: break-all;
+    width:95%;
+}
+
 
 #postingPagination {
     text-align: center;
@@ -321,7 +324,8 @@ input:focus {
 */
 
 .scrollableArea {
-    overflow-x: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .pageDiv{
@@ -355,4 +359,54 @@ input:focus {
 .starDiv .star{
     font-size:50px;
     cursor: pointer;
+}
+
+
+ribbon {
+  position: absolute;
+  right: -5px; top: -5px;
+  z-index: 1;
+  overflow: hidden;
+  width: 75px; height: 75px;
+  text-align: right;
+}
+.ribbon span {
+  font-size: 10px;
+  font-weight: bold;
+  color: #FFF;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 20px;
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  width: 100px;
+  display: block;
+  background: #79A70A;
+  background: linear-gradient(#9BC90D 0%, #79A70A 100%);
+  box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
+  position: absolute;
+  top: 19px; right: -21px;
+}
+.ribbon span::before {
+  content: "";
+  position: absolute; left: 0px; top: 100%;
+  z-index: -1;
+  border-left: 3px solid #79A70A;
+  border-right: 3px solid transparent;
+  border-bottom: 3px solid transparent;
+  border-top: 3px solid #79A70A;
+}
+.ribbon span::after {
+  content: "";
+  position: absolute; right: 0px; top: 100%;
+  z-index: -1;
+  border-left: 3px solid transparent;
+  border-right: 3px solid #79A70A;
+  border-bottom: 3px solid transparent;
+  border-top: 3px solid #79A70A;
+}
+
+.ribbon.blue span{
+    background: rgba(183,222,237,1);
+    background: linear-gradient(to right, rgba(183,222,237,1) 0%, rgba(113,206,239,1) 50%, rgba(33,180,226,1) 51%, rgba(170,218,236,1) 92%, rgba(183,222,237,1) 96%);
 }
