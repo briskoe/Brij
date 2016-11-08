@@ -35,9 +35,17 @@ function savePost() {
 
     };
 
-    makeRequest(SAVE_POST, POST, JSON.stringify(newPost), APPLICATION_JSON, savePostingComplete, null);
+    makeRequest(SAVE_POST, POST, JSON.stringify(newPost), APPLICATION_JSON, savePostingComplete, savePostErrorHandler);
 }
+function savePostErrorHandler(error){
+    var errorMsg = error.responseJSON.message.replace(";", "</br>");
+    if(errorMsg.indexOf("brij_exception") !== -1){
 
+        errorMsg = errorMsg.replace("brij_exception", "");
+        displayError($("#postForm"), errorMsg);
+    }
+
+}
 function savePostingComplete() {
     window.location.href = "postings.html";
 }

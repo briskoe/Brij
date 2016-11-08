@@ -55,12 +55,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	}
 	
-	@Override
-    public void configure(WebSecurity web) throws Exception {
-        web
-                .ignoring()
-                .antMatchers("/resources/**");
-    }
 
 	/**
 	 * This section defines the security policy for the app. - BASIC
@@ -74,6 +68,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		//TODO change admin to have role admin instead
 		http.httpBasic().and().authorizeRequests()
+				.antMatchers("/").permitAll()
+				.antMatchers("/js/**").permitAll()
+				.antMatchers("/img/**").permitAll()
+				.antMatchers("/css/**").permitAll()
+				.antMatchers("/fonts/**").permitAll()
+				.antMatchers("/res/**").permitAll()
+				.antMatchers("/spec/**").permitAll()
 				.antMatchers("/reset**").permitAll()
 				.antMatchers(HttpMethod.POST, "/user/register").permitAll()
 				.antMatchers(HttpMethod.POST, "/login**").permitAll()

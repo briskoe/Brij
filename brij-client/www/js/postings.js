@@ -56,18 +56,46 @@ function createPostingList(data) {
     currentPage = data.currentPage;
     for (var i = 0; i < array.length; i++) {
         var badge = "REQUEST"
+        var additionalClass = "list-group-item";
+        var ribbonColor ="";
         if (array[i].isPost) {
             badge = "OFFER";
+        }else{
+            ribbonColor = "blue"
         }
-        if (i % 2 === 0) {
-            listItems += "<a href='post.html?id=" + array[i].id + "' class='list-group-item' id='posting#" + array[i].id + "'> <span class='badge'>" + badge + "</span> " + array[i].title + "</a>";
-        } else {
-            listItems += "<a href='post.html?id=" + array[i].id + "' class='list-group-item list-group-item-info' id='posting#" + array[i].id + "'>" + "<span class='badge'>" + badge + "</span>" + array[i].title + "</a>";
+        if (i % 2 !== 0) {
+            additionalClass += " list-group-item-info"
         }
+        var ratings = array[i].ratings;
+        var starDiv = fillRating(ratings, data["rate_" + array[i].id]);
+        var userWord = "";
+        if(ratings.length === 1){
+            userWord = " - 1 vote";
+        }else{
+            userWord = " - " + ratings.length + " votes";
+        }
+        var creationDate = new Date(array[i].creationDate).toLocaleString();
+        listItems += "<div ><a class='"+additionalClass+"' href='post.html?id=" + array[i].id + "'  id='posting#" + array[i].id + "'>" + "<div class='ribbon "+ribbonColor+"'><span>" + badge + "</span></div><h3>" + array[i].title + "<small> by " + array[i].user.username+ "</small></h3>"+
+            starDiv +userWord+" <br> Posted: "+creationDate+"</a></div>";
     }
     loadNew = false;
     $("#postingList").html(listItems);
 
+}
+
+function fillRating(ratings, avgRate){
+    var noOfRatings = ratings.length;
+    var starDiv = "";
+    for(var i = 0; i < 5; i++){
+        var classToUse = "glyphicon ";
+        if(i < avgRate){
+            classToUse += "glyphicon-star";
+        }else{
+            classToUse += "glyphicon-star-empty";
+        }
+        starDiv += "<span class='"+classToUse+"'> </span>"
+    }
+   return starDiv;
 }
 
 function appendPostingList(data) {
@@ -77,14 +105,27 @@ function appendPostingList(data) {
     currentPage = data.currentPage;
     for (var i = 0; i < array.length; i++) {
         var badge = "REQUEST"
+        var additionalClass = "list-group-item";
+        var ribbonColor ="";
         if (array[i].isPost) {
             badge = "OFFER";
+        }else{
+            ribbonColor = "blue"
         }
-        if (i % 2 === 0) {
-            listItems += "<a href='post.html?id=" + array[i].id + "' class='list-group-item' id='posting#" + array[i].id + "'> <span class='badge'>" + badge + "</span> " + array[i].title + "</a>";
-        } else {
-            listItems += "<a href='post.html?id=" + array[i].id + "' class='list-group-item list-group-item-info' id='posting#" + array[i].id + "'>" + "<span class='badge'>" + badge + "</span>" + array[i].title + "</a>";
+        if (i % 2 !== 0) {
+            additionalClass += " list-group-item-info"
         }
+        var ratings = array[i].ratings;
+        var starDiv = fillRating(ratings, data["rate_" + array[i].id]);
+        var userWord = "";
+        if(ratings.length === 1){
+            userWord = " - 1 vote";
+        }else{
+            userWord = " - " + ratings.length + " votes";
+        }
+        var creationDate = new Date(array[i].creationDate).toLocaleString();
+        listItems += "<div ><a class='"+additionalClass+"' href='post.html?id=" + array[i].id + "'  id='posting#" + array[i].id + "'>" + "<div class='ribbon "+ribbonColor+"'><span>" + badge + "</span></div><h3>" + array[i].title + "<small> by " + array[i].user.username+ "</small></h3>"+
+            starDiv +userWord+" <br> Posted: "+creationDate+"</a></div>";
     }
 
      $("#postingList").append(listItems);
