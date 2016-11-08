@@ -145,6 +145,7 @@ public class PostingController {
 			@RequestParam(value = "pageSize", required = false) Integer pageSize) throws Exception {
 		Map<String, Object> postingsMap = new HashMap<String, Object>();
 		Map<String, Integer> countMap = new HashMap<String, Integer>();
+		Map<String, String> titleMap = new HashMap<String, String>();
 		ArrayList<Posting> postings = null;
 		int numberOfPages = 0;
 
@@ -161,7 +162,9 @@ public class PostingController {
 
 			for (Posting post : postings) {
 				int numOfReplies = daoHelper.getRequestDao().getCountForPost(post.getId());
+				String title = daoHelper.getServiceDao().getServiceById(post.getServID()).getServiceName();
 				countMap.put(post.getId().toString(), numOfReplies);
+				titleMap.put(post.getId().toString(), title);
 			}
 
 			numberOfPages = (int) Math
@@ -174,6 +177,7 @@ public class PostingController {
 		postingsMap.put("numberOfPages", numberOfPages);
 		postingsMap.put("currentPage", (pageNo + 1));
 		postingsMap.put("countMap", countMap);
+		postingsMap.put("titleMap", titleMap);
 		logger.info("successfully retrieved posts made by: " + principal.getName());
 		return postingsMap;
 	}

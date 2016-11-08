@@ -298,8 +298,8 @@ public class UserController {
 			    	user.setResetID(resetID);
 			    	userDao.save(user);
 			    	
-				    msg += "<a href='" + "http://localhost:8080" + FORGOT_PASSWORD_URL + resetID + "'>Reset Link</a>";
-			    	//msg += "<a href='" + applicationProperties.getServerURL() + FORGOT_PASSWORD_URL + resetID + "'>Reset Link</a>";
+				    //msg += "<a href='" + "http://localhost:8080" + FORGOT_PASSWORD_URL + resetID + "'>Reset Link</a>";
+			    	msg += "<a href='" + applicationProperties.getServerURL() + FORGOT_PASSWORD_URL + resetID + "'>Reset Link</a>";
 			    	
 			        Message message = new MimeMessage(session);
 			        message.setFrom(new InternetAddress(sender));

@@ -463,3 +463,15 @@ function donateModal() {
     
     $("body").append(modal);
 }
+
+function listItemGenerator(href, id, customClass, heading, body, badge1, body2) {
+    var li = "";
+    if (href === "") {
+        href = "#";
+    }
+    li += '<a href="' + href + '" id="' + id + '" class="list-group-item list-group-item-action ' + customClass + '"><span class="badge">' + badge1 + '</span>' +
+    '<h4 class="list-group-item-heading">' + heading + '</h4>' +
+    '<p class="list-group-item-text">' + body + '</p>' + '<p class="list-group-item-text">' + body2 + '</p>'
+    '</a>';
+    return li;
+}
