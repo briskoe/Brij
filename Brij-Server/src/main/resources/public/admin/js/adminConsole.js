@@ -172,7 +172,7 @@ function makePostsAdmin(start, length) {
 	for (var i = start; i < end; i++) {
 		var newPost = {
 			title : "POST_" + i,
-			servID : "0",
+			servID : "1",
 			details : "POST_" + i,
 			isPost : i % 2 === 0
 
@@ -180,6 +180,20 @@ function makePostsAdmin(start, length) {
 
 		makeRequest(SAVE_POST, POST, JSON.stringify(newPost), APPLICATION_JSON,
 				null, null);
+	}
+}
+
+function makeRequestAdmin(start, length, postID) {
+
+	var end = start + length;
+	for (var i = start; i < end; i++) {
+		var newRequest = {
+			notes : "request +" + i,
+			postID : postID
+		};
+
+		makeRequest(CREATE_REQUEST, POST, JSON.stringify(newRequest),
+				APPLICATION_JSON, null, null);
 	}
 }
 

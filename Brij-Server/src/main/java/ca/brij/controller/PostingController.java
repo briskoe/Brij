@@ -206,7 +206,11 @@ public class PostingController {
 			serviceName = service.getServiceName();
 			avgRate = daoHelper.getPostingDao().getAvgRating(id);
 			isOwner = posting.getUser().getUsername().equals(principal.getName());
-			oldRequestByUser = daoHelper.getRequestDao().findByUserAndPost(principal.getName(), posting.getId());
+			ArrayList<Request>requests = daoHelper.getRequestDao().findByUserAndPost(principal.getName(), posting.getId());
+			if(requests.size() >0){
+				oldRequestByUser = requests.get(0);
+
+			}
 			hasRequested = oldRequestByUser != null;
 			
 			if(hasRequested){

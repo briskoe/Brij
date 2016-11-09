@@ -298,7 +298,6 @@ public class UserController {
 			    	user.setResetID(resetID);
 			    	userDao.save(user);
 			    	
-				    //msg += "<a href='" + "http://localhost:8080" + FORGOT_PASSWORD_URL + resetID + "'>Reset Link</a>";
 			    	msg += "<a href='" + applicationProperties.getServerURL() + FORGOT_PASSWORD_URL + resetID + "'>Reset Link</a>";
 			    	
 			        Message message = new MimeMessage(session);
@@ -321,9 +320,7 @@ public class UserController {
 		try {
 			if (password1.equals(password2)) {
 				User user = userDao.findUserByResetID(resetid);
-				
-				System.out.println(user.getResetID());
-				
+								
 				if (user != null) { 
 					String encryptedPassword = new BCryptPasswordEncoder().encode(password1);
 					user.setPassword(encryptedPassword);
@@ -334,7 +331,7 @@ public class UserController {
 				}
 			}
 		} catch (Exception ex) {
-			//logger.error("Error updating password with resetID: " + resetID + " message: " + ex.getMessage());
+			logger.error("Error updating password with resetID: " + resetid + " message: " + ex.getMessage());
 			throw ex;
 		}
 		//logger.error("Updating password with resetID: " + resetID);

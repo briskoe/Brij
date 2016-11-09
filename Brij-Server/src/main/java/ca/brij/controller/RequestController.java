@@ -54,8 +54,12 @@ public class RequestController {
 			if(user == null || user.getStatus().equals(ConstantsUtil.INCOMPLETE)){
 				throw new Exception(ConstantsUtil.EXCEPTION_FLAG + " User needs to complete account before replying a post");
 			}
-			// see if the request exist
-			Request oldRequest = daoHelper.getRequestDao().findByUserAndPost(request.getUserID(), request.getPostID());
+			// see if the request exist -- get the first one
+			ArrayList<Request> requests = daoHelper.getRequestDao().findByUserAndPost(request.getUserID(), request.getPostID());
+			Request oldRequest = null;
+			if(requests.size() > 0){
+				oldRequest = requests.get(0);
+			}
 			if (oldRequest == null) {
 				// if it doesn't set up creation date and assign the new request
 				request.setCreationDate(Calendar.getInstance());
@@ -299,16 +303,31 @@ public class RequestController {
 	 */
 	@RequestMapping(value = "/request/findByPost", method = RequestMethod.GET)
 	@ResponseBody
-	public ArrayList<Request> findByPost(int postID) throws Exception {
+	public Map<String, Object> findByPost(int postID, @RequestParam(value = "pageNo", required = false) Integer pageNo,
+			@RequestParam(value = "pageSize", required = false) Integer pageSize) throws Exception {
+		Map<String, Object> requestMap = new HashMap<String, Object>();
 		ArrayList<Request> requests = null;
+		int numberOfPages = 0;
 		try {
+			if (pageNo == null) {
+				pageNo = 0;
+			}
+			if (pageSize == null) {
+				pageSize = 25;
+			}
 			logger.info("Finding request made for post with ID " + postID);
-			requests = daoHelper.getRequestDao().findByPost(postID);
+			requests = daoHelper.getRequestDao().findByPost(postID, new PageRequest(pageNo, pageSize));
+			numberOfPages = (int) Math
+					.ceil((double) daoHelper.getRequestDao().getCountForPost(postID) / (double) pageSize);
+
 		} catch (Exception e) {
 			logger.error("Error finding requests made for post with ID " + postID + " " + e.getMessage());
 			throw e;
 		}
-		return requests;
+		requestMap.put("list", requests);
+		requestMap.put("numberOfPages", numberOfPages);
+		requestMap.put("currentPage", (pageNo + 1));
+		return requestMap;
 	}
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
