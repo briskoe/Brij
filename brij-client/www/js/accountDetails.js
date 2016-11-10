@@ -23,16 +23,7 @@ $(function () {
             $("#userForm .userInput").attr("disabled", !isSavingUser);
         }
         if ($("#btnEdit").html() === "Save" && isSavingUser) {
-            saveUser()
-            if (userSaved) {
-                $("#btnEdit").html("Edit");
-                $("#primaryButtons #btnCancel").addClass("hide");
-                $("#btnUpdatePassword").addClass("hide");
-                isSavingUser = !isSavingUser;
-                $("#userForm .userInput").attr("disabled", !isSavingUser);
-            } else {
-                displayError("Unable to locate address");
-            }
+            saveUser();
         }
         if (isSavingUser) {
             $("#btnEdit").html("Save");
@@ -54,7 +45,7 @@ $(function () {
 
         //change name
         $("#btnEdit").html("Edit");
-        
+
         $("#errorDiv").remove();
         loadInfo(refreshForm)
     });
@@ -99,6 +90,16 @@ $(function () {
     populateProvinces();
 });
 
+function errorUpdatingUser(error) {
+    userSaved = false;
+
+    var errorMsg = error.responseJSON.message.replace(";", "</br>");
+    if (errorMsg.indexOf("brij_exception") !== -1) {
+        errorMsg = errorMsg.replace("brij_exception", "");
+        displayError(errorMsg);
+    }
+}
+
 function passwordSaveComplete() {}
 
 function populateProvinces() {
@@ -109,6 +110,8 @@ function populateProvinces() {
         }
     }
 }
+
+
 
 function validUserDetails() {
     var isValid = true;
@@ -177,17 +180,24 @@ function saveUser() {
             email: $("#userForm #email").val()
         };
 
-        makeRequest(UPDATE_USER, POST, JSON.stringify(updateUser), APPLICATION_JSON, userSavedSuccessful, errorSavingUser);
+        makeRequest(UPDATE_USER, POST, JSON.stringify(updateUser), APPLICATION_JSON, userSavedSuccessful, errorUpdatingUser);
     }
 
 }
 
 function userSavedSuccessful() {
     userSaved = true;
+    userSavedButtons();
 }
 
-function errorSavingUser() {
-    userSaved = false;
+function userSavedButtons() {
+    if (userSaved) {
+        $("#btnEdit").html("Edit");
+        $("#primaryButtons #btnCancel").addClass("hide");
+        $("#btnUpdatePassword").addClass("hide");
+        isSavingUser = !isSavingUser;
+        $("#userForm .userInput").attr("disabled", !isSavingUser);
+    }
 }
 
 function displayError(message) {

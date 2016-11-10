@@ -10,28 +10,28 @@ var currentPostId = -1;
 var requestNoPages = 1;
 var requestCurrentPage = 1;
 
-$(function () {    
+$(function () {
     loadInfo(refreshForm)
     getAllPosts();
-    
-    $('#historyList').scroll(function(e){
+
+    $('#historyList').scroll(function (e) {
         e.preventDefault();
         e.stopPropagation();
-        if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight && loadNew) {
+        if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight && loadNew) {
             var url = filterUrl;
-            if(url.indexOf("?") === -1){
+            if (url.indexOf("?") === -1) {
                 url += "?";
-            }else{
+            } else {
                 url += "&";
             }
-            url += "pageNo="+ currentPage;
-            if(currentPage !== noOfPages){
-                if(filterBy === "posts"){
-                     makeRequest(url, GET, "", "", function(data){
+            url += "pageNo=" + currentPage;
+            if (currentPage !== noOfPages) {
+                if (filterBy === "posts") {
+                    makeRequest(url, GET, "", "", function (data) {
                         createHistoryList(data, true);
                     }, null);
-                }else{
-                    makeRequest(url, GET, "", "", function(data){
+                } else {
+                    makeRequest(url, GET, "", "", function (data) {
                         createMyRequestList(data, true);
                     }, null);
                 }
@@ -41,14 +41,14 @@ $(function () {
         loadNew = true;
 
     })
-    
-    $('#requestList').scroll(function(e){
+
+    $('#requestList').scroll(function (e) {
         e.preventDefault();
         e.stopPropagation();
-        if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight && loadNew) {
-            var url =  GET_REQUESTS_BY_POST_ID + "?pageNo="+ requestCurrentPage + "&postID=" + currentPostId;
-            if(requestNoPages !== requestCurrentPage){
-                makeRequest(url, GET, "", "", function(data){
+        if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight && loadNew) {
+            var url = GET_REQUESTS_BY_POST_ID + "?pageNo=" + requestCurrentPage + "&postID=" + currentPostId;
+            if (requestNoPages !== requestCurrentPage) {
+                makeRequest(url, GET, "", "", function (data) {
                     createRequestList(data, true);
                 }, null);
 
@@ -89,16 +89,16 @@ function loadInfo(callback) {
 function getAllPosts() {
     filterBy = "posts";
     filterUrl = GET_POST_HISTORY;
-    makeRequest(GET_POST_HISTORY, GET, "", "", function(data){
-     createHistoryList(data, false);
+    makeRequest(GET_POST_HISTORY, GET, "", "", function (data) {
+        createHistoryList(data, false);
     }, null);
 }
 
 function getAllRequests() {
     filterBy = "requests";
     filterUrl = GET_MY_REQUESTS;
-    makeRequest(GET_MY_REQUESTS, GET, "", "", function(data){
-        createMyRequestList(data, false);   
+    makeRequest(GET_MY_REQUESTS, GET, "", "", function (data) {
+        createMyRequestList(data, false);
     }, null);
 }
 
@@ -117,12 +117,12 @@ function createHistoryList(data, append) {
     }
 
     loadNew = false;
-    if(append){
-        if(noOfPages === currentPage){
+    if (append) {
+        if (noOfPages === currentPage) {
             listItems = "<a class='list-group-item'><h3 class='list-group-item historyListItem'>No more posts to show</h3></a>"
         }
         $("#historyList").append(listItems);
-    }else{
+    } else {
         $("#historyList").html(listItems);
     }
 
@@ -131,7 +131,8 @@ function createHistoryList(data, append) {
         var url = GET_REQUESTS_BY_POST_ID;
         url += "?postID=" + this.id;
         currentPostId = this.id;
-        makeRequest(url, GET, "", "", function(data){
+        $("#btnViewMyPost").attr("href", "post.html?id=" + currentPostId)
+        makeRequest(url, GET, "", "", function (data) {
             createRequestList(data, false);
         }, null);
     });
@@ -148,12 +149,12 @@ function createRequestList(data, append) {
 
     }
     loadNew = false;
-    if(append){
-        if(requestNoPages === requestCurrentPage){
+    if (append) {
+        if (requestNoPages === requestCurrentPage) {
             listItems = "<a class='list-group-item'><h3 class='list-group-item historyListItem'>No more requests to show</h3></a>"
         }
         $("#requestList").append(listItems);
-    }else{
+    } else {
         $("#requestList").html(listItems);
     }
 }
@@ -167,17 +168,17 @@ function createMyRequestList(data, append) {
     for (var i = 0; i < array.length; i++) {
         var requestId = array[i].requestID;
         var date = new Date(array[i].creationDate).toLocaleDateString();
-        listItems += listItemGenerator("request.html?id=" + requestId, requestId, "requestListItem", "Post Title: " + titles[requestId],"Service: " + data.serviceTitles[requestId], array[i].status.replace("_", " "), "Date: " + date);
+        listItems += listItemGenerator("request.html?id=" + requestId, requestId, "requestListItem", "Post Title: " + titles[requestId], "Service: " + data.serviceTitles[requestId], array[i].status.replace("_", " "), "Date: " + date);
 
     }
 
     loadNew = false;
-    if(append){
-        if(noOfPages === currentPage){
+    if (append) {
+        if (noOfPages === currentPage) {
             listItems = "<h3 class='list-group-item'>No more requests to show</h3>"
         }
         $("#historyList").append(listItems);
-    }else{
+    } else {
         $("#historyList").html(listItems);
     }
 }
