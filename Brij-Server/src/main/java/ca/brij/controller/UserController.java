@@ -63,11 +63,19 @@ public class UserController {
 				userEntity.setPassword(encryptedPassword);
 				UserRole userRole = new UserRole(userEntity, "ROLE_USER");
 				userEntity.getUserRole().add(userRole);
-				userDao.save(userEntity);
-				UserDetails userDetails = userDetailsService.loadUserByUsername(userEntity.getUsername());
-				UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails,
-						encryptedPassword, userDetails.getAuthorities());
-				SecurityContextHolder.getContext().setAuthentication(auth);
+				if (userDao.findByUserName(userEntity.getUsername()) != null) { 
+					exceptions += "Username already exists";
+					throw new Exception(ConstantsUtil.EXCEPTION_FLAG + exceptions);
+				} else if (userDao.findByEmail(userEntity.getEmail()) != null){
+					exceptions += "Email already exists";
+					throw new Exception(ConstantsUtil.EXCEPTION_FLAG + exceptions);
+				} else {
+					userDao.save(userEntity);
+					UserDetails userDetails = userDetailsService.loadUserByUsername(userEntity.getUsername());
+					UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails,
+							encryptedPassword, userDetails.getAuthorities());
+					SecurityContextHolder.getContext().setAuthentication(auth);
+				}
 			} else {
 				throw new Exception(ConstantsUtil.EXCEPTION_FLAG + exceptions);
 			}
