@@ -3,6 +3,7 @@
  */
 //variable that tells if is saving user account
 var isSavingUser = false;
+var userSaved = false;
 $(function () {
 
     loadInfo(refreshForm)
@@ -17,17 +18,26 @@ $(function () {
     $("#btnEdit").click(function (e) {
         e.preventDefault();
         e.stopPropagation();
-        isSavingUser = !isSavingUser;
-        $("#userForm .userInput").attr("disabled", !isSavingUser);
+        if ($("#btnEdit").html() === "Edit") {
+            isSavingUser = !isSavingUser;
+            $("#userForm .userInput").attr("disabled", !isSavingUser);
+        }
+        if ($("#btnEdit").html() === "Save" && isSavingUser) {
+            saveUser()
+            if (userSaved) {
+                $("#btnEdit").html("Edit");
+                $("#primaryButtons #btnCancel").addClass("hide");
+                $("#btnUpdatePassword").addClass("hide");
+                isSavingUser = !isSavingUser;
+                $("#userForm .userInput").attr("disabled", !isSavingUser);
+            } else {
+                displayError("Unable to locate address");
+            }
+        }
         if (isSavingUser) {
             $("#btnEdit").html("Save");
             $("#primaryButtons #btnCancel").removeClass("hide");
             $("#btnUpdatePassword").removeClass("hide");
-        } else {
-            $("#btnEdit").html("Edit");
-            $("#primaryButtons #btnCancel").addClass("hide");
-            $("#btnUpdatePassword").addClass("hide");
-            saveUser();
         }
     });
 
@@ -44,6 +54,8 @@ $(function () {
 
         //change name
         $("#btnEdit").html("Edit");
+        
+        $("#errorDiv").remove();
         loadInfo(refreshForm)
     });
 
@@ -67,11 +79,10 @@ $(function () {
 
         if (isValid) {
             var url = UPDATE_PASSWORD;
-            url += "?password1="+password+"&password2="+rePassword;
-            makeRequest(url,GET,"","",passwordSaveComplete,null);
+            url += "?password1=" + password + "&password2=" + rePassword;
+            makeRequest(url, GET, "", "", passwordSaveComplete, null);
         } else {
-            alert(message);
-            return;
+            displayError(message);
         }
         $("#updatePasswordModal").modal("hide");
     });
@@ -88,8 +99,7 @@ $(function () {
     populateProvinces();
 });
 
-function passwordSaveComplete(){
-}
+function passwordSaveComplete() {}
 
 function populateProvinces() {
     $("#lstProvinces").html("");
@@ -167,9 +177,17 @@ function saveUser() {
             email: $("#userForm #email").val()
         };
 
-        makeRequest(UPDATE_USER, POST, JSON.stringify(updateUser), APPLICATION_JSON, null, null);
+        makeRequest(UPDATE_USER, POST, JSON.stringify(updateUser), APPLICATION_JSON, userSavedSuccessful, errorSavingUser);
     }
 
+}
+
+function userSavedSuccessful() {
+    userSaved = true;
+}
+
+function errorSavingUser() {
+    userSaved = false;
 }
 
 function displayError(message) {

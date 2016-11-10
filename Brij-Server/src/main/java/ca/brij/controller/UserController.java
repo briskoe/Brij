@@ -98,6 +98,9 @@ public class UserController {
 			if (location != null) {
 				updatedUser.setLatitude(location.lat);
 				updatedUser.setLongitude(location.lng);
+			} else {
+				logger.info("Unable to save user: " + principal.getName() + " due to invalid address");
+				throw new NullPointerException("Unable to Find Address");
 			}
 
 			User originalUser = userDao.findByUserName(principal.getName());
