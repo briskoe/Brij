@@ -203,12 +203,17 @@ function populateRequest(data) {
         }
     }else{
         aboutUser = "About the requester"
+        
         if(status === "in_progress"){
             $(".inProgress").removeClass("hide");
             $(".inPending").addClass("hide");
-
+        }else if(status === "denied"){
+            $(".inPending").addClass("hide");
+            $(".inProgress").addClass("hide");
         }else if(status === "pending"){
             $(".inPending").removeClass("hide");
+            $(".inProgress").addClass("hide");
+        }else if(status === "complete"){
             $(".inProgress").addClass("hide");
         } 
             

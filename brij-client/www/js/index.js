@@ -120,6 +120,15 @@ $(function () {
         e.stopPropagation();
         window.location.href = "createPost.html";
     });
+    
+    $(document).click(function (event) {
+        var clickover = $(event.target);
+        var _opened = $("#myNavbar").hasClass("collapse in");
+
+        if (_opened === true && !clickover.hasClass("navbar-toggle")) {
+            $("#btnOpenMenu").click();
+        }
+    });
 });
 
 function createTwoButtonForm() {
@@ -271,6 +280,14 @@ function initializeMainMenu() {
         "<li class='menuLinks'><a id='logoutMenuItem'>Logout</a></li>";
     $("#navbar").html(navbar);
 
+    
+    $("#notificationBtn").click(function(){
+        var _opened = $("#myNavbar").hasClass("collapse in");
+
+        if (_opened === true ) {
+            $("#btnOpenMenu").click();
+        }
+    })
     $("#logoutMenuItem").click(function (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -315,6 +332,8 @@ function initializeMainMenu() {
 function notificationRequest() {
     makeRequest(GET_USER_NOTIFICATION, GET, "", "", fillNotifications, null);
 }
+
+
 
 function fillNotifications(data) {
     global_notifications = data;

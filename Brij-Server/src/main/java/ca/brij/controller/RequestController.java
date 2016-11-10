@@ -103,7 +103,7 @@ public class RequestController {
 			if (status.equals(ConstantsUtil.COMPLETE)) {
 				typeOfNotification = NotificationSenderUtil.REQUEST_COMPLETE;
 			}
-			if (principal.getName().equals(request.getUserID())) {
+			if (principal.getName().equalsIgnoreCase(request.getUserID())) {
 				Posting post = daoHelper.getPostingDao().getPostingById(request.getPostID());
 				if (post != null) {
 					//this is done so the post owner does not rate its own post
@@ -188,8 +188,8 @@ public class RequestController {
 			post = daoHelper.getPostingDao().getPostingById(request.getPostID());
 			serviceName = daoHelper.getServiceDao().getServiceById(post.getServID()).getServiceName();
 			requester = daoHelper.getUserDao().findByUserName(request.getUserID());
-			isOwner = requester.getUsername().equals(principal.getName());
-			if (!isOwner && !post.getUser().getUsername().equals(principal.getName())) {
+			isOwner = requester.getUsername().equalsIgnoreCase(principal.getName());
+			if (!isOwner && !post.getUser().getUsername().equalsIgnoreCase(principal.getName())) {
 				throw new Exception("Error - user not allowed");
 			}
 		} catch (Exception e) {

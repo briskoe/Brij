@@ -1,3 +1,32 @@
+var IS_REQUEST_MESSAGE_FOR_OTHERS = "This post is requesting for help";
+var IS_POSTING_MESSAGE_FOR_OTHERS = "This post is offering a service";
+var USERNAME_ERROR = "Your username must be between 5 and 20 characters long";
+var PASSWORD_ERROR = "Your password must be between 5 and 15 characters long";
+var PASSWORD_UNMATCHED = "Your password does not match the password entered above";
+var EMAIL_ERROR = "Your email does not match the required length";
+var FIRSTNAME_ERROR = "Your first name must be between 2 and 30 character";
+var LASTNAME_ERROR = "Your last name must be between 2 and 30 character";
+var PHONENUMBER_ERROR = "Your phone number must be 10 digits long";
+var ADDRESS_ERROR = "You must enter an address";
+var CITY_ERROR = "You must enter a city";
+var PROVINCE_ERROR = "You must enter a province";
+var MINIMUM_USERNAME_LENGTH = 5;
+var MAXIMUM_USERNAME_LENGTH = 20;
+var MINIMUM_PASSWORD_LENGTH = 5;
+var MAXIMUM_PASSWORD_LENGTH = 15;
+var MINIMUM_EMAIL_LENGTH = 6;
+var MAXIMUM_EMAIL_LENGTH = 30;
+var MINIMUM_FIRSTNAME_LENGTH = 2;
+var MAXIMUM_FIRSTNAME_LENGTH = 30;
+var MINIMUM_LASTNAME_LENGTH = 2;
+var MAXIMUM_LASTNAME_LENGTH = 30;
+var PHONE_NUMBER_LENGTH = 10;
+//var MAXIMUM_PHONE_LENGTH = 12;
+var ADDRESS = true;
+var MINIMUM_CITY_LENGTH = 3;
+var MAXIMUM_CITY_LENGTH = 25;
+var PROVINCE_LENGTH = 2;
+
 var PROVINCES = {
 	ON : "Ontario",
 	QC : "Quebec",
@@ -52,29 +81,21 @@ $(function() {
 		e.preventDefault();
 		$("#wrapper").toggleClass("active");
 	});
-
+	$(".homeDiv").click(function(e) {
+		window.location = HOME;
+	});
 	$(".usersDiv").click(function(e) {
-		window.location = ADMIN_USER_PAGE;
-	});
-	$(".postsDiv").click(function(e) {
-		window.location = ADMIN_POST_PAGE;
-
-	});
-	$(".serviceDiv").click(function(e) {
-		window.location = ADMIN_SERVICES_PAGE;
+		window.location = ACCOUNT_DETAILS_PAGE;
 	});
 	$(".webPortalDiv").click(function(e) {
-
+		window.location = WEB_PORTAL_PAGE;
 	});
 	$(".ticketDiv").click(function(e) {
-		window.location = ADMIN_TICKET_PAGE;
-	});
-	$(".reportDiv").click(function(e) {
-		window.location = ADMIN_REPORT_PAGE;
+		window.location = USER_TICKET_PAGE;
 	});
 	$(".logoutDiv").click(function(e) {
 		logout(function(e) {
-			// window.location = "index.html";
+			window.location = "/";
 		}, null);
 	});
 
@@ -88,12 +109,10 @@ function makeMenu() {
 			+ "</ul>";
 
 	div += "<ul class='sidebar-nav' id='sidebar'> "
-			+ "<li><a href='#' class='menuItem usersDiv' id='menuBtnUser'> User <span class='glyphicon glyphicon-user'></span></a></li>"
-			+ "<li><a href='#' class='menuItem postsDiv' id='menuBtnPost'> Postings <span class='glyphicon glyphicon-book'></span></a></li>"
-			+ "<li><a href='#' class='menuItem serviceDiv' id='menuBtnService'> Services <span class='glyphicon glyphicon-globe'></span></a></li>"
+			+ "<li><a href='#' class='menuItem homeDiv' id='menuBtnUser'> Home <span class='glyphicon glyphicon-home'></span></a></li>"
+			+ "<li><a href='#' class='menuItem usersDiv' id='menuBtnUser'> Edit account <span class='glyphicon glyphicon-user'></span></a></li>"
 			+ "<li><a href='#' class='menuItem webPortalDiv' id='menuBtnPortal'> Web Portal <span class='glyphicon glyphicon-th-large'></span></a></li>"
 			+ "<li><a href='#' class='menuItem ticketDiv' id='menuBtnTicket'> Tickets <span class='glyphicon glyphicon-th-list'></span></a></li>"
-			+ "<li><a href='#' class='menuItem reportDiv' id='menuBtnReport'> Reports <span class='glyphicon glyphicon-th-signal'></span></a></li>"
 			+ "<li><a href='#' class='menuItem logoutDiv' id='menuBtnLogout'> Log-out <span class='glyphicon glyphicon-log-out'></span></a></li>"
 			+ "</ul> </div>";
 
@@ -101,7 +120,7 @@ function makeMenu() {
 			+ "<div class='container-fluid'>"
 			+ "<div class='navbar-header'>"
 			+ "<a href='#' class='glyphicon glyphicon-user navbar-toggle' id='btnUserAccount'> "
-			+ "<span id='userName'>Admin</span> </a> "
+			+ "<span id='userName'>User</span> </a> "
 			+ "</div> </div> </div> </nav>";
 	return div;
 }
