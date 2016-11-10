@@ -21,7 +21,7 @@ var GET_CONVERSATION_BY_REQUEST = "/conversation/getByRequest?id=:id";
 var SAVE_MESSAGE = "/conversation/saveMessage?id=:id"
 var GET_TICKET_BY_ID = "/ticket/findById";
 var GET_TICKET_BY_TYPE = "/ticket/byType";
-var GET_TICKET_USER = "ticket/findByUser";
+var GET_TICKET_USER = "/ticket/findByUser";
 var UPDATE_STATUS_TICKET = "/ticket/updateStatus";
 var SAVE_TICKET_MESSAGE = "/ticket/saveMessage";
 var SAVE_TICKET = "/ticket/save";
@@ -55,7 +55,10 @@ var ADMIN_POST_PAGE = SERVER_URL + "/admin/postPage";
 var ADMIN_SERVICES_PAGE = SERVER_URL + "/admin/servicePage";
 var ADMIN_TICKET_PAGE = SERVER_URL + "/admin/ticketPage";
 var ADMIN_REPORT_PAGE = SERVER_URL + "/admin/reportPage";
-
+var WEB_PORTAL_PAGE = SERVER_URL + "/";
+var ACCOUNT_DETAILS_PAGE = SERVER_URL + "/userPortal/accountDetail";
+var USER_PORTAL_PAGE = SERVER_URL + "/userPortal/home";
+var USER_TICKET_PAGE = SERVER_URL + "/userPortal/ticketPage";
 $(function(){
 	 SERVER_URL =  "http://" + $(location).attr('host');
 	 HOME = SERVER_URL + "/homePage";

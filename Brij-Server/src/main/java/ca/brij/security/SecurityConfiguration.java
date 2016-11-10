@@ -69,6 +69,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		//TODO change admin to have role admin instead
 		http.httpBasic().and().authorizeRequests()
 				.antMatchers("/").permitAll()
+				.antMatchers(HttpMethod.GET, "/webPortal/**").permitAll()
+				.antMatchers(HttpMethod.GET, "/download/**").permitAll()
 				.antMatchers("/js/**").permitAll()
 				.antMatchers("/img/**").permitAll()
 				.antMatchers("/css/**").permitAll()

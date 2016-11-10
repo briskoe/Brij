@@ -85,7 +85,7 @@ public class ConversationController {
 			daoHelper.getConversationDao().save(conv);
 			String user = "";
 			for(String u: conv.getUsers()){
-				if(!u.equals(principal.getName())){
+				if(!u.equalsIgnoreCase(principal.getName())){
 					user = u;
 				}
 			}

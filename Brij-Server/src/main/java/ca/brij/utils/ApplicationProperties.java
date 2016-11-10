@@ -12,6 +12,10 @@ public class ApplicationProperties {
 	@Value("${brij.serverURL}")
 	private String serverURL;
 	
+	@Value("${Brij.desktopURL}")
+	private String desktopURL;
+	
+	
 	public String getGoogleKey() {
 		return googleKey;
 	}
@@ -23,5 +27,10 @@ public class ApplicationProperties {
 	public String getServerURL() {
 		return serverURL;
 	}
+
+	public String getDesktopURL() {
+		return desktopURL;
+	}
+	
 
 }
