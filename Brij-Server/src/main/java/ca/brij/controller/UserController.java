@@ -24,6 +24,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.google.maps.model.LatLng;
 
+import ca.brij.bean.posting.Posting;
+import ca.brij.bean.request.Request;
+import ca.brij.bean.service.Service;
 import ca.brij.bean.user.MyUserDetailsService;
 import ca.brij.bean.user.User;
 import ca.brij.bean.user.UserRole;
@@ -95,6 +98,9 @@ public class UserController {
 			if (location != null) {
 				updatedUser.setLatitude(location.lat);
 				updatedUser.setLongitude(location.lng);
+			} else {
+				logger.info("Unable to save user: " + principal.getName() + " due to invalid address");
+				throw new Exception(ConstantsUtil.EXCEPTION_FLAG + "Error locating address");
 			}
 
 			User originalUser = userDao.findByUserName(principal.getName());
@@ -334,7 +340,33 @@ public class UserController {
 			logger.error("Error updating password with resetID: " + resetid + " message: " + ex.getMessage());
 			throw ex;
 		}
-		//logger.error("Updating password with resetID: " + resetID);
 		return "Success";
+	}
+	
+	/**
+	 * Update Password
+	 */
+	@RequestMapping(value = "/user/updatepassword", method = RequestMethod.GET)
+	@ResponseBody
+	public String updatePassword(Principal principal, String password1, String password2)  throws Exception{
+		try {
+			if (password1.equals(password2)) {
+				User user = userDao.findByUserName(principal.getName());
+								
+				if (user != null) { 
+					String encryptedPassword = new BCryptPasswordEncoder().encode(password1);
+					user.setPassword(encryptedPassword);
+					user.setResetID(null); //left in code because if user resets their password within account, they will no longer need this resetID to be active.
+					userDao.save(user);
+				} else {
+					return "Unable to find user";
+				}
+			}
+		} catch (Exception ex) {
+			logger.error("Error updating password for: " + principal.getName() + " message: " + ex.getMessage());
+			throw ex;
+		}
+		return "Success";
+			
 	}
 }

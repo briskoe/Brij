@@ -481,6 +481,31 @@ public class PostingController {
 		return "Success";
 	}
 
+	@RequestMapping(value = "/posting/delete", method = RequestMethod.GET)
+	@ResponseBody
+	public String deletePost(int id, Principal principal) throws Exception {
+		try {
+			User user = daoHelper.getUserDao().findByUserName(principal.getName());
+			Posting post = daoHelper.getPostingDao().getPostingById(id);
+			logger.info("saving post(" + post.getTitle() + ") made by: " + principal.getName());
+
+			if (user == post.getUser()) { //user created the post
+				post.setStatus("closed");
+
+				daoHelper.getPostingDao().save(post);
+			} else {
+				throw new Exception(ConstantsUtil.EXCEPTION_FLAG + "Error deleting post");
+			}
+				
+		} catch (Exception ex) {
+			logger.error("error deleting post made by: " + principal.getName() + " message "
+					+ ex.getMessage());
+			throw new Exception(ConstantsUtil.EXCEPTION_FLAG + "Error deleting post");
+		}
+		logger.error("post successfully deleted made by: " + principal.getName());
+		return "Success";
+	}
+	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 }

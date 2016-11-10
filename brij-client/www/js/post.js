@@ -8,20 +8,20 @@ var filterUrl = GET_REQUESTS_BY_POST_ID;
 var loadNew = false;
 
 $(function () {
-    
-    $('#requestList').scroll(function(e){
+
+    $('#requestList').scroll(function (e) {
         e.preventDefault();
         e.stopPropagation();
-        if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight && loadNew) {
+        if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight && loadNew) {
             var url = filterUrl;
-            if(url.indexOf("?") === -1){
+            if (url.indexOf("?") === -1) {
                 url += "?";
-            }else{
+            } else {
                 url += "&";
             }
-            url += "pageNo="+ requestCurrentPage;
-            if(requestCurrentPage !== requestTotalPage){
-                makeRequest(url, GET, "", "", function(data){
+            url += "pageNo=" + requestCurrentPage;
+            if (requestCurrentPage !== requestTotalPage) {
+                makeRequest(url, GET, "", "", function (data) {
                     createRequestList(data, true);
                 }, null);
             }
@@ -29,7 +29,7 @@ $(function () {
         loadNew = true;
 
     })
-    
+
     $("#btnBack").click(function (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -52,9 +52,11 @@ $(function () {
             savePost();
             $("#btnEdit").html("Edit");
             $("#btnCancel").addClass("hide");
+            $("#btnDelete").addClass("hide");
         } else {
             $("#btnEdit").html("Save");
             $("#btnCancel").removeClass("hide");
+            $("#btnDelete").removeClass("hide");
         }
     });
 
@@ -67,31 +69,65 @@ $(function () {
         if (isDisabled) {
             $("#btnEdit").html("Edit");
             $("#btnCancel").addClass("hide");
+            $("#btnDelete").addClass("hide");
         } else {
             $("#btnEdit").html("Save");
             $("#btnCancel").removeClass("hide");
+            $("#btnDelete").removeClass("hide");
         }
     });
 
-    $("#reportBtn").click(function(e){
+    $("#btnDelete").click(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $("#confirmDelete").modal("show");
+
+    });
+
+    $("#btnConfirmDelete").click(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        deletePost();
+    });
+
+    $("#reportBtn").click(function (e) {
         $("#txaMessage").val("");
         $("#lstType").val("post");
         $("#lstType").attr("disabled", true);
         additionalTicketComment += "Post: " + postID;
-        $("#reportModal").modal(); 
+        $("#reportModal").modal();
     });
 
-    $("#btnShowRequest").click(function(e){
+    $("#btnShowRequest").click(function (e) {
         var url = GET_REQUESTS_BY_POST_ID;
         url += "?postID=" + postID;
         filterUrl = url;
-        makeRequest(url, GET, "", "", function(data){
-            createRequestList(data, false)   
-        }, null);   
+        makeRequest(url, GET, "", "", function (data) {
+            createRequestList(data, false)
+        }, null);
     });
     getPosts($.urlParam("id"));
 
 });
+
+function deletePost() {
+    var url = DELETE_POST;
+    url += "?id=" + postID;
+    makeRequest(url, GET, "", "", savePostSuccessful, errorDeletingPost);
+}
+
+function savePostSuccessful() {
+    window.location = "postings.html";
+}
+
+function errorDeletingPost(error) {
+    var errorMsg = error.responseJSON.message.replace(";", "</br>");
+    if (errorMsg.indexOf("brij_exception") !== -1) {
+        errorMsg = errorMsg.replace("brij_exception", "");
+        displayErrorInModal(errorMsg);
+    }
+}
+
 
 function createRequestList(data, append) {
     var listItems = "";
@@ -102,25 +138,26 @@ function createRequestList(data, append) {
     for (var i = 0; i < array.length; i++) {
         var status = array[i].status.replace("_", " ");
         if (i % 2 === 0) {
-            listItems += "<a href='request.html?id=" + array[i].requestID + "' class='list-group-item historyListItem' id='" + array[i].requestID + "'>" + array[i].userID + "<span class='badge'>"+status+"</span></a>";
+            listItems += "<a href='request.html?id=" + array[i].requestID + "' class='list-group-item historyListItem' id='" + array[i].requestID + "'>" + array[i].userID + "<span class='badge'>" + status + "</span></a>";
         } else {
-            listItems += "<a href='request.html?id=" + array[i].requestID + "' class='list-group-item list-group-item-info historyListItem' id='" + array[i].requestID + "'>" + array[i].userID + "<span class='badge'>"+status+"</span></a>";
+            listItems += "<a href='request.html?id=" + array[i].requestID + "' class='list-group-item list-group-item-info historyListItem' id='" + array[i].requestID + "'>" + array[i].userID + "<span class='badge'>" + status + "</span></a>";
         }
     }
-    if(array.length === 0){
+    if (array.length === 0) {
         listItems = "<h3 class='list-group-item'>No request to show</h3>"
     }
     loadNew = false;
-    if(append){
-        if(requestCurrentPage === requestTotalPage){
-                listItems = "<h3 class='list-group-item'>No more requests to show</h3>"
+    if (append) {
+        if (requestCurrentPage === requestTotalPage) {
+            listItems = "<h3 class='list-group-item'>No more requests to show</h3>"
         }
 
-        $("#requestList").append(listItems);    
-    }else{
-        $("#requestList").html(listItems); 
+        $("#requestList").append(listItems);
+    } else {
+        $("#requestList").html(listItems);
     }
 }
+
 function savePost() {
     var updatePost = {
         id: postID,
@@ -134,41 +171,42 @@ function savePost() {
 
 
 function requestService() {
-        if (post.isPost) {
-            $("#formModal #title").html("You are requesting this service");
-        } else {
-            $("#formModal #title").html("You are offering to fulfill this request");
-        }
-        $("#btnSaveForm").html("Send");
-        $("#btnSaveForm").click(function(e){
-            if(clicked) return;
-            clicked= true;
-            e.preventDefault();
-            e.stopPropagation();
-                var newRequest = {
-                notes: $("#requestForm #notes").val(),
-                postID: postID
-            };
+    if (post.isPost) {
+        $("#formModal #title").html("You are requesting this service");
+    } else {
+        $("#formModal #title").html("You are offering to fulfill this request");
+    }
+    $("#btnSaveForm").html("Send");
+    $("#btnSaveForm").click(function (e) {
+        if (clicked) return;
+        clicked = true;
+        e.preventDefault();
+        e.stopPropagation();
+        var newRequest = {
+            notes: $("#requestForm #notes").val(),
+            postID: postID
+        };
 
-            makeRequest(CREATE_REQUEST, POST, JSON.stringify(newRequest), APPLICATION_JSON, function(data){
-                clicked = false;
-                $("#formModal").modal("hide");
-                getPosts(postID);
-                
-            }, savePostErrorHandler);
-        });
-    var requestForm = "<form>"+
+        makeRequest(CREATE_REQUEST, POST, JSON.stringify(newRequest), APPLICATION_JSON, function (data) {
+            clicked = false;
+            $("#formModal").modal("hide");
+            getPosts(postID);
+
+        }, savePostErrorHandler);
+    });
+    var requestForm = "<form>" +
         "<label for='txtRequestNotes'>Notes:</label>" +
         "<textarea id='txtRequestNotes' class='form-control'></textarea>" +
-        "</form>"        
+        "</form>"
     $("#formModal .modal-body").html(requestForm);
     $("txtRequestNotes").html("");
     $("#formModal").modal();
 }
-function savePostErrorHandler(error){
+
+function savePostErrorHandler(error) {
     $("#formModal").modal("hide");
     var errorMsg = error.responseJSON.message.replace(";", "</br>");
-    if(errorMsg.indexOf("brij_exception") !== -1){
+    if (errorMsg.indexOf("brij_exception") !== -1) {
 
         errorMsg = errorMsg.replace("brij_exception", "");
         displayError($("#postForm"), errorMsg);
@@ -185,7 +223,7 @@ function getPosts(id) {
     makeRequest(url, GET, "", "", populatePost, null);
 }
 
-function populateUserInfo(data){
+function populateUserInfo(data) {
     $("#username").html(data.username);
     $("#userForm #firstName").val(data.firstName);
     $("#userForm #lastName").val(data.lastName);
@@ -197,21 +235,21 @@ function populateUserInfo(data){
     $("#userForm #firstName").html();
 }
 
-function fillRating(ratings, avgRate){
+function fillRating(ratings, avgRate) {
     var noOfRatings = ratings.length;
     var starDiv = "";
-    for(var i = 0; i < 5; i++){
+    for (var i = 0; i < 5; i++) {
         var classToUse = "glyphicon ";
-        if(i < avgRate){
+        if (i < avgRate) {
             classToUse += "glyphicon-star";
-        }else{
+        } else {
             classToUse += "glyphicon-star-empty";
         }
-        starDiv += "<span class='"+classToUse+"'> </span>"
+        starDiv += "<span class='" + classToUse + "'> </span>"
     }
     $("#starDiv").html(starDiv);
     var wordUser = "users";
-    if(noOfRatings === 1){
+    if (noOfRatings === 1) {
         wordUser = "user";
     }
     $("#ratingInfo").html(avgRate + " out of 5 - " + noOfRatings + " " + wordUser);
@@ -236,29 +274,29 @@ function populatePost(data) {
         $("#btnRequest").html("Fulfill Request");
 
     }
-    
-    if(hasRequest){
+
+    if (hasRequest) {
         $("#btnRequest").html("View your request");
     }
     $("#btnRequest").click(function (e) {
         e.preventDefault();
         e.stopPropagation();
-        if(hasRequest){
+        if (hasRequest) {
             window.location = "request.html?id=" + data.requestID;
-        }else{
+        } else {
             requestService();
         }
     });
 
 
     $("#isPostDiv").html(messageInfo);
-    
+
     var isOwner = (data.isOwner);
-    if(isOwner){
+    if (isOwner) {
         $(".showOwner").removeClass("hide");
-    }else{
+    } else {
         $(".showUser").removeClass("hide");
     }
 
-    
+
 }
