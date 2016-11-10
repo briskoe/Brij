@@ -2,9 +2,34 @@ var postID;
 var isDisabled = true;
 var post;
 var clicked = false;
+var requestCurrentPage = 1;
+var requestTotalPage = 1;
+var filterUrl = GET_REQUESTS_BY_POST_ID;
+var loadNew = false;
+
 $(function () {
+    
+    $('#requestList').scroll(function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight && loadNew) {
+            var url = filterUrl;
+            if(url.indexOf("?") === -1){
+                url += "?";
+            }else{
+                url += "&";
+            }
+            url += "pageNo="+ requestCurrentPage;
+            if(requestCurrentPage !== requestTotalPage){
+                makeRequest(url, GET, "", "", function(data){
+                    createRequestList(data, true);
+                }, null);
+            }
+        }
+        loadNew = true;
 
-
+    })
+    
     $("#btnBack").click(function (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -59,27 +84,42 @@ $(function () {
     $("#btnShowRequest").click(function(e){
         var url = GET_REQUESTS_BY_POST_ID;
         url += "?postID=" + postID;
-        makeRequest(url, GET, "", "", createRequestList, null);   
+        filterUrl = url;
+        makeRequest(url, GET, "", "", function(data){
+            createRequestList(data, false)   
+        }, null);   
     });
     getPosts($.urlParam("id"));
 
 });
 
-function createRequestList(data) {
+function createRequestList(data, append) {
     var listItems = "";
-    var array = data;
-    for (var i = 0; i < array.length && i < 10; i++) {
+    var array = data.list;
+    requestCurrentPage = data.currentPage;
+    requestTotalPage = data.numberOfPages;
 
+    for (var i = 0; i < array.length; i++) {
+        var status = array[i].status.replace("_", " ");
         if (i % 2 === 0) {
-            listItems += "<a href='request.html?id=" + array[i].requestID + "' class='list-group-item historyListItem' id='" + array[i].requestID + "'>" + array[i].userID + "</a>";
+            listItems += "<a href='request.html?id=" + array[i].requestID + "' class='list-group-item historyListItem' id='" + array[i].requestID + "'>" + array[i].userID + "<span class='badge'>"+status+"</span></a>";
         } else {
-            listItems += "<a href='request.html?id=" + array[i].requestID + "' class='list-group-item list-group-item-info historyListItem' id='" + array[i].requestID + "'>" + array[i].userID + "</a>";
+            listItems += "<a href='request.html?id=" + array[i].requestID + "' class='list-group-item list-group-item-info historyListItem' id='" + array[i].requestID + "'>" + array[i].userID + "<span class='badge'>"+status+"</span></a>";
         }
     }
     if(array.length === 0){
         listItems = "<h3 class='list-group-item'>No request to show</h3>"
     }
-    $("#requestList").html(listItems);
+    loadNew = false;
+    if(append){
+        if(requestCurrentPage === requestTotalPage){
+                listItems = "<h3 class='list-group-item'>No more requests to show</h3>"
+        }
+
+        $("#requestList").append(listItems);    
+    }else{
+        $("#requestList").html(listItems); 
+    }
 }
 function savePost() {
     var updatePost = {

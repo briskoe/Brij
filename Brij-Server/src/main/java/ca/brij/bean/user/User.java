@@ -21,6 +21,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.maps.model.LatLng;
 
 import ca.brij.utils.ConstantsUtil;
@@ -145,11 +146,11 @@ public class User implements Serializable {
 	public void setUsername(String name) {
 		this.username = name;
 	}
-	
+	@JsonIgnore
 	public String getPassword() {
 		return password;
 	}
-
+	@JsonProperty
 	public void setPassword(String password) {
 		this.password = password;
 	}

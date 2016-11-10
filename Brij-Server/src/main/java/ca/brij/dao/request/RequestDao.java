@@ -20,9 +20,9 @@ public interface RequestDao  extends JpaRepository<Request, Long> {
 	
 	public ArrayList<Request> findByUser(@Param("userID") String userID, Pageable pageable);
 	
-	public ArrayList<Request> findByPost(@Param("postID") int postID);
+	public ArrayList<Request> findByPost(@Param("postID") int postID,  Pageable pageable);
 	
-	public Request findByUserAndPost(@Param("userID") String userID, @Param("postID") int postID);
+	public ArrayList<Request> findByUserAndPost(@Param("userID") String userID, @Param("postID") int postID);
 
 	public int getCountForUser(@Param("userID") String userID);
 
