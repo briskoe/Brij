@@ -80,7 +80,7 @@ public class PostingController {
 			rate.setUsername(principal.getName());
 			boolean isNew = true;
 			for(Rating rating : post.getRatings()){
-				if(rating.getUsername().equals(rate.getUsername())){
+				if(rating.getUsername().equalsIgnoreCase(rate.getUsername())){
 					rating.setDate(rate.getDate());
 					rating.setValue(rate.getValue());
 					isNew = false;
@@ -205,7 +205,7 @@ public class PostingController {
 			Service service = daoHelper.getServiceDao().getServiceById(posting.getServID());
 			serviceName = service.getServiceName();
 			avgRate = daoHelper.getPostingDao().getAvgRating(id);
-			isOwner = posting.getUser().getUsername().equals(principal.getName());
+			isOwner = posting.getUser().getUsername().equalsIgnoreCase(principal.getName());
 			ArrayList<Request>requests = daoHelper.getRequestDao().findByUserAndPost(principal.getName(), posting.getId());
 			if(requests.size() >0){
 				oldRequestByUser = requests.get(0);
@@ -431,7 +431,7 @@ public class PostingController {
 			Service service = daoHelper.getServiceDao().getServiceByIdAdmin(posting.getServID());
 			String serviceName = service.getServiceName();
 
-			isOwner = posting.getUser().getUsername().equals(principal.getName());
+			isOwner = posting.getUser().getUsername().equalsIgnoreCase(principal.getName());
 
 			map.put("serviceName", serviceName);
 

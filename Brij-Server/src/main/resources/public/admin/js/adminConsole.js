@@ -66,7 +66,7 @@ $(function() {
 		window.location = ADMIN_SERVICES_PAGE;
 	});
 	$(".webPortalDiv").click(function(e) {
-
+		window.location = WEB_PORTAL_PAGE;
 	});
 	$(".ticketDiv").click(function(e) {
 		window.location = ADMIN_TICKET_PAGE;
@@ -74,9 +74,13 @@ $(function() {
 	$(".reportDiv").click(function(e) {
 		window.location = ADMIN_REPORT_PAGE;
 	});
+	$(".userPortalDiv").click(function(e) {
+		window.location = USER_PORTAL_PAGE;
+	});
+	
 	$(".logoutDiv").click(function(e) {
 		logout(function(e) {
-			// window.location = "index.html";
+			window.location = "/";
 		}, null);
 	});
 	setupScrollable();
@@ -105,6 +109,7 @@ function makeMenu() {
 			+ "<li><a href='#' class='menuItem usersDiv' id='menuBtnUser'> User <span class='glyphicon glyphicon-user'></span></a></li>"
 			+ "<li><a href='#' class='menuItem postsDiv' id='menuBtnPost'> Postings <span class='glyphicon glyphicon-book'></span></a></li>"
 			+ "<li><a href='#' class='menuItem serviceDiv' id='menuBtnService'> Services <span class='glyphicon glyphicon-globe'></span></a></li>"
+			+ "<li><a href='#' class='menuItem userPortalDiv' id='menuBtnPortal'> User Portal <span class='glyphicon glyphicon-th-large'></span></a></li>"
 			+ "<li><a href='#' class='menuItem webPortalDiv' id='menuBtnPortal'> Web Portal <span class='glyphicon glyphicon-th-large'></span></a></li>"
 			+ "<li><a href='#' class='menuItem ticketDiv' id='menuBtnTicket'> Tickets <span class='glyphicon glyphicon-th-list'></span></a></li>"
 			+ "<li><a href='#' class='menuItem reportDiv' id='menuBtnReport'> Reports <span class='glyphicon glyphicon-signal'></span></a></li>"
