@@ -26,6 +26,7 @@ var GET_POSTINGS_LIKE = "/posting/like";
 var CHANGE_REQUEST_STATUS = "/request/changeStatus";
 var RATE_POST = "/posting/rate";
 var FORGOT_EMAIL = "/user/forgotpassword";
+var UPDATE_PASSWORD = "/user/updatepassword";
 
 //Request Types
 var GET = "GET";

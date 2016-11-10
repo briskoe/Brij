@@ -7,6 +7,13 @@ $(function () {
 
     loadInfo(refreshForm)
 
+    $("#btnUpdatePassword").click(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        $("#updatePasswordModal").modal("show");
+    });
+
     $("#btnEdit").click(function (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -14,15 +21,17 @@ $(function () {
         $("#userForm .userInput").attr("disabled", !isSavingUser);
         if (isSavingUser) {
             $("#btnEdit").html("Save");
-            $("#btnCancel").removeClass("hide");
+            $("#primaryButtons #btnCancel").removeClass("hide");
+            $("#btnUpdatePassword").removeClass("hide");
         } else {
             $("#btnEdit").html("Edit");
-            $("#btnCancel").addClass("hide");
+            $("#primaryButtons #btnCancel").addClass("hide");
+            $("#btnUpdatePassword").addClass("hide");
             saveUser();
         }
     });
 
-    $("#btnCancel").click(function (e) {
+    $("#primaryButtons #btnCancel").click(function (e) {
         e.preventDefault();
         e.stopPropagation();
         //when user clicks cancel, save changes to edit
@@ -30,15 +39,57 @@ $(function () {
         $("#userForm .userInput").attr("disabled", true);
 
         //hiding button
-        $("#btnCancel").addClass("hide");
+        $("#primaryButtons #btnCancel").addClass("hide");
+        $("#btnUpdatePassword").addClass("hide");
 
         //change name
         $("#btnEdit").html("Edit");
         loadInfo(refreshForm)
     });
 
+    $("#updatePasswordModal #btnSave").click(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var password = $("#updatePasswordModal #password1").val();
+        var rePassword = $("#updatePasswordModal #password2").val();
+        var message = "";
+        var isValid = false;
+
+        if (password === rePassword) {
+            if (password.length >= MINIMUM_PASSWORD_LENGTH && password.length <= MAXIMUM_PASSWORD_LENGTH) {
+                isValid = true;
+            } else {
+                message += PASSWORD_ERROR + "</br>";
+            }
+        } else {
+            message += PASSWORD_UNMATCHED + "</br>";
+        }
+
+        if (isValid) {
+            var url = UPDATE_PASSWORD;
+            url += "?password1="+password+"&password2="+rePassword;
+            makeRequest(url,GET,"","",passwordSaveComplete,null);
+        } else {
+            alert(message);
+            return;
+        }
+        $("#updatePasswordModal").modal("hide");
+    });
+
+    $("#updatePasswordModal #btnCancel").click(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $("#updatePasswordModal #password1").val("");
+        $("#updatePasswordModal #password2").val("");
+        $("#updatePasswordModal").modal("hide");
+
+    });
+
     populateProvinces();
 });
+
+function passwordSaveComplete(){
+}
 
 function populateProvinces() {
     $("#lstProvinces").html("");
@@ -71,7 +122,7 @@ function validUserDetails() {
         message += LASTNAME_ERROR + "</br>";
     }
 
-    if (phonenumber.length !== PHONE_NUMBER_LENGTH ) {
+    if (phonenumber.length !== PHONE_NUMBER_LENGTH) {
         isValid = false;
         message += PHONENUMBER_ERROR + "</br>";
     }
@@ -90,7 +141,7 @@ function validUserDetails() {
         isValid = false;
         message += PROVINCE_ERROR + "</br>";
     }
-    
+
     if (email.length < MINIMUM_EMAIL_LENGTH || email.length > MAXIMUM_EMAIL_LENGTH) {
         isValid = false;
         message += EMAIL_ERROR + "</br>";
@@ -103,10 +154,10 @@ function validUserDetails() {
 }
 
 function saveUser() {
-    
-    if(validUserDetails()){
+
+    if (validUserDetails()) {
         $("#errorDiv").remove();
-            var updateUser = {
+        var updateUser = {
             firstName: $("#userForm #firstName").val(),
             lastName: $("#userForm #lastName").val(),
             phoneNumber: $("#userForm #phoneNumber").val(),
@@ -149,7 +200,7 @@ function recoverStateForm() {
 
 function refreshForm(data) {
     var province = data.province;
-    if(!province ){
+    if (!province) {
         province = "ON";
     }
     $("#username").html(data.username);
