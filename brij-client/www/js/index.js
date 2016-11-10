@@ -113,7 +113,7 @@ $(function () {
     setupSettingModal();
     setupScrollable();
     setupReportModal();
-    createTwoButtonForm()
+    createTwoButtonForm();
 
     $(".navbar #createPost").click(function (e) {
         e.preventDefault();
@@ -131,8 +131,8 @@ $(function () {
     });
 });
 
-function createTwoButtonForm(){
-        var modal = "<div class='container' ><div id='formModal' class='modal fade' role='dialog'>" +
+function createTwoButtonForm() {
+    var modal = "<div class='container' ><div id='formModal' class='modal fade' role='dialog'>" +
         "<div class='modal-dialog'>" +
         "<div class='modal-content'> <div class='modal-header'>" +
         "<h2 id='title'></h2> </div>" +
@@ -320,7 +320,7 @@ function initializeMainMenu() {
         $("#navbar").removeClass("in");
     });
 
-    $("#btnDonate").click(function(e){
+    $("#btnDonate").click(function (e) {
         e.preventDefault();
         e.stopPropagation();
         donateModal();
@@ -353,9 +353,9 @@ function fillNotifications(data) {
             var notificationId = notifications[i].id;
             if (notifications[i].type === "request") {
                 href = "request.html?id=" + notifications[i].targetID;
-            } else if(notifications[i].type === "requestComplete"){
+            } else if (notifications[i].type === "requestComplete") {
                 href = "request.html?id=" + notifications[i].targetID + "&openRate=true";
-            }else if (notifications[i].type === "conversation") {
+            } else if (notifications[i].type === "conversation") {
                 href = "request.html?id=" + notifications[i].targetID + "&openConvo=true";
             }
             navbar += "<li class='dropdown-item " + classCss + "'><a id='notification_" + notificationId + "' onclick='return notificationOnClick(this)' href='" + href + "' class='" + classCss + "'> " + notifications[i].description + "</a></li>";
@@ -442,24 +442,26 @@ var loading = {
 };
 
 var errorAlert = {
-    show: function(msg){
-         $("<div id='errorDiv'><h3>"+msg+"</h3></div>")
-            .css({ display: "block", 
-                opacity: 0.90, 
+    show: function (msg) {
+        $("<div id='errorDiv'><h3>" + msg + "</h3></div>")
+            .css({
+                display: "block",
+                opacity: 0.90,
                 position: "fixed",
                 padding: "7px",
                 "text-align": "center",
-                  background:"black",
-                  color:"white",
+                background: "black",
+                color: "white",
                 width: "270px",
-                left: ($(window).width() - 284)/2,
-                top: 0 })
-            .appendTo( $("body") ).delay( 1500 );
+                left: ($(window).width() - 284) / 2,
+                top: 0
+            })
+            .appendTo($("body")).delay(1500);
     },
-    end: function(){
+    end: function () {
         $("#toastID").hide();
     }
-      
+
 };
 
 function donateModal() {
@@ -479,7 +481,7 @@ function donateModal() {
         '</form>' +
         "</div></div> </div>" +
         "</div> </div></center>";
-    
+
     $("body").append(modal);
 }
 
@@ -489,8 +491,8 @@ function listItemGenerator(href, id, customClass, heading, body, badge1, body2) 
         href = "#";
     }
     li += '<a href="' + href + '" id="' + id + '" class="list-group-item list-group-item-action ' + customClass + '"><span class="badge">' + badge1 + '</span>' +
-    '<h4 class="list-group-item-heading">' + heading + '</h4>' +
-    '<p class="list-group-item-text">' + body + '</p>' + '<p class="list-group-item-text">' + body2 + '</p>'
+        '<h4 class="list-group-item-heading">' + heading + '</h4>' +
+        '<p class="list-group-item-text">' + body + '</p>' + '<p class="list-group-item-text">' + body2 + '</p>'
     '</a>';
     return li;
 }
