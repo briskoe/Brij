@@ -279,9 +279,9 @@ function initializeMainMenu() {
     var navbar = "" +
         "<li class='menuLinks'><a href='postings.html'>Postings</a></li>" +
         "<li class='menuLinks'><a href='accountDetails.html'>Account Details</a></li>" +
-        "<li class='menuLinks'><a href='history.html'>History</a></li>" +
-        "<li class='menuLinks'><a href='#' id='btnReport' >Report a problem </a></li>" +
-        "<li class='menuLinks'><a href='#' id='btnSetting' >Settings </a></li>" +
+        "<li class='menuLinks'><a href='history.html'>Account History</a></li>" +
+        "<li class='menuLinks'><a href='#' id='btnReport' >Report a Problem </a></li>" +
+        "<li class='menuLinks'><a href='#' id='btnSetting' >Distance Settings </a></li>" +
         "<li class='menuLinks'><a href='#' id='btnDonate' >Donate </a></li>" +
         "<li class='menuLinks'><a id='logoutMenuItem'>Logout</a></li>";
     $("#navbar").html(navbar);
@@ -504,7 +504,7 @@ function donateModal() {
         '<button type="button" class="close" data-dismiss="modal">&times;</button>' +
         '<h4 class="modal-title">Donations</h4>' +
         '</div>' +
-        "<div class='modal-body'> " +
+        "<div class='modal-body'> Every little bit helps! :)<br /><br />" +
         '<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">' +
         '<input type="hidden" name="cmd" value="_s-xclick">' +
         '<input type="hidden" name="hosted_button_id" value="3FBBXRFYBYQSL">' +
