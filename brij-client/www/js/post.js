@@ -185,7 +185,7 @@ function requestService() {
         e.preventDefault();
         e.stopPropagation();
         var newRequest = {
-            notes: $("#requestForm #notes").val(),
+            notes: $("#txtRequestNotes").val(),
             postID: postID
         };
 
