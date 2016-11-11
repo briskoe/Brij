@@ -67,6 +67,11 @@ var reportTypes = {
     other: "other"
 };
 
+document.addEventListener("deviceready", onDeviceReady, false);
+function onDeviceReady() {
+    AndroidFullScreen.immersiveMode()
+}
+
 var app = {
     // Application Constructor
     initialize: function () {
