@@ -18,7 +18,6 @@ $(function () {
                     url += "&distance=" + search_km;
                 }
                 if(currentPage !== noOfPages){
-                    console.log(url);
                     makeRequest(url, GET, "", "", function(data){
                         createPostingList(data, true);
                     }, null);
@@ -45,6 +44,10 @@ $(function () {
             getAllPosts();
         }
     });
+    
+    $(document).on('onSettingChange', function(e, opts) {
+                getAllPosts();
+  });
 
     
 });

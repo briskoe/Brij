@@ -246,6 +246,10 @@ function setupSettingModal() {
             search_km = distanceKm;
             $("#txtKm").val(distanceKm);
             $("#settingModal").modal("hide");
+            
+              $(document).trigger('onSettingChange', {
+               
+              });
         }
     })
 }
