@@ -3,26 +3,36 @@
  */
 //variable that tells if is saving user account
 var isSavingUser = false;
+var userSaved = false;
 $(function () {
 
     loadInfo(refreshForm)
 
+    $("#btnUpdatePassword").click(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        $("#updatePasswordModal").modal("show");
+    });
+
     $("#btnEdit").click(function (e) {
         e.preventDefault();
         e.stopPropagation();
-        isSavingUser = !isSavingUser;
-        $("#userForm .userInput").attr("disabled", !isSavingUser);
+        if ($("#btnEdit").html() === "Edit") {
+            isSavingUser = !isSavingUser;
+            $("#userForm .userInput").attr("disabled", !isSavingUser);
+        }
+        if ($("#btnEdit").html() === "Save" && isSavingUser) {
+            saveUser();
+        }
         if (isSavingUser) {
             $("#btnEdit").html("Save");
-            $("#btnCancel").removeClass("hide");
-        } else {
-            $("#btnEdit").html("Edit");
-            $("#btnCancel").addClass("hide");
-            saveUser();
+            $("#primaryButtons #btnCancel").removeClass("hide");
+            $("#btnUpdatePassword").removeClass("hide");
         }
     });
 
-    $("#btnCancel").click(function (e) {
+    $("#primaryButtons #btnCancel").click(function (e) {
         e.preventDefault();
         e.stopPropagation();
         //when user clicks cancel, save changes to edit
@@ -30,15 +40,67 @@ $(function () {
         $("#userForm .userInput").attr("disabled", true);
 
         //hiding button
-        $("#btnCancel").addClass("hide");
+        $("#primaryButtons #btnCancel").addClass("hide");
+        $("#btnUpdatePassword").addClass("hide");
 
         //change name
         $("#btnEdit").html("Edit");
+
+        $("#errorDiv").remove();
         loadInfo(refreshForm)
+    });
+
+    $("#updatePasswordModal #btnSave").click(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var password = $("#updatePasswordModal #password1").val();
+        var rePassword = $("#updatePasswordModal #password2").val();
+        var message = "";
+        var isValid = false;
+
+        if (password === rePassword) {
+            if (password.length >= MINIMUM_PASSWORD_LENGTH && password.length <= MAXIMUM_PASSWORD_LENGTH) {
+                isValid = true;
+            } else {
+                message += PASSWORD_ERROR + "</br>";
+            }
+        } else {
+            message += PASSWORD_UNMATCHED + "</br>";
+        }
+
+        if (isValid) {
+            var url = UPDATE_PASSWORD;
+            url += "?password1=" + password + "&password2=" + rePassword;
+            makeRequest(url, GET, "", "", passwordSaveComplete, null);
+        } else {
+            displayError(message);
+        }
+        $("#updatePasswordModal").modal("hide");
+    });
+
+    $("#updatePasswordModal #btnCancel").click(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $("#updatePasswordModal #password1").val("");
+        $("#updatePasswordModal #password2").val("");
+        $("#updatePasswordModal").modal("hide");
+
     });
 
     populateProvinces();
 });
+
+function errorUpdatingUser(error) {
+    userSaved = false;
+
+    var errorMsg = error.responseJSON.message.replace(";", "</br>");
+    if (errorMsg.indexOf("brij_exception") !== -1) {
+        errorMsg = errorMsg.replace("brij_exception", "");
+        displayError(errorMsg);
+    }
+}
+
+function passwordSaveComplete() {}
 
 function populateProvinces() {
     $("#lstProvinces").html("");
@@ -48,6 +110,8 @@ function populateProvinces() {
         }
     }
 }
+
+
 
 function validUserDetails() {
     var isValid = true;
@@ -71,7 +135,7 @@ function validUserDetails() {
         message += LASTNAME_ERROR + "</br>";
     }
 
-    if (phonenumber.length !== PHONE_NUMBER_LENGTH ) {
+    if (phonenumber.length !== PHONE_NUMBER_LENGTH) {
         isValid = false;
         message += PHONENUMBER_ERROR + "</br>";
     }
@@ -90,7 +154,7 @@ function validUserDetails() {
         isValid = false;
         message += PROVINCE_ERROR + "</br>";
     }
-    
+
     if (email.length < MINIMUM_EMAIL_LENGTH || email.length > MAXIMUM_EMAIL_LENGTH) {
         isValid = false;
         message += EMAIL_ERROR + "</br>";
@@ -103,10 +167,10 @@ function validUserDetails() {
 }
 
 function saveUser() {
-    
-    if(validUserDetails()){
+
+    if (validUserDetails()) {
         $("#errorDiv").remove();
-            var updateUser = {
+        var updateUser = {
             firstName: $("#userForm #firstName").val(),
             lastName: $("#userForm #lastName").val(),
             phoneNumber: $("#userForm #phoneNumber").val(),
@@ -116,9 +180,24 @@ function saveUser() {
             email: $("#userForm #email").val()
         };
 
-        makeRequest(UPDATE_USER, POST, JSON.stringify(updateUser), APPLICATION_JSON, null, null);
+        makeRequest(UPDATE_USER, POST, JSON.stringify(updateUser), APPLICATION_JSON, userSavedSuccessful, errorUpdatingUser);
     }
 
+}
+
+function userSavedSuccessful() {
+    userSaved = true;
+    userSavedButtons();
+}
+
+function userSavedButtons() {
+    if (userSaved) {
+        $("#btnEdit").html("Edit");
+        $("#primaryButtons #btnCancel").addClass("hide");
+        $("#btnUpdatePassword").addClass("hide");
+        isSavingUser = !isSavingUser;
+        $("#userForm .userInput").attr("disabled", !isSavingUser);
+    }
 }
 
 function displayError(message) {
@@ -149,7 +228,7 @@ function recoverStateForm() {
 
 function refreshForm(data) {
     var province = data.province;
-    if(!province ){
+    if (!province) {
         province = "ON";
     }
     $("#username").html(data.username);

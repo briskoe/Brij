@@ -109,12 +109,12 @@ public class RequestController {
 					//this is done so the post owner does not rate its own post
 					typeOfNotification = NotificationSenderUtil.REQUEST_TYPE;
 					notificationUtils.makeNotification(post.getUser().getUsername(), typeOfNotification,
-							request.getRequestID(), principal.getName() + " have changed the status of the request to: " + status);
+							request.getRequestID(), principal.getName() + " has changed the status of the request to: " + status);
 				}
 				
 			}else{
 				notificationUtils.makeNotification(request.getUserID(), typeOfNotification,
-						request.getRequestID(), principal.getName() + " have changed the status of the request to: " + status.replace("_", " "));
+						request.getRequestID(), principal.getName() + " has changed the status of the request to: " + status.replace("_", " "));
 			
 			}
 

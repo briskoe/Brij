@@ -26,6 +26,7 @@ var UPDATE_STATUS_TICKET = "/ticket/updateStatus";
 var SAVE_TICKET_MESSAGE = "/ticket/saveMessage";
 var SAVE_TICKET = "/ticket/save";
 var UPDATE_FORGOT_EMAIL = "/user/updateForgotPassword";
+var UPDATE_PASSWORD = "/user/updatepassword";
 
 //ADMIN
 var GET_ALL_USERS = "/admin/user/findAll"

@@ -93,18 +93,25 @@ function requestConversation(){
     makeRequest(url, GET, "", "", openConversation, null);
 }
 function openConversation(data){
+    
+    $('#chatRoomModal').on('shown.bs.modal', function() {
+        $('#chatRoomModal #modalBody').scrollTop($('#chatRoomModal #modalBody')[0].scrollHeight);
+    })
     var conversation = data.conversation;
     var currentUser = data.currentUser;
+    
+    
     var body = createMessagesDiv(conversation.messages, currentUser);
     $("#chatRoomModal #modalTitle").html(conversation.title);
     $("#chatRoomModal #modalBody").css({"height": $(window).height() - 200});
-    $("#chatRoomModal #modalBody").scrollTop($("#chatRoomModal #modalBody").scrollHeight);
     $("#chatRoomModal #modalBody").html(body);
     $("#chatRoomModal").modal();
-    
+
     $('#chatRoomModal').on('hidden.bs.modal', function () {
         clearInterval(conversationTimer);    
     })
+    
+
 }
 
 
@@ -305,7 +312,10 @@ function populateRequest(data) {
             }
         })
         $("#formModal").modal();
+
+
     }
+
 }
 
 function getStarForm(){

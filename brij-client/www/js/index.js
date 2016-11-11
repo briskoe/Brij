@@ -201,6 +201,8 @@ function setupReportModal() {
 function ticketSaved(data) {
     if (data !== "") {
         $("#reportModal").modal("hide");
+            toast.show("You have successfully sent the ticket!")
+
     }
 }
 
@@ -219,7 +221,6 @@ function setupSettingModal() {
     var modal = "<div class='container' ><div id='settingModal' class='modal fade' role='dialog'>" +
         "<div class='modal-dialog'>" +
         "<div class='modal-content'> <div class='modal-header'>" +
-        "<button type='button' class='close' data-disiss='modal'>&times;</button>" +
         "<h4>Setting</h4> </div>" +
         "<div class='modal-body'> " +
         settingBody() +
@@ -330,6 +331,7 @@ function initializeMainMenu() {
 }
 
 function notificationRequest() {
+    showLoading = false;
     makeRequest(GET_USER_NOTIFICATION, GET, "", "", fillNotifications, null);
 }
 
@@ -462,6 +464,31 @@ var errorAlert = {
         $("#toastID").hide();
     }
 
+};
+
+var toast = {
+    show: function(msg){
+         $("<div id='toastID'><h3>"+msg+"</h3></div>")
+            .css({ display: "block", 
+                opacity: 0.90, 
+                position: "fixed",
+                padding: "7px",
+                "text-align": "center",
+                  background:"black",
+                  color:"white",
+                width: "270px",
+                left: ($(window).width() - 284)/2,
+                top: $(window).height()/2 })
+            .appendTo( $("body") ).delay( 1500 )
+             .fadeOut( 400, function(){
+                    $(this).remove();
+                });
+    },
+    end: function(){
+        $("#toastID").hide();
+    }
+
+      
 };
 
 function donateModal() {

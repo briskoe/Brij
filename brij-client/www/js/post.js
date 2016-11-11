@@ -166,7 +166,9 @@ function savePost() {
     };
 
 
-    makeRequest(SAVE_POST, POST, JSON.stringify(updatePost), APPLICATION_JSON, null, null);
+    makeRequest(SAVE_POST, POST, JSON.stringify(updatePost), APPLICATION_JSON, function(){
+         toast.show("Your post has been successfully updated!")
+    }, null);
 }
 
 
@@ -191,6 +193,7 @@ function requestService() {
             clicked = false;
             $("#formModal").modal("hide");
             getPosts(postID);
+            toast.show("You successfully requested this post!")
 
         }, savePostErrorHandler);
     });

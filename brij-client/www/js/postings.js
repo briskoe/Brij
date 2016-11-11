@@ -66,7 +66,7 @@ function createPostingList(data, append) {
     noOfPages = data.numberOfPages;
     currentPage = data.currentPage;
     for (var i = 0; i < array.length; i++) {
-        var badge = "REQUEST"
+        var badge = "WANTED"
         var additionalClass = "list-group-item";
         var ribbonColor ="";
         if (array[i].isPost) {

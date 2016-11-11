@@ -38,6 +38,7 @@ var DELETE = "DELETE";
 var APPLICATION_JSON = "application/json; charset=utf-8";
 
 
+var showLoading = true;
 function initializeUser() {
     var user = {};
     user.firstName = "";
@@ -57,7 +58,11 @@ function makeRequest(url, type, data, dataType, successCallBack, errorCallBack) 
     url = SERVER_URL + url;
     $.ajaxSetup({
        beforeSend: function(){
-           loading.show("loading");
+           if(showLoading){
+                loading.show("loading");
+           }else{
+               showLoading = true;
+           }
        },
         complete: function(){
             loading.end();

@@ -188,6 +188,7 @@ function saveUser() {
 function userSavedSuccessful() {
     userSaved = true;
     userSavedButtons();
+    toast.show("Your account has been saved!")
 }
 
 function userSavedButtons() {
