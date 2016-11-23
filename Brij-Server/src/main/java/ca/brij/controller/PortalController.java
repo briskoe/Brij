@@ -4,6 +4,7 @@ package ca.brij.controller;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.Principal;
 import java.util.Set;
 
@@ -166,16 +167,14 @@ public class PortalController {
 	@ResponseBody
 	public ResponseEntity<InputStreamResource> getAndroid() throws IOException {
 		ClassLoader classLoader = this.getClass().getClassLoader();
-		File file = new File(classLoader.getResource("android-release.apk").getFile());
-	    InputStreamResource isResource = new InputStreamResource(new FileInputStream(file));
-	    FileSystemResource fileSystemResource = new FileSystemResource(file);
+		InputStream file = classLoader.getResourceAsStream("brij.apk");
+	    InputStreamResource isResource = new InputStreamResource(file);
 	 	HttpHeaders headers = new HttpHeaders();
 	    headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
 	    headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
 	    headers.add("Pragma", "no-cache");
 	    headers.add("Expires", "0");
-	    headers.setContentLength(fileSystemResource.contentLength());
-	    headers.setContentDispositionFormData("attachment", "android-release.apk");
+	    headers.setContentDispositionFormData("attachment", "brij.apk");
 	    return new ResponseEntity<InputStreamResource>(isResource, headers, HttpStatus.OK);
 	}
 }
