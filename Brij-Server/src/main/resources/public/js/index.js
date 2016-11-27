@@ -98,7 +98,7 @@ $(function() {
 			window.location = "/";
 		}, null);
 	});
-
+	$(".modal").addClass("precedence");
 });
 
 function makeMenu() {
