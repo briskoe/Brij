@@ -1,7 +1,7 @@
 /**
  * Javascript meant for history
  */
-var filterBy = "myPosts";
+var filterBy = "posts";
 var currentPage = 1;
 var noOfPages = 1;
 var filterUrl = GET_POST_HISTORY;
@@ -75,6 +75,15 @@ $(function () {
         $("#btnMyReplies").addClass("active");
         getAllRequests();
     });
+    
+    $(document).on('onScrollRefresh', function(e, opts) {
+        if (filterBy === "posts") {
+            getAllPosts();
+        }else{
+            getAllRequests();
+
+        }
+  });
 
 });
 

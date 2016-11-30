@@ -48,6 +48,9 @@ $(function () {
     $(document).on('onSettingChange', function(e, opts) {
                 getAllPosts();
   });
+    $(document).on('onScrollRefresh', function(e, opts) {
+                getAllPosts();
+  });
 
     
 });

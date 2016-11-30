@@ -134,7 +134,10 @@ $(function () {
             $("#btnOpenMenu").click();
         }
     });
+    
 });
+
+
 
 function createTwoButtonForm() {
     var modal = "<div class='container' ><div id='formModal' class='modal fade' role='dialog'>" +
@@ -158,6 +161,7 @@ $(window).resize(function () {
     var window_height = $(window).height(),
         content_height = window_height - 200;
     $('.scrollableArea').height(content_height);
+    setupScrollForRefresh();
 });
 
 function fillListType() {
@@ -337,6 +341,37 @@ function initializeMainMenu() {
         $("#donateModal").modal("show");
         $("#navbar").removeClass("in");
     });
+    
+    //set up refresh by pulling in mobile
+    setupScrollForRefresh();
+}
+
+function isMobile(){
+    return document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1;
+}
+function setupScrollForRefresh(){
+   
+
+    if ( isMobile()) {
+            $("nav.mainMenu").css("padding-top", "50px");
+            var window_height = $(window).height(),
+            content_height = window_height + 50;
+            $('body').height(content_height);
+            window.scrollBy(0, 50);
+
+        window.document.addEventListener("scroll", function(){
+            if(window.pageYOffset == 0)
+            {
+                $(document).trigger('onScrollRefresh');
+                window.scrollBy({ 
+                  behavior: 'smooth' 
+                }, 50);
+
+            }            
+        }, false);
+    } else {
+        // Web page
+    }  
 }
 
 function notificationRequest() {

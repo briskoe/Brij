@@ -73,7 +73,10 @@ $(function () {
     openConvo = $.urlParam("openConvo");
     openRate = $.urlParam("openRate");
 
-
+    $(document).on('onScrollRefresh', function(e, opts) {
+        openConvo = false;
+        getRequest(requestID);
+  });
 });
 
 
