@@ -362,6 +362,7 @@ function setupScrollForRefresh(){
         window.document.addEventListener("scroll", function(){
             if(window.pageYOffset == 0)
             {
+                makeRequest(GET_USER_NOTIFICATION, GET, "", "", fillNotifications, null);
                 $(document).trigger('onScrollRefresh');
                 window.scrollBy({ 
                   behavior: 'smooth' 
