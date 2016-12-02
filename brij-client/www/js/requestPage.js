@@ -244,10 +244,12 @@ function populateRequest(data) {
     $("#description").val(data.posting.details);
     $("#notes").val(data.request.notes);
     if(openConvo){
+        openConvo = false;
         requestConversation();
         conversationTimer = setInterval(requestConversation, 50000);
     }
     if(openRate){
+        openRate = false;
         $("#formModal #title").html("Rate post");
         $("#btnSaveForm").html("Rate");
         $("#btnSaveForm").click(function(e){
