@@ -43,7 +43,7 @@
     <form>
         <div class="container">
             <div class="row">
-                <div class="col-sm-10 col-sm-offset-1">
+                <div class="col-xs-10 col-xs-offset-1">
                     <div id="imaginary_container">
                         <div class="input-group stylish-input-group">
                             <input type="text" class="form-control" placeholder="Search" id="txtSearch" onkeyup="checkNull()">
@@ -55,6 +55,19 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="row searchRow input-group">
+                <center>
+                    <div class="col-xs-4 vcenter">
+                        <label for='txtKm'>Search Radius(KM):</label>
+                    </div>
+                    <div class="col-xs-4 vcenter">
+                        <input name='txtKm' class='form-control' type='number' min='1' id='txtKm' />
+                    </div>
+                    <div class="col-xs-3 vcenter">
+                        <button type='button' class='btn btn-info' id='btnSaveSetting'> Save </button>
+                    </div>
+                </center>
             </div>
         </div>
     </form>

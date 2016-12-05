@@ -68,6 +68,7 @@ var reportTypes = {
 };
 
 document.addEventListener("deviceready", onDeviceReady, false);
+
 function onDeviceReady() {
     AndroidFullScreen.immersiveMode()
 }
@@ -125,7 +126,7 @@ $(function () {
         e.stopPropagation();
         window.location.href = "createPost.html";
     });
-    
+
     $(document).click(function (event) {
         var clickover = $(event.target);
         var _opened = $("#myNavbar").hasClass("collapse in");
@@ -134,7 +135,7 @@ $(function () {
             $("#btnOpenMenu").click();
         }
     });
-    
+
 });
 
 
@@ -210,7 +211,7 @@ function setupReportModal() {
 function ticketSaved(data) {
     if (data !== "") {
         $("#reportModal").modal("hide");
-            toast.show("You have successfully sent the ticket!")
+        toast.show("You have successfully sent the ticket!")
 
     }
 }
@@ -227,17 +228,17 @@ function reportBody() {
 
 
 function setupSettingModal() {
-    var modal = "<div class='container' ><div id='settingModal' class='modal fade' role='dialog'>" +
-        "<div class='modal-dialog'>" +
-        "<div class='modal-content'> <div class='modal-header'>" +
-        "<h4>Setting</h4> </div>" +
-        "<div class='modal-body'> " +
-        settingBody() +
-        "</div><div class='modal-footer'>" +
-        "<button type='button' class='btn btn-info' id='btnSaveSetting' > Save </button>" +
-        "<button type='button' class='btn btn-default' data-dismiss='modal'>close</button>" + "</div> </div> </div>" +
-        "</div> </div>";
-    $("body").append(modal);
+//    var modal = "<div class='container' ><div id='settingModal' class='modal fade' role='dialog'>" +
+//        "<div class='modal-dialog'>" +
+//        "<div class='modal-content'> <div class='modal-header'>" +
+//        "<h4>Setting</h4> </div>" +
+//        "<div class='modal-body'> " +
+//        settingBody() +
+//        "</div><div class='modal-footer'>" +
+//        "<button type='button' class='btn btn-info' id='btnSaveSetting' > Save </button>" +
+//        "<button type='button' class='btn btn-default' data-dismiss='modal'>close</button>" + "</div> </div> </div>" +
+//        "</div> </div>";
+//    $("body").append(modal);
 
 
     $("#btnSaveSetting").click(function (e) {
@@ -250,11 +251,12 @@ function setupSettingModal() {
             search_km = distanceKm;
             $("#txtKm").val(distanceKm);
             $("#settingModal").modal("hide");
-            
-              $(document).trigger('onSettingChange', {
-               
-              });
+
+            $(document).trigger('onSettingChange', {
+
+            });
         }
+        window.location.href = "postings.html";
     })
 }
 
@@ -289,16 +291,16 @@ function initializeMainMenu() {
         "<li class='menuLinks'><a href='accountDetails.html'>Account Details</a></li>" +
         "<li class='menuLinks'><a href='history.html'>Account History</a></li>" +
         "<li class='menuLinks'><a href='#' id='btnReport' >Report a Problem </a></li>" +
-        "<li class='menuLinks'><a href='#' id='btnSetting' >Distance Settings </a></li>" +
+//        "<li class='menuLinks'><a href='#' id='btnSetting' >Distance Settings </a></li>" +
         "<li class='menuLinks'><a href='#' id='btnDonate' >Donate </a></li>" +
         "<li class='menuLinks'><a id='logoutMenuItem'>Logout</a></li>";
     $("#navbar").html(navbar);
 
-    
-    $("#notificationBtn").click(function(){
+
+    $("#notificationBtn").click(function () {
         var _opened = $("#myNavbar").hasClass("collapse in");
 
-        if (_opened === true ) {
+        if (_opened === true) {
             $("#btnOpenMenu").click();
         }
     })
@@ -341,38 +343,38 @@ function initializeMainMenu() {
         $("#donateModal").modal("show");
         $("#navbar").removeClass("in");
     });
-    
+
     //set up refresh by pulling in mobile
     setupScrollForRefresh();
 }
 
-function isMobile(){
-    return document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1;
+function isMobile() {
+    return document.URL.indexOf('http://') === -1 && document.URL.indexOf('https://') === -1;
 }
-function setupScrollForRefresh(){
-   
 
-    if ( isMobile()) {
-            $("nav.mainMenu").css("padding-top", "50px");
-            var window_height = $(window).height(),
+function setupScrollForRefresh() {
+
+
+    if (isMobile()) {
+        $("nav.mainMenu").css("padding-top", "50px");
+        var window_height = $(window).height(),
             content_height = window_height + 50;
-            $('body').height(content_height);
-            window.scrollBy(0, 50);
+        $('body').height(content_height);
+        window.scrollBy(0, 50);
 
-        window.document.addEventListener("scroll", function(){
-            if(window.pageYOffset == 0)
-            {
+        window.document.addEventListener("scroll", function () {
+            if (window.pageYOffset == 0) {
                 makeRequest(GET_USER_NOTIFICATION, GET, "", "", fillNotifications, null);
                 $(document).trigger('onScrollRefresh');
-                window.scrollBy({ 
-                  behavior: 'smooth' 
+                window.scrollBy({
+                    behavior: 'smooth'
                 }, 50);
 
-            }            
+            }
         }, false);
     } else {
         // Web page
-    }  
+    }
 }
 
 function notificationRequest() {
@@ -512,28 +514,30 @@ var errorAlert = {
 };
 
 var toast = {
-    show: function(msg){
-         $("<div id='toastID'><h3>"+msg+"</h3></div>")
-            .css({ display: "block", 
-                opacity: 0.90, 
+    show: function (msg) {
+        $("<div id='toastID'><h3>" + msg + "</h3></div>")
+            .css({
+                display: "block",
+                opacity: 0.90,
                 position: "fixed",
                 padding: "7px",
                 "text-align": "center",
-                  background:"black",
-                  color:"white",
+                background: "black",
+                color: "white",
                 width: "270px",
-                left: ($(window).width() - 284)/2,
-                top: $(window).height()/2 })
-            .appendTo( $("body") ).delay( 1500 )
-             .fadeOut( 400, function(){
-                    $(this).remove();
-                });
+                left: ($(window).width() - 284) / 2,
+                top: $(window).height() / 2
+            })
+            .appendTo($("body")).delay(1500)
+            .fadeOut(400, function () {
+                $(this).remove();
+            });
     },
-    end: function(){
+    end: function () {
         $("#toastID").hide();
     }
 
-      
+
 };
 
 function donateModal() {

@@ -25,6 +25,7 @@ $(function () {
         }
         loadNew = true;
     })
+    $("#txtKm").val(search_km);
     getAllPosts();
 
     $("#btnSearch").click(function (e) {
