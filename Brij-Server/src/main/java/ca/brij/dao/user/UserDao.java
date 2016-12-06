@@ -28,5 +28,7 @@ public interface UserDao extends JpaRepository<User, Long> {
 	public User findByEmail(@Param("email") String email);
 
 	public User findUserByResetID(@Param("resetID") String resetID);
+	
+	public Double getAvgRating(@Param("username") String username );
 
 }

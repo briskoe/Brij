@@ -6,6 +6,7 @@ var openConvo = false;
 var openRate = false;
 var status = "";
 var ratingValue = -1;
+var otherUser = "";
 $(function () {
     $("#btnBack").click(function (e) {
         e.preventDefault();
@@ -52,18 +53,39 @@ $(function () {
         }, null);
     })
     $("#btnAccept").click(function(e){
-        changeStatus("in_progress"); 
+        questionModal("Do you wish to change the status to 'in progress'?",function(){
+            changeStatus("in_progress"); 
+        });
     });
     
     $("#btnDeny").click(function(e){
-        changeStatus("denied"); 
+        questionModal("Do you wish to deny this request?", function(){
+            changeStatus("denied"); 
+        });
     });
     
     $("#btnComplete").click(function(e){
-        changeStatus("complete"); 
+        questionModal("Do you wish to complete this request?", function(){
+            changeStatus("complete");
+            setupRating("Rate " + otherUser, function(){
+                ratingValue = ratingValue > 5? 5 : ratingValue < 1? 0: ratingValue;
+                var rating = {
+                    value: ratingValue
+                }
+                if(ratingValue > 0){
+                    makeRequest(RATE_USER + "?username="+otherUser, POST, JSON.stringify(rating), APPLICATION_JSON, function(e){
+                        $("#formModal").modal("hide");
+                    }, null);  
+                }else{
+                   displayError("#formModal .modal-body", "You need to select a rating")
+                }
+            });
+        });
     });
     $("#btnClose").click(function(e){
-        changeStatus("cancelled"); 
+        questionModal("Do you wish to Cancel this request?",function(){
+            changeStatus("cancelled"); 
+        });
     });
     
     $( window ).resize(function() {
@@ -72,14 +94,21 @@ $(function () {
     getRequest($.urlParam("id"));
     openConvo = $.urlParam("openConvo");
     openRate = $.urlParam("openRate");
-
+    openRate = openRate === "true";
     $(document).on('onScrollRefresh', function(e, opts) {
         openConvo = false;
         getRequest(requestID);
   });
 });
 
-
+function questionModal(message, positiveCallback){
+    $("#statusChangeModal #modalBody").html(message);
+    $("#btnChangeStatus").click(function(){
+        positiveCallback();
+        $("#statusChangeModal").modal("hide");
+    });
+    $("#statusChangeModal").modal();
+}
 
 function changeStatus(newStatus){
     var url = CHANGE_REQUEST_STATUS + "?id= " + requestID + "&status=" + newStatus;
@@ -163,8 +192,10 @@ function getRequest(id) {
     url = url.replace(":id", id);
     makeRequest(url, GET, "", "", populateRequest, null);
 }
-function populateUserInfo(data){
+function populateUserInfo(data, noOfRatingsByPoster,ratingForPoster, ratingForUser) {
     $("#username").html(data.username);
+    fillRating(noOfRatingsByPoster,ratingForPoster, "#posterRatingDiv");
+    fillRating(data.ratings.length,ratingForUser, "#userRatingDiv");
     $("#userForm #firstName").val(data.firstName);
     $("#userForm #lastName").val(data.lastName);
     $("#userForm #phoneNumber").val(data.phoneNumber);
@@ -206,14 +237,15 @@ function populateRequest(data) {
     changeStatusInPage(status);
     if(data.isOwner){
         aboutUser = "About the poster";
-        populateUserInfo(data.posting.user);
+        otherUser = data.posting.user.username;
+        populateUserInfo(data.posting.user,data.noOfRatingsByPoster,data.avgRateByPoster, data.avgRateByUser);
         $(".showOwner").removeClass("hide");
         if(status === "complete" || status === "cancelled" || status === "denied"){
             $(".showOwner").addClass("hide");
         }
     }else{
         aboutUser = "About the requester"
-        
+        otherUser = data.requester.username;
         if(status === "in_progress"){
             $(".inProgress").removeClass("hide");
             $(".inPending").addClass("hide");
@@ -228,7 +260,7 @@ function populateRequest(data) {
         } 
             
         
-        populateUserInfo(data.requester);
+        populateUserInfo(data.requester ,data.noOfRatingsByPoster,data.avgRateByPoster, data.avgRateByUser);
         if (data.posting.isPost) {
             requestType = data.requester.username + " has requested this service";
         } else {
@@ -249,21 +281,40 @@ function populateRequest(data) {
         conversationTimer = setInterval(requestConversation, 50000);
     }
     if(openRate){
-        openRate = false;
-        $("#formModal #title").html("Rate post");
-        $("#btnSaveForm").html("Rate");
-        $("#btnSaveForm").click(function(e){
-            e.preventDefault();
-            e.stopPropagation();
+
+        setupRating("Rate post",function(){
             ratingValue = ratingValue > 5? 5 : ratingValue < 1? 0: ratingValue;
             var rating = {
                 value: ratingValue
             }
-            makeRequest(RATE_POST + "?id="+postID, POST, JSON.stringify(rating), APPLICATION_JSON, function(e){
-                $("#formModal").modal("hide");
-            }, null);
-            
+            if(ratingValue > 0){
+                makeRequest(RATE_POST + "?id="+postID, POST, JSON.stringify(rating), APPLICATION_JSON, function(e){
+                    $("#formModal").modal("hide");
+                }, null);  
+            }else{
+               displayError("#formModal .modal-body", "You need to select a rating")
+            }
         });
+
+    }
+
+}
+
+function setupRating(title, clickCallback){
+        openRate = false;
+        $("#formModal #title").html(title);
+        $("#btnSaveForm").html("Rate");
+        $("#btnSaveForm").click(function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            clickCallback();
+        });
+        
+        setupStar();
+        $("#formModal").modal();
+}
+
+function setupStar(){
         var starFormBody = getStarForm();
         $("#formModal .modal-body").html(starFormBody);
         
@@ -316,12 +367,8 @@ function populateRequest(data) {
                 }
             }
         })
-        $("#formModal").modal();
-
-
-    }
-
 }
+
 
 function getStarForm(){
     var div = "<div class='text-center starDiv'>";
