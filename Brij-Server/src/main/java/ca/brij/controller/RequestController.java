@@ -182,6 +182,10 @@ public class RequestController {
 		String serviceName = null;
 		User requester = null;
 		boolean isOwner = false;
+		Double avgRateAsPoster = 0.0;
+		Integer noOfRatingsAsPoster = 0;
+		Double avgRateAsRequester = 0.0;
+
 		try {
 			logger.info("Finding Request by ID: " + id);
 			request = daoHelper.getRequestDao().findById(id);
@@ -192,6 +196,17 @@ public class RequestController {
 			if (!isOwner && !post.getUser().getUsername().equalsIgnoreCase(principal.getName())) {
 				throw new Exception("Error - user not allowed");
 			}
+			if(isOwner){
+				noOfRatingsAsPoster = daoHelper.getPostingDao().getCountOfUser(post.getUser().getUsername());
+				avgRateAsPoster = daoHelper.getPostingDao().getAvgRatingByUser(post.getUser().getUsername());
+				avgRateAsRequester = daoHelper.getUserDao().getAvgRating(post.getUser().getUsername());
+
+			}else{
+				noOfRatingsAsPoster = requester.getRatings().size();
+				avgRateAsPoster = daoHelper.getPostingDao().getAvgRatingByUser(requester.getUsername());
+				avgRateAsRequester = daoHelper.getUserDao().getAvgRating(requester.getUsername());
+			}
+
 		} catch (Exception e) {
 			logger.error("Error Finding request" + e.getMessage());
 			throw e;
@@ -201,6 +216,10 @@ public class RequestController {
 		requestDTO.put("serviceName", serviceName);
 		requestDTO.put("isOwner", isOwner);
 		requestDTO.put("requester", requester);
+		requestDTO.put("avgRateByPoster", avgRateAsPoster == null? 0 : avgRateAsPoster);
+		requestDTO.put("noOfRatingsByPoster", noOfRatingsAsPoster == null? 0 : noOfRatingsAsPoster);
+		requestDTO.put("avgRateByUser", avgRateAsRequester == null? 0 : avgRateAsRequester);
+
 		logger.info("Successfully found request by id: " + id);
 		return requestDTO;
 	}

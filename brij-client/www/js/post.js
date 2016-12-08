@@ -226,8 +226,10 @@ function getPosts(id) {
     makeRequest(url, GET, "", "", populatePost, null);
 }
 
-function populateUserInfo(data) {
+function populateUserInfo(data, noOfRatingsByPoster,ratingForPoster, ratingForUser) {
     $("#username").html(data.username);
+    fillRating(noOfRatingsByPoster,ratingForPoster, "#posterRatingDiv");
+    fillRating(data.ratings.length,ratingForUser, "#userRatingDiv")
     $("#userForm #firstName").val(data.firstName);
     $("#userForm #lastName").val(data.lastName);
     $("#userForm #phoneNumber").val(data.phoneNumber);
@@ -235,38 +237,18 @@ function populateUserInfo(data) {
     $("#userForm #city").val(data.city);
     $("#userForm #province").val(data.province);
     $("#userForm #email").val(data.email);
-    $("#userForm #firstName").html();
-}
 
-function fillRating(ratings, avgRate) {
-    var noOfRatings = ratings.length;
-    var starDiv = "";
-    for (var i = 0; i < 5; i++) {
-        var classToUse = "glyphicon ";
-        if (i < avgRate) {
-            classToUse += "glyphicon-star";
-        } else {
-            classToUse += "glyphicon-star-empty";
-        }
-        starDiv += "<span class='" + classToUse + "'> </span>"
-    }
-    $("#starDiv").html(starDiv);
-    var wordUser = "users";
-    if (noOfRatings === 1) {
-        wordUser = "user";
-    }
-    $("#ratingInfo").html(avgRate + " out of 5 - " + noOfRatings + " " + wordUser);
 }
 
 function populatePost(data) {
     post = data.posting;
     id = data.posting.id;
-    populateUserInfo(data.posting.user);
+    populateUserInfo(data.posting.user, data.noOfRatingsByPoster,data.avgRateByPoster, data.avgRateByUser);
     $("#postName").html(data.posting.title);
     $("#postForm #title").val(data.posting.title);
     $("#postForm #serviceName").val(data.serviceName);
     $("#postForm #description").val(data.posting.details);
-    fillRating(data.posting.ratings, data.avgRate);
+    fillRating(data.posting.ratings.length, data.avgRate, "#ratingDiv");
     var messageInfo = "";
     var hasRequest = data.hasRequested;
     if (data.posting.isPost) {

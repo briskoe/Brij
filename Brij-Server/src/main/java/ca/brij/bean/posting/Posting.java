@@ -34,6 +34,7 @@ import ca.brij.bean.user.User;
 		@NamedQuery(name = "Posting.getPostingById", query = "from Posting where id = :id AND status <> 'closed'"),
 		@NamedQuery(name = "Posting.getPostingByIdAdmin", query = "from Posting where id = :id"),
 		@NamedQuery(name = "Posting.getAvgRating", query = "SELECT avg(r.value) from Posting p JOIN p.ratings r WHERE id = :id"),
+		@NamedQuery(name = "Posting.getAvgRatingByUser", query = "SELECT avg(r.value) from Posting p JOIN p.ratings r WHERE p.user.username = :userID"),
 		@NamedQuery(name = "Posting.getPostingsByServID", query = "from Posting where servID = :servID"),
 		@NamedQuery(name = "Posting.getPostingsLikeTitleAdmin", query = "from Posting where LOWER(title) LIKE LOWER('%' || :title || '%')"),
 		@NamedQuery(name = "Posting.getPostingsLikeTitle", query = "from Posting where LOWER(title) LIKE LOWER('%' || :title || '%')"),
