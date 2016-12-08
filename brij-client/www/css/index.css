@@ -258,6 +258,12 @@ input:focus {
     width: 100%;
 }
 
+.filterDiv{
+    margin-top:10px; 
+    margin:10px auto;
+    width: 75%;
+}
+
 #notificationBtn {
     color: white;
     font-size: 15px;
@@ -456,4 +462,11 @@ ribbon {
 .rdCheck{
     visibility: hidden;
     
+}
+
+@media (max-width: 600px) {
+
+    .filterDiv{
+        width: 100%;
+    }
 }
