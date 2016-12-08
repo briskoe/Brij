@@ -56,18 +56,26 @@
                     </div>
                 </div>
             </div>
-            <div class="row searchRow input-group">
-                <center>
-                    <div class="col-xs-4 vcenter">
-                        <label for='txtKm'>Search Radius(KM):</label>
-                    </div>
-                    <div class="col-xs-4 vcenter">
-                        <input name='txtKm' class='form-control' type='number' min='1' id='txtKm' />
-                    </div>
-                    <div class="col-xs-3 vcenter">
-                        <button type='button' class='btn btn-info' id='btnSaveSetting'> Save </button>
-                    </div>
-                </center>
+            <div class="row" style="margin-top:10px;">
+                <div class="col-xs-4">
+                    <center>
+                        <label>
+                            Search
+                            <br> Radius(KM):
+                        </label>
+                    </center>
+                </div>
+                <div class="col-xs-5">
+                    <input name='txtKm' class='form-control' type='number' min='1' id='txtKm' style="text-align:center"/>
+                </div>
+                <div class="col-xs-3">
+                    <center>
+                        <button type='button' class='btn btn-info glyphicon glyphicon-globe' id='btnSaveSetting'> Filter</button>
+                    </center>
+                </div>
+            </div>
+            <div class="row" style="margin-top:10px;">
+
             </div>
         </div>
     </form>

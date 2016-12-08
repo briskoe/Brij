@@ -63,6 +63,7 @@ var reportTypes = {
     login: "login/logout process",
     user: "user",
     post: "post",
+    service: "service",
     request: "request",
     other: "other"
 };
@@ -287,12 +288,12 @@ function initializeMainMenu() {
         "<ul class='dropdown-menu dropdown-menu-right' id='notificationNavBar'> </ul>"
     );
     var navbar = "" +
-        "<li class='menuLinks'><a href='postings.html'>Postings</a></li>" +
+        "<li class='menuLinks'><a href='postings.html'>View Posts</a></li>" +
         "<li class='menuLinks'><a href='accountDetails.html'>Account Details</a></li>" +
         "<li class='menuLinks'><a href='history.html'>Account History</a></li>" +
-        "<li class='menuLinks'><a href='#' id='btnReport' >Report a Problem </a></li>" +
+        "<li class='menuLinks'><a href='#' id='btnReport' >Create Ticket</a></li>" +
 //        "<li class='menuLinks'><a href='#' id='btnSetting' >Distance Settings </a></li>" +
-        "<li class='menuLinks'><a href='#' id='btnDonate' >Donate </a></li>" +
+        "<li class='menuLinks'><a href='#' id='btnDonate' >Donate</a></li>" +
         "<li class='menuLinks'><a id='logoutMenuItem'>Logout</a></li>";
     $("#navbar").html(navbar);
 

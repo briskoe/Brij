@@ -244,12 +244,12 @@ function changeStatusInPage(status){
 function populateRequest(data) {
     postID = data.posting.id;
     requestID = data.request.requestID;
-    var aboutUser = "About the requester";
+    var aboutUser = "About Requester";
     var requestType = "You have requested this service";
     status = data.request.status;
     changeStatusInPage(status);
     if(data.isOwner){
-        aboutUser = "About the poster";
+        aboutUser = "About Poster";
         otherUser = data.posting.user.username;
         populateUserInfo(data.posting.user,data.noOfRatingsByPoster,data.avgRateByPoster, data.avgRateByUser);
         $(".showOwner").removeClass("hide");
@@ -257,7 +257,7 @@ function populateRequest(data) {
             $(".showOwner").addClass("hide");
         }
     }else{
-        aboutUser = "About the requester"
+        aboutUser = "About Requester"
         otherUser = data.requester.username;
         if(status === "in_progress"){
             $(".inProgress").removeClass("hide");

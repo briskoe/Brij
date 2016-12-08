@@ -441,4 +441,19 @@ ribbon {
     margin: 2px;
     border-radius: 10px;
     border: aqua solid 2px;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
+/**checkbox styling*/
+
+.rdCheck:before {
+ visibility: visible;
+}
+.rdCheck:checked:before {
+   content: "\e067";
+}
+.rdCheck{
+    visibility: hidden;
+    
 }
