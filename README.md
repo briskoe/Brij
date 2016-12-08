@@ -25,3 +25,31 @@ Additional Information:
 
 Notes:
 	Working directories are "brij-client" and "brij-server" on github
+    
+# Iteration 2
+--------
+
+Use Cases / Functionality
+    -Login
+    -View Posts
+    -Create Post
+    -View Post
+    -View Account Details
+    -Edit Account Details
+    -Security
+
+# Iteration 3
+--------
+
+Use Cases / Functionality
+    -Logout
+    -View Service
+    -Edit Post
+    -Create Service
+    -Create Request
+    -View Request
+    -Update Request
+    -Notifications
+    -Pagination for Posts
+    -Popup Loading Messages
+    -Custom Pages Based on User

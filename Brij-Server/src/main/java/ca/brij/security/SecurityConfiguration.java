@@ -9,6 +9,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -29,7 +30,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
  
     @Autowired
     private MySavedRequestAwareAuthenticationSuccessHandler authenticationSuccessHandler;
-	/**
+	
+    @Autowired
+    private CustomLogOutSuccessHandler logOutHandler;
+    
+    /**
 	 * This section defines the user accounts which can be used for
 	 * authentication as well as the roles each user has.
 	 */
@@ -49,6 +54,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
 
 	}
+	
 
 	/**
 	 * This section defines the security policy for the app. - BASIC
@@ -62,17 +68,34 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		//TODO change admin to have role admin instead
 		http.httpBasic().and().authorizeRequests()
+				.antMatchers("/").permitAll()
+				.antMatchers(HttpMethod.GET, "/webPortal/**").permitAll()
+				.antMatchers(HttpMethod.GET, "/download/**").permitAll()
+				.antMatchers("/js/**").permitAll()
+				.antMatchers("/img/**").permitAll()
+				.antMatchers("/css/**").permitAll()
+				.antMatchers("/fonts/**").permitAll()
+				.antMatchers("/res/**").permitAll()
+				.antMatchers("/spec/**").permitAll()
+				.antMatchers("/reset**").permitAll()
 				.antMatchers(HttpMethod.POST, "/user/register").permitAll()
 				.antMatchers(HttpMethod.POST, "/login**").permitAll()
-				.antMatchers(HttpMethod.GET, "/admin**").hasRole("USER")
+				.antMatchers(HttpMethod.GET, "/user/updateForgotPassword**").permitAll()
+				.antMatchers(HttpMethod.GET, "/user/forgotpassword**").permitAll()
+				.antMatchers(HttpMethod.GET, "/admin**").hasRole("ADMIN")
                 .anyRequest().hasRole("USER")
 				.and()
 		        .formLogin()
 		        .successHandler(authenticationSuccessHandler)
 		        .failureHandler(new SimpleUrlAuthenticationFailureHandler())
 	            .and()
-				.logout().logoutSuccessUrl("/spring/logout").permitAll().and().csrf().disable();
+				.logout().logoutSuccessHandler(logOutHandler).permitAll().and().csrf().disable();
 	}
+	
+    @Bean
+    public CustomLogOutSuccessHandler logOutHandler(){
+        return new CustomLogOutSuccessHandler();
+    }
 	
     @Bean
     public MySavedRequestAwareAuthenticationSuccessHandler mySuccessHandler(){

@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <title>Postings</title>
-    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="css/index.css" />
     <script type="text/javascript" src="js/jquery.min.js"></script>
@@ -20,12 +20,13 @@
     <nav class="navbar navbar-inverse mainMenu">
         <div class="container-fluid">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar" aria-expanded="false">
+                <button id="btnOpenMenu" type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar" aria-expanded="false">
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">Brij</a>
+                <button type="button" id="createPost" class="navbar-toggle" data-target="#myNavbar" aria-expanded="false"><span class="glyphicon glyphicon-plus" style="color:white"></span></button>
+                <a class="navbar-brand" href="#" id="brijHome">Brij</a>
             </div>
         </div>
         <div class="collapse" aria-expanded="false" id="myNavbar">
@@ -34,19 +35,58 @@
         </div>
     </nav>
     <!--END OF HEADER -->
-    <img src="img/brij_logo.png" class="img-rounded" alt="Brij Logo" width="100%">
-    <br/>
-    <br/>
-    <a href="createPost.html" class="btn btn-primary btn-block btn-lg" role="button">Create New Post</a>
-    <br/>
-    <div class="btn-group btn-group-justified">
-        <a id="btnAll" href="#" class="btn btn-info btnPosts active">All Postings</a>
-        <a id="btnMyPosts" href="#" class="btn btn-info btnPosts">My Postings</a>
-        <a id="btnMyRequest" href="#" class="btn btn-info btnPosts">My Requests</a>
+    <div class="page-header" id="titleDiv">
+        <center>
+            <h1>Posts</h1>
+        </center>
     </div>
-    <div id="postingList" class="list-group">
+    <form>
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-10 col-xs-offset-1">
+                    <div id="imaginary_container">
+                        <div class="input-group stylish-input-group">
+                            <input type="text" class="form-control" placeholder="Search" id="txtSearch" onkeyup="checkNull()">
+                            <span class="input-group-addon">
+                            <button type="submit" id="btnSearch">
+                            <span class="glyphicon glyphicon-search"></span>
+                            </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="margin-top:10px;">
+                <div class="col-xs-4">
+                    <center>
+                        <label>
+                            Search
+                            <br> Radius(KM):
+                        </label>
+                    </center>
+                </div>
+                <div class="col-xs-5">
+                    <input name='txtKm' class='form-control' type='number' min='1' id='txtKm' style="text-align:center"/>
+                </div>
+                <div class="col-xs-3">
+                    <center>
+                        <button type='button' class='btn btn-info glyphicon glyphicon-globe' id='btnSaveSetting'> Filter</button>
+                    </center>
+                </div>
+            </div>
+            <div class="row" style="margin-top:10px;">
 
+            </div>
+        </div>
+    </form>
+    <br />
+    <div id="postingDiv" class="scrollableArea">
+        <div id="postingList" class="list-group">
+
+        </div>
     </div>
+
+
 </body>
 
 </html>
