@@ -1,4 +1,5 @@
 //hide this information
+//var SERVER_URL = "http://142.55.32.86:50161";
 var SERVER_URL = "http://localhost:8080";
 var LOGIN = "/login?username=:username&password=:password";
 var LOGOUT = "/logout";
@@ -28,7 +29,7 @@ var RATE_POST = "/posting/rate";
 var FORGOT_EMAIL = "/user/forgotpassword";
 var UPDATE_PASSWORD = "/user/updatepassword";
 var DELETE_POST = "/posting/delete";
-
+var RATE_USER = "/user/rate";
 //Request Types
 var GET = "GET";
 var POST = "POST";

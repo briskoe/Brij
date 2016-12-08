@@ -199,12 +199,18 @@ public class PostingController {
 		int requestID = -1;
 		String serviceName = "";
 		Double avgRate = 0.0;
+		Double avgRateAsPoster = 0.0;
+		Integer noOfRatingsAsPoster = 0;
+		Double avgRateByUser = 0.0;
 		try {
 			logger.info("retrieving post by id" + id);
 			posting = daoHelper.getPostingDao().getPostingById(id);
 			Service service = daoHelper.getServiceDao().getServiceById(posting.getServID());
 			serviceName = service.getServiceName();
 			avgRate = daoHelper.getPostingDao().getAvgRating(id);
+			avgRateAsPoster = daoHelper.getPostingDao().getAvgRatingByUser(posting.getUser().getUsername());
+			noOfRatingsAsPoster = daoHelper.getPostingDao().getCountOfUser(posting.getUser().getUsername());
+			avgRateByUser = daoHelper.getUserDao().getAvgRating(posting.getUser().getUsername());
 			isOwner = posting.getUser().getUsername().equalsIgnoreCase(principal.getName());
 			ArrayList<Request>requests = daoHelper.getRequestDao().findByUserAndPost(principal.getName(), posting.getId());
 			if(requests.size() >0){
@@ -228,6 +234,10 @@ public class PostingController {
 		map.put("isOwner", isOwner);
 		map.put("serviceName", serviceName);
 		map.put("avgRate", avgRate == null? 0 : avgRate);
+		map.put("avgRateByPoster", avgRateAsPoster == null? 0 : avgRateAsPoster);
+		map.put("noOfRatingsByPoster", noOfRatingsAsPoster == null? 0 : noOfRatingsAsPoster);
+		map.put("avgRateByUser", avgRateByUser == null? 0 : avgRateByUser);
+
 		return map;
 	}
 

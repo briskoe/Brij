@@ -2,6 +2,7 @@ package ca.brij.controller;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.maps.model.LatLng;
 
 import ca.brij.bean.posting.Posting;
+import ca.brij.bean.rating.Rating;
 import ca.brij.bean.request.Request;
 import ca.brij.bean.service.Service;
 import ca.brij.bean.user.MyUserDetailsService;
@@ -49,6 +51,23 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 @RestController
 public class UserController {
+	
+	@Autowired
+	private UserDao userDao;
+	
+	@Autowired
+	private DaoHelper daoHelper;
+
+	@Autowired
+	private MyUserDetailsService userDetailsService;
+
+	@Autowired
+	private GeocodingHelper geoHelper;
+	
+	@Autowired
+	private ApplicationProperties applicationProperties;
+
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@RequestMapping(value = "/user/register", method = RequestMethod.POST)
 	@ResponseBody
@@ -87,6 +106,24 @@ public class UserController {
 		logger.info("Successfully registered user: " + userEntity.getUsername());
 		return "Success";
 
+	}
+	
+	@RequestMapping(value = "/user/rate", method = RequestMethod.POST)
+	@ResponseBody
+	public String rateUser(String username, @RequestBody Rating rate, Principal principal) throws Exception {
+		try {
+			User user = userDao.findByUserName(username);
+			rate.setDate(Calendar.getInstance());
+			rate.setUsername(principal.getName());
+			user.getRatings().add(rate);
+			userDao.save(user);
+		} catch (Exception ex) {
+			logger.error("error saving user(" + username + ") made by: " + principal.getName() + " message "
+					+ ex.getMessage());
+			throw ex;
+		}
+		logger.info("Successfully saved user(" +username + ") made by: " + principal.getName());
+		return "Success";
 	}
 
 	@RequestMapping(value = "/user/save", method = RequestMethod.POST)
@@ -180,14 +217,27 @@ public class UserController {
 
 	@RequestMapping("/user/current")
 	@ResponseBody
-	public User getCurrentUser(Principal principal) {
+	public Map<String, Object> getCurrentUser(Principal principal) {
+		Map<String, Object> map = new HashMap<String, Object>();
 		User user = null;
+		Double avgRateAsPoster = 0.0;
+		Integer noOfRatingsAsPoster = 0;
+		Double avgRateByUser = 0.0;
+
 		try {
 			user = userDao.findByUserName(principal.getName());
+			avgRateByUser = daoHelper.getUserDao().getAvgRating(principal.getName());
+			noOfRatingsAsPoster = daoHelper.getPostingDao().getCountOfUser(principal.getName());
+			avgRateAsPoster = daoHelper.getPostingDao().getAvgRatingByUser(principal.getName());
 		} catch (Exception ex) {
 			return null;
 		}
-		return user;
+		map.put("user", user);
+		map.put("avgRateByUser", avgRateByUser == null? 0 : avgRateByUser);
+		map.put("noOfRatingsByPoster", noOfRatingsAsPoster == null? 0 : noOfRatingsAsPoster);
+		map.put("avgRateByPoster", avgRateAsPoster == null? 0 : avgRateAsPoster);
+
+		return map;
 	}
 
 	@RequestMapping("/admin/user/current")
@@ -262,19 +312,6 @@ public class UserController {
 		return userMap;
 	}
 
-	@Autowired
-	private UserDao userDao;
-
-	@Autowired
-	private MyUserDetailsService userDetailsService;
-
-	@Autowired
-	private GeocodingHelper geoHelper;
-	
-	@Autowired
-	private ApplicationProperties applicationProperties;
-
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	/**
 	 * forgotten password

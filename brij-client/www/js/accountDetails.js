@@ -228,19 +228,21 @@ function recoverStateForm() {
 }
 
 function refreshForm(data) {
-    var province = data.province;
+    var user = data.user;
+    var province = user.province;
     if (!province) {
         province = "ON";
     }
-    $("#username").html(data.username);
-    $("#userForm #firstName").val(data.firstName);
-    $("#userForm #lastName").val(data.lastName);
-    $("#userForm #phoneNumber").val(data.phoneNumber);
-    $("#userForm #address").val(data.address);
-    $("#userForm #city").val(data.city);
+    fillRating(data.noOfRatingsByPoster,data.avgRateByPoster, "#posterRatingDiv");
+    fillRating(user.ratings.length, data.avgRateByUser, "#userRatingDiv");
+    $("#username").html(user.username);
+    $("#userForm #firstName").val(user.firstName);
+    $("#userForm #lastName").val(user.lastName);
+    $("#userForm #phoneNumber").val(user.phoneNumber);
+    $("#userForm #address").val(user.address);
+    $("#userForm #city").val(user.city);
     $("#userForm #lstProvinces").val(province);
-    $("#userForm #email").val(data.email);
-    $("#userForm #firstName").html();
+    $("#userForm #email").val(user.email);
 }
 
 function loadInfo(callback) {

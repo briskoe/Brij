@@ -396,14 +396,16 @@ function fillNotifications(data) {
         for (var i = 0; i < notifications.length; i++) {
             var href = "";
             var classCss = "";
+            var openRate = false;
             if (!notifications[i].readFlag) {
                 classCss = "bg-danger readFlag";
+                openRate = true;
             }
             var notificationId = notifications[i].id;
             if (notifications[i].type === "request") {
                 href = "request.html?id=" + notifications[i].targetID;
             } else if (notifications[i].type === "requestComplete") {
-                href = "request.html?id=" + notifications[i].targetID + "&openRate=true";
+                href = "request.html?id=" + notifications[i].targetID + "&openRate="+openRate;
             } else if (notifications[i].type === "conversation") {
                 href = "request.html?id=" + notifications[i].targetID + "&openConvo=true";
             }
@@ -576,4 +578,25 @@ function listItemGenerator(href, id, customClass, heading, body, badge1, body2) 
 function displayError(div, message) {
     $(div + " #errorDiv").remove("");
     $(div).prepend("<div id='errorDiv' class='alert alert-danger'>" + message + "</div>");
+}
+
+function fillRating(ratingsNo, avgRate, div) {
+    var noOfRatings = ratingsNo;
+    var starDiv = "";
+    for (var i = 0; i < 5; i++) {
+        var classToUse = "glyphicon ";
+        if (i < avgRate) {
+            classToUse += "glyphicon-star";
+        } else {
+            classToUse += "glyphicon-star-empty";
+        }
+        starDiv += "<span class='" + classToUse + "'> </span>"
+    }
+    $(div + " .starDiv").html(starDiv);
+    var wordUser = "users";
+    if (noOfRatings === 1) {
+        wordUser = "user";
+    }
+    avgRate = avgRate.toFixed(0);
+    $(div + " .ratingInfo").html(avgRate + " out of 5 - " + noOfRatings + " " + wordUser);
 }

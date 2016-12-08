@@ -8,6 +8,7 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -15,17 +16,12 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
-
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.maps.model.LatLng;
 
-import ca.brij.utils.ConstantsUtil;
-
+import ca.brij.bean.rating.Rating;
 import ca.brij.utils.ConstantsUtil;
 
 @Entity
@@ -37,7 +33,8 @@ import ca.brij.utils.ConstantsUtil;
 		@NamedQuery(name = "User.findUserByResetID", query = "FROM User WHERE resetID = :resetID"),
 		@NamedQuery(name = "User.findByUserLike", query = "FROM User WHERE LOWER(username) LIKE LOWER('%' || :username || '%' )"),
 		@NamedQuery(name = "User.countUserLike", query = "SELECT COUNT(*) FROM User WHERE LOWER(username) LIKE LOWER('%' || :username || '%' )"),
-		@NamedQuery(name = "User.findUser", query = "FROM User WHERE username = :username AND password = :password")
+		@NamedQuery(name = "User.findUser", query = "FROM User WHERE username = :username AND password = :password"),
+		@NamedQuery(name = "User.getAvgRating", query = "SELECT avg(r.value) from User u JOIN u.ratings r WHERE u.username = :username")
 })
 @Table(name = "users")
 public class User implements Serializable {
@@ -87,18 +84,14 @@ public class User implements Serializable {
 	
 	@Column(name = "resetID")
 	private String resetID;
-	
-	public String getResetID() {
-		return resetID;
-	}
-
-	public void setResetID(String resetID) {
-		this.resetID = resetID;
-	}
 
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user" , cascade = CascadeType.ALL, orphanRemoval=true)
 	private Set<UserRole> userRole = new HashSet<UserRole>(0);
+	
+	@ElementCollection(fetch=FetchType.EAGER)
+	@Column(name = "ratings")
+	private List<Rating> ratings = new ArrayList<Rating>();
 
 	// Public methods
 	public User() {
@@ -247,6 +240,22 @@ public class User implements Serializable {
 		this.status = status;
 	}
 	
+	public List<Rating> getRatings() {
+		return ratings;
+	}
+
+	public void setRatings(List<Rating> ratings) {
+		this.ratings = ratings;
+	}
+	
+	public String getResetID() {
+		return resetID;
+	}
+
+	public void setResetID(String resetID) {
+		this.resetID = resetID;
+	}
+
 	public static List<User> getPriviligedUser(){
 		List<User> users = new ArrayList<User>();
 		String encryptedPassword = new BCryptPasswordEncoder().encode("admin");
