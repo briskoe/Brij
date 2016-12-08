@@ -593,5 +593,6 @@ function fillRating(ratingsNo, avgRate, div) {
     if (noOfRatings === 1) {
         wordUser = "user";
     }
+    avgRate = avgRate.toFixed(0);
     $(div + " .ratingInfo").html(avgRate + " out of 5 - " + noOfRatings + " " + wordUser);
 }

@@ -53,18 +53,24 @@ $(function () {
         }, null);
     })
     $("#btnAccept").click(function(e){
+        e.preventDefault();
+        e.stopPropagation();
         questionModal("Do you wish to change the status to 'in progress'?",function(){
             changeStatus("in_progress"); 
         });
     });
     
     $("#btnDeny").click(function(e){
+        e.preventDefault();
+        e.stopPropagation();
         questionModal("Do you wish to deny this request?", function(){
             changeStatus("denied"); 
         });
     });
     
     $("#btnComplete").click(function(e){
+        e.preventDefault();
+        e.stopPropagation();
         questionModal("Do you wish to complete this request?", function(){
             changeStatus("complete");
             setupRating("Rate " + otherUser, function(){
@@ -83,6 +89,8 @@ $(function () {
         });
     });
     $("#btnClose").click(function(e){
+        e.preventDefault();
+        e.stopPropagation();
         questionModal("Do you wish to Cancel this request?",function(){
             changeStatus("cancelled"); 
         });
@@ -103,10 +111,15 @@ $(function () {
 
 function questionModal(message, positiveCallback){
     $("#statusChangeModal #modalBody").html(message);
-    $("#btnChangeStatus").click(function(){
-        positiveCallback();
-        $("#statusChangeModal").modal("hide");
-    });
+    $('#btnChangeStatus').unbind('click');
+    $("#btnChangeStatus").click(function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            positiveCallback();
+            $("#statusChangeModal").modal("hide");
+        });
+
+
     $("#statusChangeModal").modal();
 }
 
